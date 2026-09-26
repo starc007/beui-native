@@ -1,0 +1,27 @@
+{
+  "name": "beui-native",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Native components and an Expo showcase for beUI.",
+  "packageManager": "bun@1.3.14",
+  "workspaces": [
+    "example"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd example start",
+    "ios": "bun run --cwd example ios",
+    "android": "bun run --cwd example android",
+    "web": "bun run --cwd example web",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "check": "bun run typecheck && bun run lint",
+    "doctor": "cd example && bunx expo-doctor",
+    "export": "bun run --cwd example export"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.14",
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3"
+  }
+}

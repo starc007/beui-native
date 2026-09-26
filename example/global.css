@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@import "uniwind";
+@import "../src/styles/theme.css";
+
+@source "../src";
