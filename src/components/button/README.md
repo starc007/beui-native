@@ -1,6 +1,6 @@
 # Button
 
-A native Pressable with primary, secondary, and ghost appearances; sm, md, and lg sizes; disabled and loading states; and reduced-motion-aware press feedback. Every default touch target is at least 48 × 48 points (labeled buttons have a 48-point minimum height).
+A fully rounded native Pressable with primary, secondary, and ghost appearances; sm, md, and lg sizes; disabled and loading states; and reduced-motion-aware press feedback. Every default touch target is at least 48 × 48 points (labeled buttons have a 48-point minimum height).
 
 ```tsx
 import { Button } from "./src";
@@ -13,7 +13,7 @@ import { Button } from "./src";
 <Button iconOnly variant="ghost" size="sm" icon={HeartIcon} accessibilityLabel="Save to favorites" />
 ```
 
-`iconOnly` controls the shape independently of `variant`. It requires both `icon` and `accessibilityLabel` in TypeScript. Use a meaningful action label, not the icon's visual name. The label form accepts a string child; icons go in `startIcon` and `endIcon`, which may be used together. Start/end follow the layout direction.
+`iconOnly` makes the pill-shaped button circular, independently of `variant`. It requires both `icon` and `accessibilityLabel` in TypeScript. Use a meaningful action label, not the icon's visual name. The label form accepts a string child; icons go in `startIcon` and `endIcon`, which may be used together. Start/end follow the layout direction.
 
 An icon can be a React node or a render function receiving `{ size, color }`. Render functions pick up the button's size and theme automatically. There is no icon-library dependency in the component:
 

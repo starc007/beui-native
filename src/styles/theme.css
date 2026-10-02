@@ -1,25 +1,27 @@
+/* Matches the default beUI palette in ui-components/lib/themes.ts.
+   Native surface maps to card; muted maps to muted-foreground. */
 @layer theme {
   :root {
     @variant light {
-      --color-background: #f5f5f3;
-      --color-surface: #ffffff;
-      --color-foreground: #18181b;
-      --color-muted: #65656b;
-      --color-border: #e4e4e7;
-      --color-primary: #18181b;
+      --color-background: oklch(99% 0 0);
+      --color-surface: oklch(97% 0 0);
+      --color-foreground: oklch(15% 0 0);
+      --color-muted: oklch(50% 0 0);
+      --color-border: oklch(15% 0 0 / 0.06);
+      --color-primary: #0285f7;
       --color-on-primary: #ffffff;
     }
   }
 
   :root {
     @variant dark {
-      --color-background: #111113;
-      --color-surface: #1b1b1f;
-      --color-foreground: #fafafa;
-      --color-muted: #a1a1aa;
-      --color-border: #333338;
-      --color-primary: #fafafa;
-      --color-on-primary: #18181b;
+      --color-background: #151515;
+      --color-surface: #1c1c1c;
+      --color-foreground: oklch(96% 0 0);
+      --color-muted: oklch(62% 0 0);
+      --color-border: rgb(255 255 255 / 0.05);
+      --color-primary: #0285f7;
+      --color-on-primary: #ffffff;
     }
   }
 }
