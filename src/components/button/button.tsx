@@ -126,7 +126,7 @@ export function Button({
               </View>
             )}
             <Text
-              className={`shrink text-center font-semibold ${dimensions.label} ${appearance.label}`}
+              className={`shrink text-center font-medium ${dimensions.label} ${appearance.label}`}
             >
               {children}
             </Text>
@@ -145,9 +145,7 @@ export function Button({
           style={styles.loader}
         >
           {reducedMotion ? (
-            <Text className={`text-lg font-semibold ${appearance.label}`}>
-              …
-            </Text>
+            <Text className={`text-lg font-medium ${appearance.label}`}>…</Text>
           ) : (
             <ActivityIndicator size="small" color={color} />
           )}
