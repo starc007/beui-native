@@ -1,6 +1,6 @@
 # Button
 
-A fully rounded native Pressable with primary, secondary, and ghost appearances; sm, md, and lg sizes; disabled and loading states; and reduced-motion-aware press feedback. Every default touch target is at least 48 × 48 points (labeled buttons have a 48-point minimum height).
+A fully rounded native Pressable with primary, secondary, and ghost appearances; sm, md, and lg sizes; disabled and loading states; and reduced-motion-aware press feedback. Visible heights are 36, 40, and 44 points for sm, md, and lg, with content allowed to grow for larger text. Icon-only buttons use matching square dimensions. Default `hitSlop` adds 6, 4, and 2 points per side, respectively, for a nominal 48-point touch area. Native hit areas cannot extend past their parent bounds; leave enough room around compact buttons and avoid overlapping targets. You can override `hitSlop` explicitly.
 
 ```tsx
 import { Button } from "./src";

@@ -17,24 +17,33 @@ export const variants: Record<
 
 export const sizes: Record<
   ButtonSize,
-  { container: string; iconOnly: string; label: string; icon: number }
+  {
+    container: string;
+    iconOnly: string;
+    label: string;
+    icon: number;
+    hitSlop: number;
+  }
 > = {
   sm: {
-    container: "min-h-12 px-3 py-2",
-    iconOnly: "h-12 w-12",
+    container: "min-h-9 px-3 py-1.5",
+    iconOnly: "h-9 w-9",
     label: "text-sm",
-    icon: 18,
+    icon: 16,
+    hitSlop: 6,
   },
   md: {
-    container: "min-h-13 px-4 py-3",
-    iconOnly: "h-13 w-13",
-    label: "text-base",
-    icon: 20,
+    container: "min-h-10 px-4 py-2",
+    iconOnly: "h-10 w-10",
+    label: "text-sm",
+    icon: 18,
+    hitSlop: 4,
   },
   lg: {
-    container: "min-h-14 px-5 py-4",
-    iconOnly: "h-14 w-14",
-    label: "text-lg",
-    icon: 22,
+    container: "min-h-11 px-5 py-2",
+    iconOnly: "h-11 w-11",
+    label: "text-base",
+    icon: 20,
+    hitSlop: 2,
   },
 };

@@ -43,6 +43,7 @@ export function Button({
   onPressIn,
   onPressOut,
   ref,
+  hitSlop,
   ...props
 }: ButtonProps) {
   const reducedMotion = useReducedMotionPreference();
@@ -81,7 +82,8 @@ export function Button({
       aria-disabled={blocked}
       aria-busy={loading}
       disabled={blocked}
-      className={`min-w-12 self-start items-center justify-center rounded-full border ${appearance.container} ${iconOnly ? dimensions.iconOnly : dimensions.container} ${className}`}
+      hitSlop={hitSlop ?? dimensions.hitSlop}
+      className={`min-w-9 self-start items-center justify-center rounded-full border ${appearance.container} ${iconOnly ? dimensions.iconOnly : dimensions.container} ${className}`}
       style={(state) => [
         typeof style === "function" ? style(state) : style,
         { opacity: disabled ? 0.4 : state.pressed && !blocked ? 0.8 : 1 },
