@@ -1,6 +1,6 @@
 # beUI Native
 
-React Native components with Uniwind styling and Reanimated motion. This repository starts with a shared source foundation and an Expo showcase; the component catalog is next.
+React Native components with Uniwind styling and Reanimated motion. The shared source and Expo showcase currently include Button and Surface.
 
 ## Start
 
@@ -37,7 +37,7 @@ The example owns the runtime dependencies. Bun hoists them into one workspace in
 
 `example/global.css` scans `../src` explicitly. Keep class names statically discoverable. Uniwind is the outermost Metro wrapper and generates `example/uniwind-types.d.ts`; this file is checked in so typechecking works before starting Metro. Expo's Babel preset configures Worklets automatically.
 
-The demo press target is a setup check, not the finished public Button API. The first planned components are Button, Switch, and Slider.
+The showcase uses the shared [Button](src/components/button/README.md) with primary, secondary, and ghost variants, three sizes, icon-only actions, icons before/after labels, and loading/disabled states. Icons in the showcase use `react-native-svg`; Button itself accepts any icon library. Switch and Slider are next.
 
 ## Checks
 
