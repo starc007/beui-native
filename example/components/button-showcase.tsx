@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
-import { Button, Surface } from "../../src";
+import { Button, type ButtonState, StatefulButton, Surface } from "../../src";
 import { ArrowRightIcon, HeartIcon, PlusIcon } from "./icons";
 
 function Section({
@@ -28,29 +28,46 @@ function Section({
   );
 }
 
-export function ButtonShowcase() {
-  const [message, setMessage] = useState("Try any button below.");
-  const [loading, setLoading] = useState(false);
-  const [disabled, setDisabled] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+function Row({ children }: { children: ReactNode }) {
+  return (
+    <View className="flex-row flex-wrap items-center gap-3">{children}</View>
+  );
+}
 
+function useSequence() {
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   useEffect(
     () => () => {
-      if (timer.current) clearTimeout(timer.current);
+      for (const timer of timers.current) clearTimeout(timer);
     },
     [],
   );
+  return (steps: [number, () => void][]) => {
+    for (const timer of timers.current) clearTimeout(timer);
+    timers.current = steps.map(([delay, step]) => setTimeout(step, delay));
+  };
+}
+
+export function ButtonShowcase() {
+  const [message, setMessage] = useState("Try any button below.");
+  const [saved, setSaved] = useState(false);
+  const [saveState, setSaveState] = useState<ButtonState>("idle");
+  const [deployState, setDeployState] = useState<ButtonState>("idle");
+  const run = useSequence();
 
   function save() {
-    if (timer.current) return;
-    setLoading(true);
-    setMessage("Saving changes…");
-    timer.current = setTimeout(() => {
-      setLoading(false);
-      setMessage("Changes saved.");
-      timer.current = null;
-    }, 1800);
+    if (saveState !== "idle") return;
+    setSaveState("loading");
+    run([
+      [1600, () => setSaveState("success")],
+      [3200, () => setSaveState("idle")],
+    ]);
+  }
+
+  function deploy() {
+    if (deployState === "loading") return;
+    setDeployState("loading");
+    run([[1600, () => setDeployState("error")]]);
   }
 
   return (
@@ -61,11 +78,12 @@ export function ButtonShowcase() {
       >
         {message}
       </Text>
+
       <Section
-        title="The essentials"
-        description="Three appearances, one familiar action."
+        title="Spring press"
+        description="Four appearances that sink into the press and spring back."
       >
-        <View className="flex-row flex-wrap items-center gap-3">
+        <Row>
           <Button onPress={() => setMessage("Primary pressed.")}>
             Primary
           </Button>
@@ -75,39 +93,34 @@ export function ButtonShowcase() {
           >
             Secondary
           </Button>
+          <Button
+            variant="outline"
+            onPress={() => setMessage("Outline pressed.")}
+          >
+            Outline
+          </Button>
           <Button variant="ghost" onPress={() => setMessage("Ghost pressed.")}>
             Ghost
           </Button>
-        </View>
-        <View className="flex-row flex-wrap items-center gap-3">
-          <Button
-            size="sm"
-            variant="secondary"
-            onPress={() => setMessage("Small pressed.")}
-          >
+        </Row>
+        <Row>
+          <Button size="sm" variant="secondary">
             Small
           </Button>
-          <Button
-            size="md"
-            variant="secondary"
-            onPress={() => setMessage("Medium pressed.")}
-          >
+          <Button size="md" variant="secondary">
             Medium
           </Button>
-          <Button
-            size="lg"
-            variant="secondary"
-            onPress={() => setMessage("Large pressed.")}
-          >
+          <Button size="lg" variant="secondary">
             Large
           </Button>
-        </View>
+        </Row>
       </Section>
+
       <Section
-        title="A little direction"
-        description="An icon before, after, or on both sides of the label."
+        title="With icons"
+        description="Icons pick up the button's size and color."
       >
-        <View className="flex-row flex-wrap items-center gap-3">
+        <Row>
           <Button
             startIcon={PlusIcon}
             onPress={() => setMessage("Add item pressed.")}
@@ -121,32 +134,11 @@ export function ButtonShowcase() {
           >
             Continue
           </Button>
+        </Row>
+        <Row>
           <Button
+            size="icon"
             variant="secondary"
-            startIcon={PlusIcon}
-            endIcon={ArrowRightIcon}
-            onPress={() => setMessage("Create project pressed.")}
-          >
-            Create project
-          </Button>
-        </View>
-      </Section>
-      <Section
-        title="Just the icon"
-        description="A compact shape with a full touch target."
-      >
-        <View className="flex-row flex-wrap items-center gap-3">
-          <Button
-            iconOnly
-            icon={PlusIcon}
-            accessibilityLabel="Add item"
-            onPress={() => setMessage("Add icon pressed.")}
-          />
-          <Button
-            iconOnly
-            variant="secondary"
-            size="sm"
-            icon={HeartIcon}
             accessibilityLabel={
               saved ? "Remove from favorites" : "Save to favorites"
             }
@@ -157,72 +149,81 @@ export function ButtonShowcase() {
                 saved ? "Removed from favorites." : "Saved to favorites.",
               );
             }}
+            icon={HeartIcon}
           />
           <Button
-            iconOnly
+            size="icon"
             variant="ghost"
-            size="lg"
-            icon={ArrowRightIcon}
+            accessibilityLabel="Add item"
+            onPress={() => setMessage("Add icon pressed.")}
+            icon={PlusIcon}
+          />
+          <Button
+            size="icon"
+            variant="outline"
             accessibilityLabel="Go forward"
             onPress={() => setMessage("Forward icon pressed.")}
+            icon={ArrowRightIcon}
           />
-          <Button
-            iconOnly
-            variant="secondary"
-            icon={PlusIcon}
-            accessibilityLabel="Add unavailable"
-            disabled
-          />
-          <Button
-            iconOnly
-            variant="secondary"
-            icon={HeartIcon}
-            accessibilityLabel="Saving favorite"
-            loading
-          />
-        </View>
+        </Row>
       </Section>
+
       <Section
-        title="Every state"
-        description="Loading keeps its footprint. Disabled actions stay quiet."
+        title="Ripple"
+        description="A soft wave from wherever your finger lands."
       >
-        <View className="flex-row flex-wrap items-center gap-3">
-          <Button
-            startIcon={PlusIcon}
-            endIcon={ArrowRightIcon}
-            loading={loading}
-            loadingLabel="Saving changes"
-            disabled={disabled}
+        <Row>
+          <Button ripple size="lg">
+            Tap anywhere
+          </Button>
+          <Button ripple size="lg" variant="secondary">
+            Or here
+          </Button>
+        </Row>
+      </Section>
+
+      <Section
+        title="Stateful"
+        description="Labels roll letter by letter while the button resizes to fit."
+      >
+        <Row>
+          <StatefulButton
+            state={saveState}
+            loadingText="Saving"
+            successText="Saved"
+            icon={ArrowRightIcon}
             onPress={save}
           >
             Save changes
+          </StatefulButton>
+          <StatefulButton
+            variant="secondary"
+            state={deployState}
+            loadingText="Deploying"
+            errorText="Try again"
+            onPress={deploy}
+          >
+            Deploy
+          </StatefulButton>
+        </Row>
+      </Section>
+
+      <Section
+        title="Quiet states"
+        description="Disabled actions dim. Motion can be turned off per button."
+      >
+        <Row>
+          <Button variant="secondary" disabled>
+            Unavailable
           </Button>
           <Button
             variant="secondary"
-            disabled
-            onPress={() => setMessage("Unexpected disabled press.")}
-          >
-            Unavailable
-          </Button>
-        </View>
-        <View className="flex-row flex-wrap items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            accessibilityState={{ selected: disabled }}
-            onPress={() => setDisabled(!disabled)}
-          >
-            {disabled ? "Enable save button" : "Disable save button"}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
             disableAnimation
             onPress={() => setMessage("Pressed without motion.")}
           >
             Without motion
           </Button>
-        </View>
+        </Row>
       </Section>
     </View>
   );
