@@ -18,6 +18,10 @@ export {
 } from "./components/button";
 export type { CheckboxProps } from "./components/checkbox";
 export { Checkbox } from "./components/checkbox";
+export type { InputClassNames, InputProps } from "./components/input";
+export { Input } from "./components/input";
+export type { OTPInputProps, OTPStatus } from "./components/otp-input";
+export { OTPInput } from "./components/otp-input";
 export type {
   RadioGroupItemProps,
   RadioGroupProps,
@@ -34,4 +38,5 @@ export type {
   TabsVariant,
 } from "./components/tabs";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/tabs";
+export type { IconProps, IconSource } from "./primitives/render-icon";
 export { motion } from "./styles/motion";

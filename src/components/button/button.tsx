@@ -1,13 +1,4 @@
-import {
-  type ComponentType,
-  createContext,
-  createElement,
-  isValidElement,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import {
   type ColorValue,
   Pressable,
@@ -24,10 +15,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
+import { renderIcon } from "../../primitives/render-icon";
 import { EASE_OUT, motion } from "../../styles/motion";
 import { sizes, variants } from "./button.styles";
 import type {
-  ButtonIconProps,
   ButtonIcon as ButtonIconType,
   ButtonProps,
   ButtonRootProps,
@@ -55,22 +46,7 @@ export function useButtonContext() {
   return context;
 }
 
-export function renderButtonIcon(icon: ButtonIconType, props: ButtonIconProps) {
-  if (typeof icon === "function") return createElement(icon, props);
-  // forwardRef and memo components (lucide-react-native, for example) are objects.
-  if (
-    icon != null &&
-    typeof icon === "object" &&
-    !isValidElement(icon) &&
-    "$$typeof" in icon
-  ) {
-    return createElement(
-      icon as unknown as ComponentType<ButtonIconProps>,
-      props,
-    );
-  }
-  return icon;
-}
+export { renderIcon as renderButtonIcon };
 
 function ButtonLabel({ className = "", ...props }: TextProps) {
   const { variant, size } = useButtonContext();
@@ -91,7 +67,7 @@ function ButtonIcon({ icon }: { icon: ButtonIconType }) {
       aria-hidden
       style={styles.icon}
     >
-      {renderButtonIcon(icon, { size: sizes[size].icon, color })}
+      {renderIcon(icon, { size: sizes[size].icon, color })}
     </View>
   );
 }

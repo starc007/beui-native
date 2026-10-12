@@ -8,6 +8,7 @@ import { Uniwind, useUniwind } from "uniwind";
 import { Button } from "../src";
 import { ButtonShowcase } from "./components/button-showcase";
 import { ChoiceShowcase } from "./components/choice-showcase";
+import { InputShowcase } from "./components/input-showcase";
 import { SwitchShowcase } from "./components/switch-showcase";
 import { TabsShowcase } from "./components/tabs-showcase";
 
@@ -47,6 +48,7 @@ function Playground() {
             </Button>
           ))}
         </View>
+        <InputShowcase />
         <TabsShowcase />
         <ChoiceShowcase />
         <SwitchShowcase />

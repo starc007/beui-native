@@ -18,6 +18,6 @@ import { Checkbox } from "./src";
 - **Accessibility:** reports the `checkbox` role. An indeterminate checkbox reports a mixed state.
 - **Reduced motion:** when the system asks for it, or `disableAnimation` is set, the mark and colours change instantly with no press scale.
 
-The mark is drawn with two rotated Views, matching the web SVG path, so the component needs no SVG library.
+The mark is drawn by the shared `DrawnPath` primitive with rotated Views, matching the web SVG path, so the component needs no SVG library.
 
-Copy this directory, `hooks/use-presence.ts`, `hooks/use-reduced-motion.ts`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`.
+Copy this directory, `hooks/use-presence.ts`, `hooks/use-reduced-motion.ts`, `primitives/drawn-path.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`.

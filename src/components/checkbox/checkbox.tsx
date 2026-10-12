@@ -9,9 +9,7 @@ import {
 } from "react-native";
 import Animated, {
   cancelAnimation,
-  interpolate,
   interpolateColor,
-  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -21,23 +19,21 @@ import Animated, {
 import { useResolveClassNames } from "uniwind";
 import { usePresence } from "../../hooks/use-presence";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
+import { DrawnPath, type PathSegment } from "../../primitives/drawn-path";
 import { EASE_OUT, motion } from "../../styles/motion";
 
 const BOX = 20;
-const MARK = 12;
 // The web mark is a 24-unit SVG path drawn at 12px with a 3-unit stroke.
-const UNIT = MARK / 24;
-const STROKE = 3 * UNIT;
-const CHECK: Segment[] = [
+const MARK = 12;
+const CHECK: PathSegment[] = [
   [5, 13, 9, 17],
   [9, 17, 19, 7],
 ];
-const DASH: Segment[] = [[6, 12, 18, 12]];
+const DASH: PathSegment[] = [[6, 12, 18, 12]];
 // Tops a 20-point row up to a 48-point touch area.
 const HIT_SLOP = { top: 14, bottom: 14, left: 0, right: 0 };
 const COLOR_FADE = { duration: 200, reduceMotion: motion.fade.reduceMotion };
 
-type Segment = [x1: number, y1: number, x2: number, y2: number];
 type Mark = "check" | "dash";
 
 export type CheckboxProps = Omit<
@@ -59,53 +55,6 @@ export type CheckboxProps = Omit<
   className?: string;
   ref?: Ref<View>;
 };
-
-function length([x1, y1, x2, y2]: Segment) {
-  return Math.hypot(x2 - x1, y2 - y1);
-}
-
-/** One straight stroke that grows from its start point as `progress` covers [from, to]. */
-function Stroke({
-  segment,
-  from,
-  to,
-  progress,
-  color,
-}: {
-  segment: Segment;
-  from: number;
-  to: number;
-  progress: SharedValue<number>;
-  color: ColorValue | undefined;
-}) {
-  const [x1, y1, x2, y2] = segment;
-  const full = length(segment) * UNIT;
-  const angle = Math.atan2(y2 - y1, x2 - x1);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const drawn = interpolate(progress.value, [from, to], [0, 1], "clamp");
-    return {
-      opacity: drawn > 0 ? 1 : 0,
-      // Round caps extend half a stroke past each end, like SVG's linecap.
-      width: STROKE + full * drawn,
-    };
-  });
-
-  return (
-    <Animated.View
-      style={[
-        styles.stroke,
-        {
-          left: x1 * UNIT - STROKE / 2,
-          top: y1 * UNIT - STROKE / 2,
-          backgroundColor: color,
-          transform: [{ rotate: `${angle}rad` }],
-        },
-        animatedStyle,
-      ]}
-    />
-  );
-}
 
 function CheckMark({
   mark,
@@ -147,25 +96,15 @@ function CheckMark({
     transform: [{ scale: 0.5 + 0.5 * presence.value }],
   }));
 
-  const total = segments.reduce((sum, segment) => sum + length(segment), 0);
-  let start = 0;
-
   return (
     <Animated.View style={[styles.mark, markStyle]}>
-      {segments.map((segment) => {
-        const from = start / total;
-        start += length(segment);
-        return (
-          <Stroke
-            key={segment.join()}
-            segment={segment}
-            from={from}
-            to={start / total}
-            progress={draw}
-            color={color}
-          />
-        );
-      })}
+      <DrawnPath
+        segments={segments}
+        size={MARK}
+        strokeWidth={3}
+        color={color}
+        progress={draw}
+      />
     </Animated.View>
   );
 }
@@ -308,10 +247,4 @@ const styles = StyleSheet.create({
   },
   disabled: { opacity: 0.6 },
   mark: { position: "absolute", width: MARK, height: MARK },
-  stroke: {
-    position: "absolute",
-    height: STROKE,
-    borderRadius: STROKE / 2,
-    transformOrigin: [STROKE / 2, STROKE / 2, 0],
-  },
 });

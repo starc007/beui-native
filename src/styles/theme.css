@@ -8,8 +8,11 @@
       --color-foreground: oklch(15% 0 0);
       --color-muted: oklch(50% 0 0);
       --color-border: oklch(15% 0 0 / 0.06);
+      --color-border-strong: oklch(15% 0 0 / 0.16);
       --color-primary: #0285f7;
       --color-on-primary: #ffffff;
+      --color-destructive: #dc2626;
+      --color-success: #059669;
     }
   }
 
@@ -20,8 +23,11 @@
       --color-foreground: oklch(96% 0 0);
       --color-muted: oklch(62% 0 0);
       --color-border: rgb(255 255 255 / 0.05);
+      --color-border-strong: rgb(255 255 255 / 0.14);
       --color-primary: #0285f7;
       --color-on-primary: #ffffff;
+      --color-destructive: #f87171;
+      --color-success: #34d399;
     }
   }
 }

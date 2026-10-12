@@ -1,17 +1,12 @@
-import type { ComponentType, ReactNode, Ref } from "react";
-import type {
-  ColorValue,
-  PressableProps,
-  StyleProp,
-  View,
-  ViewStyle,
-} from "react-native";
+import type { ReactNode, Ref } from "react";
+import type { PressableProps, StyleProp, View, ViewStyle } from "react-native";
+import type { IconProps, IconSource } from "../../primitives/render-icon";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "outline";
 export type ButtonSize = "sm" | "md" | "lg" | "icon";
-export type ButtonIconProps = { size: number; color: ColorValue | undefined };
+export type ButtonIconProps = IconProps;
 /** A component receiving `{ size, color }` (such as a lucide icon), or a prebuilt node. */
-export type ButtonIcon = ComponentType<ButtonIconProps> | ReactNode;
+export type ButtonIcon = IconSource;
 
 export type ButtonBaseProps = Omit<PressableProps, "children" | "style"> & {
   variant?: ButtonVariant;

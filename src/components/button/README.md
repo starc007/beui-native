@@ -46,7 +46,7 @@ The web version also blurs letters as they move. Native has no cheap blur, so le
 
 ## Copying
 
-Copy this directory, `hooks/use-reduced-motion.ts`, `hooks/use-presence.ts`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. The host app needs React Native, Uniwind and Reanimated, set up as described in the root README.
+Copy this directory, `hooks/use-reduced-motion.ts`, `hooks/use-presence.ts`, `primitives/render-icon.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. The host app needs React Native, Uniwind and Reanimated, set up as described in the root README.
 
 ## Validation
 
