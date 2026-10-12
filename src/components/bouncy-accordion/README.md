@@ -15,7 +15,8 @@ import { BouncyAccordion } from "./src";
 ```
 
 - **Grouping:** closed rows join into one stack with 28-point outer corners. Opening a row moves it 12 points away from its neighbors, and the corners on either side of each gap spring round, so the open row becomes its own card.
-- **Motion:** the gap, corners and content height use the web version's bouncy springs. In Reanimated terms: 550 ms at damping ratio 0.62 for the row, 580 ms at 0.68 to open, 460 ms at 0.74 to close. The chevron flips on its own spring and the content fades in over 180 ms. Gaps and heights are clamped at zero, so an overshooting spring never overlaps the next row.
+- **Motion:** the gap, corners and content height spring with a bounce: 550 ms at damping ratio 0.62 for the row, 580 ms at 0.68 to open, and 520 ms at 0.55 to close. That's livelier than the web version on close, where the bounce is mostly clipped once the height reaches zero. The chevron flips on its own spring and the content fades in over 180 ms. A row that starts open appears in place without animating.
+- **Closing bounce:** a height can't go below zero, so a closing row's overshoot becomes a small negative bottom margin. The rows below travel up to 14 points past rest and spring back. That overlap only covers the closing row's empty bottom padding, in the same colour as the stack it's rejoining, so nothing visibly overlaps.
 - **Content:** `description` can be a string, which gets the default muted text style, or any element. Its height is measured at its natural size, so long answers and larger text open fully.
 - **State:** pass `value` with `onValueChange` to control the open row, or `defaultValue` to let it manage itself. `collapsible={false}` keeps one row always open.
 - **Rows:** each row is at least 54 points tall, with an optional leading `icon` (a component given `{ size, color }`, or an element) and a soft pressed highlight. `disabled` dims a row and ignores presses.

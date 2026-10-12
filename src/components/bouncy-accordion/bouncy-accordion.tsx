@@ -1,4 +1,10 @@
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Pressable,
   StyleSheet,
@@ -63,9 +69,11 @@ const OPEN = {
   dampingRatio: 0.68,
   reduceMotion: ReduceMotion.System,
 };
+// Closing is a little livelier than the web, where the bounce is mostly
+// clipped once the height reaches zero.
 const CLOSE = {
-  duration: 460,
-  dampingRatio: 0.74,
+  duration: 520,
+  dampingRatio: 0.55,
   reduceMotion: ReduceMotion.System,
 };
 const CHEVRON = {
@@ -76,6 +84,9 @@ const CHEVRON = {
 const FADE = { duration: 180, easing: EASE_OUT };
 
 const GAP = 12;
+// How far a closing row's overshoot may pull the rows below past rest. It
+// overlaps only the closing row's empty bottom padding, in the same color.
+const SETTLE_OVERLAP = 14;
 const RADIUS = 28;
 const ICON = 16;
 const CHEVRON_PATH: PathSegment[] = [
@@ -106,6 +117,8 @@ function Row({
   const { backgroundColor: pressedColor } =
     useResolveClassNames("bg-foreground/5");
   const [measured, setMeasured] = useState(0);
+  // The first measurement places an initially open row without animating it.
+  const firstMeasure = useRef(true);
   const hasContent = item.description != null;
 
   const gap = useSharedValue(separated ? GAP : 0);
@@ -130,15 +143,23 @@ function Row({
   }, [bottom, endsGroup, gap, separated, startsGroup, to, top]);
 
   useEffect(() => {
-    height.value = to(open && hasContent ? measured : 0, open ? OPEN : CLOSE);
+    const target = open && hasContent ? measured : 0;
+    if (firstMeasure.current && measured > 0) {
+      firstMeasure.current = false;
+      height.value = target;
+    } else {
+      height.value = to(target, open ? OPEN : CLOSE);
+    }
     fade.value = reduce ? (open ? 1 : 0) : withTiming(open ? 1 : 0, FADE);
     turn.value = to(open ? 1 : 0, CHEVRON);
   }, [fade, hasContent, height, measured, open, reduce, to, turn]);
 
-  // Springs overshoot by design; never let a gap or height dip below zero,
-  // which would overlap the neighboring row mid-bounce.
+  // A height can't go below zero, so a closing spring's overshoot becomes a
+  // small negative margin instead: the rows below travel slightly past rest and
+  // spring back, keeping the bounce the clamp would otherwise flatten.
   const rowStyle = useAnimatedStyle(() => ({
-    marginTop: Math.max(0, gap.value),
+    marginTop: Math.max(-SETTLE_OVERLAP, gap.value),
+    marginBottom: Math.max(-SETTLE_OVERLAP, Math.min(0, height.value)),
     borderTopLeftRadius: Math.max(0, top.value),
     borderTopRightRadius: Math.max(0, top.value),
     borderBottomLeftRadius: Math.max(0, bottom.value),
