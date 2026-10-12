@@ -7,6 +7,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Uniwind, useUniwind } from "uniwind";
 import { Button } from "../src";
 import { ButtonShowcase } from "./components/button-showcase";
+import { ChoiceShowcase } from "./components/choice-showcase";
 import { SwitchShowcase } from "./components/switch-showcase";
 
 function Playground() {
@@ -45,6 +46,7 @@ function Playground() {
             </Button>
           ))}
         </View>
+        <ChoiceShowcase />
         <SwitchShowcase />
         <ButtonShowcase />
       </ScrollView>
