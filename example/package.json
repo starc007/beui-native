@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@hugeicons/core-free-icons": "^4.3.5",
+    "@hugeicons/react-native": "^1.0.16",
     "expo": "~57.0.27",
     "expo-constants": "~57.0.21",
     "expo-linking": "~57.0.12",

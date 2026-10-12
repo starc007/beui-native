@@ -1,168 +1,45 @@
-import Svg, { Circle, Path } from "react-native-svg";
-import type { ButtonIconProps } from "../../src";
+// Hugeicons, imported one file per icon so the bundle holds only these and
+// not the whole free set (Metro does not tree-shake).
+import ArrowRight02 from "@hugeicons/core-free-icons/ArrowRight02Icon";
+import Clock01 from "@hugeicons/core-free-icons/Clock01Icon";
+import Delete02 from "@hugeicons/core-free-icons/Delete02Icon";
+import Favourite from "@hugeicons/core-free-icons/FavouriteIcon";
+import File01 from "@hugeicons/core-free-icons/File01Icon";
+import Flag02 from "@hugeicons/core-free-icons/Flag02Icon";
+import Mail01 from "@hugeicons/core-free-icons/Mail01Icon";
+import Pin from "@hugeicons/core-free-icons/PinIcon";
+import PlusSign from "@hugeicons/core-free-icons/PlusSignIcon";
+import Search01 from "@hugeicons/core-free-icons/Search01Icon";
+import Tick02 from "@hugeicons/core-free-icons/Tick02Icon";
+import User from "@hugeicons/core-free-icons/UserIcon";
+import View from "@hugeicons/core-free-icons/ViewIcon";
+import ViewOffSlash from "@hugeicons/core-free-icons/ViewOffSlashIcon";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react-native";
+import type { IconProps } from "../../src";
 
-export function PlusIcon({ size, color }: ButtonIconProps) {
-  return (
-    <Svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth={1.8}
-      strokeLinecap="round"
-    >
-      <Path d="M12 5v14M5 12h14" />
-    </Svg>
-  );
+/**
+ * Adapts a Hugeicon to beUI's icon contract: a component given `{ size, color }`.
+ * Created once per icon at module scope, so each keeps a stable identity.
+ */
+function hugeicon(icon: IconSvgElement) {
+  return function Icon({ size, color }: IconProps) {
+    return (
+      <HugeiconsIcon icon={icon} size={size} color={color} strokeWidth={1.8} />
+    );
+  };
 }
 
-export function ArrowRightIcon({ size, color }: ButtonIconProps) {
-  return (
-    <Svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <Path d="M5 12h14m-6-6 6 6-6 6" />
-    </Svg>
-  );
-}
-
-export function HeartIcon({ size, color }: ButtonIconProps) {
-  return (
-    <Svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <Path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" />
-    </Svg>
-  );
-}
-
-function Outline({
-  size,
-  color,
-  children,
-}: ButtonIconProps & { children: React.ReactNode }) {
-  return (
-    <Svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {children}
-    </Svg>
-  );
-}
-
-export function MailIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Path d="M4 6h16v12H4z" />
-      <Path d="m4 7 8 6 8-6" />
-    </Outline>
-  );
-}
-
-export function SearchIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Circle cx={11} cy={11} r={6.5} />
-      <Path d="m20 20-4.2-4.2" />
-    </Outline>
-  );
-}
-
-export function EyeIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
-      <Circle cx={12} cy={12} r={3} />
-    </Outline>
-  );
-}
-
-export function EyeOffIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Path d="M10.6 5.6A9.7 9.7 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-2.7 3.4M6.6 6.6A17 17 0 0 0 2.5 12S6 18.5 12 18.5a9.4 9.4 0 0 0 5.4-1.7" />
-      <Path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18" />
-    </Outline>
-  );
-}
-
-export function CheckIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Path d="m5 12.5 4.5 4.5L19 7.5" />
-    </Outline>
-  );
-}
-
-export function PinIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Path d="M12 17v4M9 4h6l-1 6 3 3v2H7v-2l3-3-1-6Z" />
-    </Outline>
-  );
-}
-
-export function ClockIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Circle cx={12} cy={12} r={8.5} />
-      <Path d="M12 7.5V12l3 2" />
-    </Outline>
-  );
-}
-
-export function TrashIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" />
-    </Outline>
-  );
-}
-
-export function FileIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7l-4-4Z" />
-      <Path d="M14 3v4h4M9 13h6M9 17h6" />
-    </Outline>
-  );
-}
-
-export function UserIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Circle cx={12} cy={8} r={4} />
-      <Path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" />
-    </Outline>
-  );
-}
-
-export function FlagIcon(props: ButtonIconProps) {
-  return (
-    <Outline {...props}>
-      <Path d="M5 21V4M5 4h11l-2 4 2 4H5" />
-    </Outline>
-  );
-}
+export const PlusIcon = hugeicon(PlusSign);
+export const ArrowRightIcon = hugeicon(ArrowRight02);
+export const HeartIcon = hugeicon(Favourite);
+export const MailIcon = hugeicon(Mail01);
+export const SearchIcon = hugeicon(Search01);
+export const EyeIcon = hugeicon(View);
+export const EyeOffIcon = hugeicon(ViewOffSlash);
+export const CheckIcon = hugeicon(Tick02);
+export const PinIcon = hugeicon(Pin);
+export const ClockIcon = hugeicon(Clock01);
+export const TrashIcon = hugeicon(Delete02);
+export const FileIcon = hugeicon(File01);
+export const UserIcon = hugeicon(User);
+export const FlagIcon = hugeicon(Flag02);
