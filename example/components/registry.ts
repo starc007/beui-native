@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import { AccordionShowcase } from "./accordion-showcase";
 import { ButtonShowcase } from "./button-showcase";
 import { CheckboxShowcase } from "./checkbox-showcase";
 import { InputShowcase } from "./input-showcase";
@@ -75,6 +76,12 @@ export const groups: ComponentGroup[] = [
   {
     title: "Navigation and lists",
     items: [
+      {
+        slug: "bouncy-accordion",
+        title: "Bouncy Accordion",
+        description: "FAQ rows that spring apart as they open.",
+        Showcase: AccordionShowcase,
+      },
       {
         slug: "tabs",
         title: "Tabs",

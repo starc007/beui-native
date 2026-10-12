@@ -1,4 +1,10 @@
 export type {
+  BouncyAccordionClassNames,
+  BouncyAccordionItem,
+  BouncyAccordionProps,
+} from "./components/bouncy-accordion";
+export { BouncyAccordion } from "./components/bouncy-accordion";
+export type {
   ButtonBaseProps,
   ButtonIcon,
   ButtonIconProps,
