@@ -2,6 +2,7 @@ import { type Ref, useEffect, useRef, useState } from "react";
 import {
   AccessibilityInfo,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -332,7 +333,13 @@ export function OTPInput({
         </Text>
       ) : null}
 
-      <View style={disabled && styles.disabled}>
+      <Pressable
+        // Focus on any tap across the slots, even one the field misses.
+        accessible={false}
+        disabled={disabled}
+        onPress={() => inputRef.current?.focus()}
+        style={disabled && styles.disabled}
+      >
         <Animated.View
           className="flex-row items-center gap-2"
           style={shakeStyle}
@@ -380,6 +387,9 @@ export function OTPInput({
           textContentType="oneTimeCode"
           autoComplete={Platform.OS === "android" ? "sms-otp" : "one-time-code"}
           caretHidden
+          // Nothing of the native field shows; the slots draw everything.
+          selectionColor="transparent"
+          underlineColorAndroid="transparent"
           contextMenuHidden={false}
           // Keep the native caret at the end so edits always append or delete last.
           selection={{ start: code.length, end: code.length }}
@@ -409,7 +419,7 @@ export function OTPInput({
             onBlur?.(event);
           }}
         />
-      </View>
+      </Pressable>
 
       {message ? (
         <Text
@@ -450,7 +460,10 @@ const styles = StyleSheet.create({
   },
   capture: {
     ...StyleSheet.absoluteFill,
-    opacity: 0,
+    // iOS skips views below 0.01 opacity when hit-testing, so a fully
+    // transparent field never receives the tap that opens the keyboard.
+    opacity: 0.011,
     color: "transparent",
+    backgroundColor: "transparent",
   },
 });
