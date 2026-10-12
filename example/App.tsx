@@ -9,6 +9,7 @@ import { Button } from "../src";
 import { ButtonShowcase } from "./components/button-showcase";
 import { ChoiceShowcase } from "./components/choice-showcase";
 import { SwitchShowcase } from "./components/switch-showcase";
+import { TabsShowcase } from "./components/tabs-showcase";
 
 function Playground() {
   const { theme, hasAdaptiveThemes } = useUniwind();
@@ -46,6 +47,7 @@ function Playground() {
             </Button>
           ))}
         </View>
+        <TabsShowcase />
         <ChoiceShowcase />
         <SwitchShowcase />
         <ButtonShowcase />
