@@ -1,0 +1,34 @@
+import "../global.css";
+
+import { Stack } from "expo-router/stack";
+import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useResolveClassNames, useUniwind } from "uniwind";
+
+export default function RootLayout() {
+  const { theme } = useUniwind();
+  const { backgroundColor: background } = useResolveClassNames("bg-background");
+  const { color: foreground } = useResolveClassNames("text-foreground");
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: background },
+          headerTintColor: foreground,
+          headerTitleStyle: { color: foreground },
+          headerShadowVisible: false,
+          headerBackButtonDisplayMode: "minimal",
+          contentStyle: { backgroundColor: background },
+        }}
+      >
+        <Stack.Screen
+          name="index"
+          options={{ title: "beUI Native", headerLargeTitleEnabled: true }}
+        />
+        <Stack.Screen name="[component]" />
+      </Stack>
+    </GestureHandlerRootView>
+  );
+}

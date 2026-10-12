@@ -4,11 +4,11 @@ import { useResolveClassNames } from "uniwind";
 import {
   Button,
   type ButtonIconProps,
-  Surface,
   type SwipeAction,
   SwipeableList,
   type SwipeableListItem,
 } from "../../src";
+import { DemoSection } from "./demo";
 import {
   CheckIcon,
   ClockIcon,
@@ -88,18 +88,15 @@ export function SwipeShowcase() {
   const [lastAction, setLastAction] = useState("Swipe a row either way.");
 
   return (
-    <Surface className="gap-5">
+    <DemoSection>
       <View className="flex-row items-center justify-between gap-3">
-        <View className="shrink gap-1">
-          <Text
-            accessibilityRole="header"
-            className="text-lg font-semibold text-foreground"
-          >
-            Swipeable list
+        <View className="shrink gap-0.5">
+          <Text className="text-sm font-semibold text-foreground">
+            Priority queue
           </Text>
           <Text
             accessibilityLiveRegion="polite"
-            className="text-sm leading-5 text-muted"
+            className="text-xs leading-4 text-muted"
           >
             {lastAction}
           </Text>
@@ -127,6 +124,6 @@ export function SwipeShowcase() {
       <Text className="text-xs font-medium text-muted">
         {items.length} open
       </Text>
-    </Surface>
+    </DemoSection>
   );
 }

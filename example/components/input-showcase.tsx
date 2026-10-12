@@ -1,38 +1,15 @@
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { useResolveClassNames } from "uniwind";
-import { Input, OTPInput, type OTPStatus, Surface } from "../../src";
+import { Input } from "../../src";
+import { DemoSection } from "./demo";
 import { EyeIcon, EyeOffIcon, MailIcon, SearchIcon } from "./icons";
-
-const CODE = "123456";
-
-function Header({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <View className="gap-1">
-      <Text
-        accessibilityRole="header"
-        className="text-lg font-semibold text-foreground"
-      >
-        {title}
-      </Text>
-      <Text className="text-sm leading-5 text-muted">{description}</Text>
-    </View>
-  );
-}
 
 export function InputShowcase() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("hunter2");
   const [visible, setVisible] = useState(false);
   const [query, setQuery] = useState("Ada");
-  const [code, setCode] = useState("");
-  const [status, setStatus] = useState<OTPStatus>("idle");
   const { color: muted } = useResolveClassNames("text-muted");
 
   const emailError =
@@ -42,24 +19,28 @@ export function InputShowcase() {
 
   return (
     <>
-      <Surface className="gap-5">
-        <Header
-          title="Input"
-          description="Errors shake the field in. A valid value draws a check."
+      <DemoSection
+        title="Validation"
+        description="Type an address without @ to see the error shake."
+      >
+        <Input
+          label="Email"
+          placeholder="you@example.com"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoComplete="email"
+          leftIcon={MailIcon}
+          value={email}
+          onChangeText={setEmail}
+          error={emailError}
+          reserveErrorLine
         />
+      </DemoSection>
+      <DemoSection
+        title="Icons and controls"
+        description="A trailing control, and a check that draws on success."
+      >
         <View className="gap-1">
-          <Input
-            label="Email"
-            placeholder="you@example.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoComplete="email"
-            leftIcon={MailIcon}
-            value={email}
-            onChangeText={setEmail}
-            error={emailError}
-            reserveErrorLine
-          />
           <Input
             label="Password"
             secureTextEntry={!visible}
@@ -87,31 +68,12 @@ export function InputShowcase() {
             value={query}
             onChangeText={setQuery}
             success={query.length > 1}
-            reserveErrorLine
           />
-          <Input label="Disabled" defaultValue="Read only" disabled />
         </View>
-      </Surface>
-
-      <Surface className="gap-5">
-        <Header
-          title="OTP input"
-          description="Digits roll into place. A wrong code shakes; the right one draws a check."
-        />
-        <OTPInput
-          label="Verification code"
-          hint={`Enter ${CODE} to verify.`}
-          successMessage="Verified."
-          errorMessage="Wrong code, try again."
-          value={code}
-          status={status}
-          onChangeText={(next) => {
-            setCode(next);
-            if (status !== "idle") setStatus("idle");
-          }}
-          onComplete={(next) => setStatus(next === CODE ? "success" : "error")}
-        />
-      </Surface>
+      </DemoSection>
+      <DemoSection title="Disabled">
+        <Input label="Account ID" defaultValue="Read only" disabled />
+      </DemoSection>
     </>
   );
 }

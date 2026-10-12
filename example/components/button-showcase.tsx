@@ -1,32 +1,8 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
-import { Button, type ButtonState, StatefulButton, Surface } from "../../src";
+import { View } from "react-native";
+import { Button, type ButtonState, StatefulButton } from "../../src";
+import { DemoSection, DemoStatus } from "./demo";
 import { ArrowRightIcon, HeartIcon, PlusIcon } from "./icons";
-
-function Section({
-  title,
-  description,
-  children,
-}: {
-  title: string;
-  description: string;
-  children: ReactNode;
-}) {
-  return (
-    <Surface className="gap-5">
-      <View className="gap-1">
-        <Text
-          accessibilityRole="header"
-          className="text-lg font-semibold text-foreground"
-        >
-          {title}
-        </Text>
-        <Text className="text-sm leading-5 text-muted">{description}</Text>
-      </View>
-      {children}
-    </Surface>
-  );
-}
 
 function Row({ children }: { children: ReactNode }) {
   return (
@@ -72,14 +48,9 @@ export function ButtonShowcase() {
 
   return (
     <View className="gap-4">
-      <Text
-        accessibilityLiveRegion="polite"
-        className="text-sm leading-5 text-muted"
-      >
-        {message}
-      </Text>
+      <DemoStatus>{message}</DemoStatus>
 
-      <Section
+      <DemoSection
         title="Spring press"
         description="Four appearances that sink into the press and spring back."
       >
@@ -114,9 +85,9 @@ export function ButtonShowcase() {
             Large
           </Button>
         </Row>
-      </Section>
+      </DemoSection>
 
-      <Section
+      <DemoSection
         title="With icons"
         description="Icons pick up the button's size and color."
       >
@@ -166,9 +137,9 @@ export function ButtonShowcase() {
             icon={ArrowRightIcon}
           />
         </Row>
-      </Section>
+      </DemoSection>
 
-      <Section
+      <DemoSection
         title="Ripple"
         description="A soft wave from wherever your finger lands."
       >
@@ -180,9 +151,9 @@ export function ButtonShowcase() {
             Or here
           </Button>
         </Row>
-      </Section>
+      </DemoSection>
 
-      <Section
+      <DemoSection
         title="Stateful"
         description="Labels roll letter by letter while the button resizes to fit."
       >
@@ -206,9 +177,9 @@ export function ButtonShowcase() {
             Deploy
           </StatefulButton>
         </Row>
-      </Section>
+      </DemoSection>
 
-      <Section
+      <DemoSection
         title="Quiet states"
         description="Disabled actions dim. Motion can be turned off per button."
       >
@@ -224,7 +195,7 @@ export function ButtonShowcase() {
             Without motion
           </Button>
         </Row>
-      </Section>
+      </DemoSection>
     </View>
   );
 }

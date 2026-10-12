@@ -21,6 +21,8 @@ src/
   styles/           Semantic light/dark colors and motion settings
   index.ts          Source exports
 example/            Expo showcase importing ../src directly
+  app/              Expo Router routes: the component list and one page per component
+  components/       Showcases, plus registry.ts listing every component
 ```
 
 The root package is private to prevent accidental npm publication. This does not control GitHub repository visibility. Distribution starts with copyable source; npm publishing, paid components, and a registry are outside this initial setup.

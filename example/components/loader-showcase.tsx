@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
-import { Loader, type LoaderVariant, Surface } from "../../src";
+import { Loader, type LoaderVariant } from "../../src";
+import { DemoSection } from "./demo";
 
 const VARIANTS: { variant: LoaderVariant; label: string }[] = [
   { variant: "spinner", label: "Spinner" },
@@ -23,28 +24,29 @@ const VARIANTS: { variant: LoaderVariant; label: string }[] = [
 
 export function LoaderShowcase() {
   return (
-    <Surface className="gap-5">
-      <View className="gap-1">
-        <Text
-          accessibilityRole="header"
-          className="text-lg font-semibold text-foreground"
-        >
-          Loader
-        </Text>
-        <Text className="text-sm leading-5 text-muted">
-          Seventeen indicators that all scale from one size.
-        </Text>
-      </View>
-      <View className="flex-row flex-wrap gap-y-6">
-        {VARIANTS.map(({ variant, label }) => (
-          <View key={variant} className="w-1/3 items-center gap-3">
-            <View className="h-14 items-center justify-center">
-              <Loader variant={variant} size={32} label={label} />
+    <>
+      <DemoSection title="Variants">
+        <View className="flex-row flex-wrap gap-y-6">
+          {VARIANTS.map(({ variant, label }) => (
+            <View key={variant} className="w-1/3 items-center gap-3">
+              <View className="h-14 items-center justify-center">
+                <Loader variant={variant} size={32} label={label} />
+              </View>
+              <Text className="text-xs text-muted">{label}</Text>
             </View>
-            <Text className="text-xs text-muted">{label}</Text>
-          </View>
-        ))}
-      </View>
-    </Surface>
+          ))}
+        </View>
+      </DemoSection>
+      <DemoSection
+        title="Size and color"
+        description="Everything scales from one size."
+      >
+        <View className="flex-row items-center gap-6">
+          <Loader variant="dots" size={16} />
+          <Loader variant="dots" size={32} className="text-primary" />
+          <Loader variant="dots" size={48} className="text-success" />
+        </View>
+      </DemoSection>
+    </>
   );
 }
