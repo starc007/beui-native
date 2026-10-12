@@ -148,6 +148,8 @@ const ARM_RATIO = 0.55;
 // How long a fully swiped row waits off screen for its removal before returning.
 const RETURN_DELAY = 320;
 const ICON = 20;
+// The row's corner radius, which action panels tuck under.
+const CORNER = 16;
 
 const FILLS: Record<SwipeActionTone, string> = {
   neutral: "bg-muted",
@@ -193,6 +195,10 @@ function ActionPanel({
   // The outermost action sits at the screen edge and owns the full swipe.
   const outer = side === "left" ? 0 : count - 1;
 
+  // The panel beside the row reaches under its rounded corners, so the corner
+  // notches show the action's color rather than whatever is behind the list.
+  const inner = side === "left" ? count - 1 : 0;
+
   const panelStyle = useAnimatedStyle(() => {
     const revealed = Math.max(0, side === "left" ? x.value : -x.value);
     const share = revealed / count;
@@ -202,8 +208,38 @@ function ActionPanel({
     let offset = 0;
     for (let i = 0; i < index; i += 1) offset += widthOf(i);
     const width = widthOf(index);
-    const start = side === "left" ? offset : rowWidth.value - revealed + offset;
-    return { left: start, width };
+    // Grows from nothing so no color shows while the row is at rest.
+    const tuck = Math.min(CORNER, revealed);
+    const multi = count > 1;
+
+    if (side === "right") {
+      const edge = rowWidth.value - revealed;
+      let start = edge + offset;
+      if (index === inner) start -= tuck;
+      // While armed, the outer action takes over the edge beside the row.
+      if (index === outer && multi) start += (edge - tuck - start) * a;
+      const end = edge + offset + width;
+      return {
+        left: start,
+        width: end - start,
+        zIndex: index === outer ? 1 : 0,
+        paddingLeft: Math.max(0, edge - start),
+        paddingRight: 0,
+      };
+    }
+
+    const edge = revealed;
+    const start = offset;
+    let end = offset + width;
+    if (index === inner) end += tuck;
+    if (index === outer && multi) end += (edge + tuck - end) * a;
+    return {
+      left: start,
+      width: end - start,
+      zIndex: index === outer ? 1 : 0,
+      paddingLeft: 0,
+      paddingRight: Math.max(0, end - edge),
+    };
   });
 
   const contentStyle = useAnimatedStyle(() => {
