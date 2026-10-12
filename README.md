@@ -35,9 +35,9 @@ The example owns the runtime dependencies. Bun hoists them into one workspace in
 - Gesture Handler root and safe-area providers.
 - A demo for system/light/dark appearance and reduced-motion-aware press feedback.
 
-`example/global.css` scans `../src` explicitly. Keep class names statically discoverable. Uniwind is the outermost Metro wrapper and generates `example/uniwind-types.d.ts`; this file is checked in so typechecking works before starting Metro. Expo's Babel preset configures Worklets automatically.
+`example/global.css` scans `../src` explicitly, and `example/metro.config.js` adds `../src` to Metro's watch folders so edits there hot-reload. Keep class names statically discoverable. Uniwind is the outermost Metro wrapper and generates `example/uniwind-types.d.ts`; this file is checked in so typechecking works before starting Metro. Expo's Babel preset configures Worklets automatically.
 
-Components are native ports of [beUI](https://beui.dev) and match its API, variants and spring tokens (`src/styles/motion.ts` mirrors beUI's `lib/ease.ts`). The showcase covers [Button and StatefulButton](src/components/button/README.md). Icons in the showcase use `react-native-svg`; components accept any icon library.
+Components are native ports of [beUI](https://beui.dev) and match its API, variants and spring tokens (`src/styles/motion.ts` mirrors beUI's `lib/ease.ts`). The showcase covers [Button and StatefulButton](src/components/button/README.md) and [Switch](src/components/switch/README.md). Icons in the showcase use `react-native-svg`; components accept any icon library.
 
 ## Checks
 

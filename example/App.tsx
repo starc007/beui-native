@@ -7,6 +7,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Uniwind, useUniwind } from "uniwind";
 import { Button } from "../src";
 import { ButtonShowcase } from "./components/button-showcase";
+import { SwitchShowcase } from "./components/switch-showcase";
 
 function Playground() {
   const { theme, hasAdaptiveThemes } = useUniwind();
@@ -24,7 +25,7 @@ function Playground() {
             accessibilityRole="header"
             className="text-4xl font-semibold tracking-tight text-foreground"
           >
-            Button
+            Components
           </Text>
           <Text className="text-base leading-6 text-muted">
             Small details. A better first touch.
@@ -44,6 +45,7 @@ function Playground() {
             </Button>
           ))}
         </View>
+        <SwitchShowcase />
         <ButtonShowcase />
       </ScrollView>
     </SafeAreaView>

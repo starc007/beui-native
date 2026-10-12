@@ -17,4 +17,6 @@ export {
   StatefulButton,
 } from "./components/button";
 export { Surface } from "./components/surface";
+export type { SwitchProps } from "./components/switch";
+export { Switch } from "./components/switch";
 export { motion } from "./styles/motion";
