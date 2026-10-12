@@ -10,6 +10,7 @@ import {
 } from "react";
 import {
   type LayoutRectangle,
+  Platform,
   Pressable,
   type PressableProps,
   ScrollView,
@@ -26,6 +27,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import { EASE_OUT } from "../../styles/motion";
 
@@ -46,8 +48,38 @@ const CONTENT_FADE = {
 // Layout sizes can round below the text's real width; a little slack stops the
 // overlay label from truncating while keeping it centered.
 const SLACK = 1;
-// Space kept between a revealed tab and the edge of a scrolled list.
-const REVEAL_MARGIN = 16;
+// Width of the fade over a list edge that has more tabs past it.
+const EDGE_FADE = 24;
+// Space kept between a revealed tab and the edge, so it clears the fade.
+const REVEAL_MARGIN = EDGE_FADE + 8;
+// The color behind each variant's tabs, which the edge fades blend into.
+const fadeColors: Record<TabsVariant, string> = {
+  pill: "bg-surface",
+  segment: "bg-surface",
+  underline: "bg-background",
+};
+
+/** The same color at zero alpha, so a gradient fades without graying. */
+function transparentOf(color: string) {
+  const hex = color.match(/^#([0-9a-f]{6})$/i)?.[1];
+  if (hex) {
+    const [r, g, b] = [0, 2, 4].map((i) =>
+      Number.parseInt(hex.slice(i, i + 2), 16),
+    );
+    return `rgba(${r}, ${g}, ${b}, 0)`;
+  }
+  const rgb = color.match(/^rgba?\(([^,]+),([^,]+),([^,)]+)/);
+  if (rgb) return `rgba(${rgb[1]},${rgb[2]},${rgb[3]}, 0)`;
+  return "transparent";
+}
+
+/** A horizontal gradient, on native through experimental_backgroundImage. */
+function fadeStyle(color: string, toward: "left" | "right") {
+  const gradient = `linear-gradient(to ${toward}, ${transparentOf(color)}, ${color})`;
+  return Platform.OS === "web"
+    ? ({ backgroundImage: gradient } as object)
+    : { experimental_backgroundImage: gradient };
+}
 
 const surfaces: Record<TabsVariant, string> = {
   pill: "rounded-full bg-surface",
@@ -157,6 +189,11 @@ export function TabsList({
   const scrollRef = useRef<ScrollView>(null);
   const scrollX = useRef(0);
   const viewportWidth = useRef(0);
+  const contentWidth = useRef(0);
+  const [edges, setEdges] = useState({ start: false, end: false });
+  const { backgroundColor: fadeColor } = useResolveClassNames(
+    fadeColors[variant],
+  );
   const valueRef = useRef(value);
   valueRef.current = value;
   const animateRef = useRef(animate);
@@ -167,6 +204,18 @@ export function TabsList({
   const width = useSharedValue(0);
   const height = useSharedValue(0);
   const visible = useSharedValue(0);
+
+  // Show a fade on each side that has tabs scrolled out of view.
+  const updateEdges = useCallback(() => {
+    const max = contentWidth.current - viewportWidth.current;
+    const next = {
+      start: scrollX.current > 1,
+      end: max > 1 && scrollX.current < max - 1,
+    };
+    setEdges((current) =>
+      current.start === next.start && current.end === next.end ? current : next,
+    );
+  }, []);
 
   // Keep the selected tab clear of the viewport edges when the list scrolls.
   const reveal = useCallback((layout: LayoutRectangle) => {
@@ -252,12 +301,19 @@ export function TabsList({
           ref={scrollRef}
           horizontal
           showsHorizontalScrollIndicator={false}
+          style={styles.scroller}
           scrollEventThrottle={16}
           onScroll={(event) => {
             scrollX.current = event.nativeEvent.contentOffset.x;
+            updateEdges();
           }}
           onLayout={(event) => {
             viewportWidth.current = event.nativeEvent.layout.width;
+            updateEdges();
+          }}
+          onContentSizeChange={(width) => {
+            contentWidth.current = width;
+            updateEdges();
           }}
         >
           <View
@@ -275,6 +331,24 @@ export function TabsList({
             {children}
           </View>
         </ScrollView>
+        {edges.start && fadeColor ? (
+          <View
+            style={[
+              styles.fade,
+              styles.fadeStart,
+              fadeStyle(String(fadeColor), "left"),
+            ]}
+          />
+        ) : null}
+        {edges.end && fadeColor ? (
+          <View
+            style={[
+              styles.fade,
+              styles.fadeEnd,
+              fadeStyle(String(fadeColor), "right"),
+            ]}
+          />
+        ) : null}
       </View>
     </IndicatorContext.Provider>
   );
@@ -446,6 +520,18 @@ export function TabsContent({
 }
 
 const styles = StyleSheet.create({
+  // Native ScrollViews default to flexGrow: 1 and would stretch to fill the
+  // page vertically; size to the tab row instead.
+  scroller: { flexGrow: 0 },
+  fade: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    width: EDGE_FADE,
+    pointerEvents: "none",
+  },
+  fadeStart: { left: 0 },
+  fadeEnd: { right: 0 },
   indicator: { position: "absolute", left: 0, top: 0 },
   underline: { position: "absolute", left: 0, bottom: -1, height: 1 },
   clip: {
