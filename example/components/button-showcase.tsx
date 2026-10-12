@@ -47,7 +47,7 @@ export function ButtonShowcase() {
   }
 
   return (
-    <View className="gap-4">
+    <View className="gap-8">
       <DemoStatus>{message}</DemoStatus>
 
       <DemoSection

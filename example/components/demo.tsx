@@ -1,25 +1,20 @@
 import type { ReactNode } from "react";
 import { Text, View } from "react-native";
-import { Surface } from "../../src";
 
-/** A card on a component page, with an optional heading and note. */
+/** A section on a component page: an optional heading and note, then the demo. */
 export function DemoSection({
   title,
   description,
   className = "",
-  plain = false,
   children,
 }: {
   title?: string;
   description?: string;
   className?: string;
-  /** Drops the card, for components whose own surface would blend into it. */
-  plain?: boolean;
   children: ReactNode;
 }) {
-  const Container = plain ? View : Surface;
   return (
-    <Container className={`gap-5 ${plain ? "px-1" : ""} ${className}`}>
+    <View className={`gap-4 px-1 ${className}`}>
       {title || description ? (
         <View className="gap-1">
           {title ? (
@@ -36,7 +31,7 @@ export function DemoSection({
         </View>
       ) : null}
       {children}
-    </Container>
+    </View>
   );
 }
 

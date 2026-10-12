@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 640,
     alignSelf: "center",
-    gap: 16,
+    gap: 32,
     paddingHorizontal: 20,
     paddingTop: 8,
     paddingBottom: 48,

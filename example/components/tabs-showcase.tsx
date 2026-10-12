@@ -16,7 +16,6 @@ export function TabsShowcase() {
     // Tab lists use the surface color, so these sit on the page background.
     <>
       <DemoSection
-        plain
         title="Pill"
         description="The default. Labels change color where the pill passes."
       >
@@ -39,7 +38,6 @@ export function TabsShowcase() {
       </DemoSection>
 
       <DemoSection
-        plain
         title="Overflow"
         description="Wider lists scroll and reveal the selected tab."
       >
@@ -54,7 +52,7 @@ export function TabsShowcase() {
         </Tabs>
       </DemoSection>
 
-      <DemoSection plain title="Segment">
+      <DemoSection title="Segment">
         <Tabs defaultValue="day" variant="segment">
           <TabsList>
             <TabsTrigger value="day">Day</TabsTrigger>
@@ -64,7 +62,7 @@ export function TabsShowcase() {
         </Tabs>
       </DemoSection>
 
-      <DemoSection plain title="Underline">
+      <DemoSection title="Underline">
         <Tabs defaultValue="all" variant="underline">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
