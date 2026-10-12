@@ -3,6 +3,7 @@ import "../global.css";
 import { Stack } from "expo-router/stack";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useResolveClassNames, useUniwind } from "uniwind";
 
 export default function RootLayout() {
@@ -12,23 +13,25 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style={theme === "dark" ? "light" : "dark"} />
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: background },
-          headerTintColor: foreground,
-          headerTitleStyle: { color: foreground },
-          headerShadowVisible: false,
-          headerBackButtonDisplayMode: "minimal",
-          contentStyle: { backgroundColor: background },
-        }}
-      >
-        <Stack.Screen
-          name="index"
-          options={{ title: "beUI Native", headerLargeTitleEnabled: true }}
-        />
-        <Stack.Screen name="[component]" />
-      </Stack>
+      <KeyboardProvider>
+        <StatusBar style={theme === "dark" ? "light" : "dark"} />
+        <Stack
+          screenOptions={{
+            headerStyle: { backgroundColor: background },
+            headerTintColor: foreground,
+            headerTitleStyle: { color: foreground },
+            headerShadowVisible: false,
+            headerBackButtonDisplayMode: "minimal",
+            contentStyle: { backgroundColor: background },
+          }}
+        >
+          <Stack.Screen
+            name="index"
+            options={{ title: "beUI Native", headerLargeTitleEnabled: true }}
+          />
+          <Stack.Screen name="[component]" />
+        </Stack>
+      </KeyboardProvider>
     </GestureHandlerRootView>
   );
 }

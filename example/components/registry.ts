@@ -17,6 +17,8 @@ export type ComponentEntry = {
   title: string;
   description: string;
   Showcase: ComponentType;
+  /** Shows previous, next and done controls above the keyboard. */
+  keyboard?: boolean;
 };
 
 export type ComponentGroup = { title: string; items: ComponentEntry[] };
@@ -41,12 +43,14 @@ export const groups: ComponentGroup[] = [
         title: "Input",
         description: "Error shake, focus ring and a drawn success check.",
         Showcase: InputShowcase,
+        keyboard: true,
       },
       {
         slug: "otp-input",
         title: "OTP Input",
         description: "Digits roll into slots, with SMS autofill.",
         Showcase: OTPShowcase,
+        keyboard: true,
       },
       {
         slug: "checkbox",

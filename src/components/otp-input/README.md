@@ -22,6 +22,7 @@ import { OTPInput } from "./src";
 - **Status:** `status="error"` shakes the slots and turns them red. `status="success"` turns them green and springs in a check that draws itself beside the slots. Each status message is announced to screen readers.
 - **Input:** a transparent native `TextInput` covers the slots and owns focus, the number pad, paste and SMS autofill (`oneTimeCode` on iOS, `sms-otp` on Android). It only accepts digits. `onComplete` fires when the last slot fills.
 - **State:** pass `value` with `onChangeText` to control it, or `defaultValue` to let it manage itself.
+- **Keyboard:** the number pad follows the app's light or dark theme on iOS (override with `keyboardAppearance`). `blurOnComplete` dismisses the keyboard once the last slot fills.
 - **Accessibility:** screen readers see one field named by `label` (or "One-time passcode"), with the current message as its hint. The drawn slots are hidden from them.
 - **Reduced motion:** when the system asks for it, or `disableAnimation` is set, digits and colours change instantly, the caret stays solid, and nothing shakes.
 

@@ -14,7 +14,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useResolveClassNames } from "uniwind";
+import { useResolveClassNames, useUniwind } from "uniwind";
 import { usePresence } from "../../hooks/use-presence";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import { useShake } from "../../hooks/use-shake";
@@ -148,9 +148,13 @@ export function Input({
   onBlur,
   accessibilityLabel,
   accessibilityHint,
+  keyboardAppearance,
+  style,
   ref,
   ...props
 }: InputProps) {
+  // Match the keyboard to the app's theme unless the caller chooses one.
+  const { theme } = useUniwind();
   const [uncontrolled, setUncontrolled] = useState(defaultValue ?? "");
   const value = valueProp ?? uncontrolled;
   const [focused, setFocused] = useState(false);
@@ -265,8 +269,9 @@ export function Input({
             placeholderTextColor={placeholder}
             cursorColor={foreground}
             selectionColor={foreground}
-            className={`h-full flex-1 text-base text-foreground ${leftIcon != null ? "ps-10" : "ps-3.5"} ${trailing != null || success ? "pe-10" : "pe-3.5"} ${classNames?.input ?? ""}`}
-            style={styles.input}
+            className={`h-full flex-1 text-foreground ${leftIcon != null ? "ps-10" : "ps-3.5"} ${trailing != null || success ? "pe-10" : "pe-3.5"} ${classNames?.input ?? ""}`}
+            style={[styles.input, style]}
+            keyboardAppearance={keyboardAppearance ?? theme}
             onChangeText={(next) => {
               if (valueProp === undefined) setUncontrolled(next);
               onChangeText?.(next);
@@ -323,11 +328,17 @@ const styles = StyleSheet.create({
     pointerEvents: "none",
   },
   field: { height: FIELD_HEIGHT },
-  // Web inputs draw a focus outline; the field's border and ring replace it.
-  input: Platform.select({
-    web: { outlineStyle: "none" },
-    default: {},
-  }) as object,
+  input: {
+    // A font size without a line height: a TextInput line height pushes the
+    // text and placeholder off center on iOS.
+    fontSize: 16,
+    paddingVertical: 0,
+    // Android centers text vertically only when asked, and adds font padding.
+    textAlignVertical: "center",
+    includeFontPadding: false,
+    // Web inputs draw a focus outline; the field's border and ring replace it.
+    ...Platform.select({ web: { outlineWidth: 0 }, default: {} }),
+  },
   leading: {
     position: "absolute",
     start: 12,

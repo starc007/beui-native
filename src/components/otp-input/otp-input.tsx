@@ -18,7 +18,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { useResolveClassNames } from "uniwind";
+import { useResolveClassNames, useUniwind } from "uniwind";
 import { usePresence } from "../../hooks/use-presence";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import { useShake } from "../../hooks/use-shake";
@@ -69,6 +69,8 @@ export type OTPInputProps = Omit<
   disabled?: boolean;
   /** Disables digit, caret and feedback motion independently of the system preference. */
   disableAnimation?: boolean;
+  /** Dismisses the keyboard once the last slot fills. */
+  blurOnComplete?: boolean;
   className?: string;
   ref?: Ref<TextInput>;
 };
@@ -269,9 +271,16 @@ export function OTPInput({
   accessibilityLabel,
   onFocus,
   onBlur,
+  blurOnComplete = false,
+  keyboardAppearance,
   ref,
   ...props
 }: OTPInputProps) {
+  const { theme } = useUniwind();
+  const inputRef = useRef<TextInput | null>(null);
+  // Blur once the filled value and caret have rendered; applying them can
+  // otherwise take focus straight back.
+  const pendingBlur = useRef(false);
   const [uncontrolled, setUncontrolled] = useState(() =>
     sanitize(defaultValue, length),
   );
@@ -281,6 +290,12 @@ export function OTPInput({
   const animate = !reducedMotion && !disableAnimation;
   const { shake, style: shakeStyle } = useShake(SHAKE, 450, EASE_OUT);
   const previousStatus = useRef(status);
+
+  useEffect(() => {
+    if (!pendingBlur.current || code.length < length) return;
+    pendingBlur.current = false;
+    inputRef.current?.blur();
+  }, [code, length]);
 
   const active = Math.min(code.length, length - 1);
   const message =
@@ -350,7 +365,13 @@ export function OTPInput({
             and SMS autofill. The slots only draw what it holds. */}
         <TextInput
           {...props}
-          ref={ref}
+          ref={(node) => {
+            inputRef.current = node;
+            if (typeof ref === "function") ref(node);
+            else if (ref) ref.current = node;
+          }}
+          // Match the keyboard to the app's theme unless the caller chooses one.
+          keyboardAppearance={keyboardAppearance ?? theme}
           value={code}
           editable={!disabled}
           maxLength={length}
@@ -372,11 +393,12 @@ export function OTPInput({
           onChangeText={(raw) => {
             const next = sanitize(raw, length);
             if (next === code) return;
+            const completed = code.length < length && next.length === length;
+            // Set before notifying: a parent update can render synchronously.
+            if (completed && blurOnComplete) pendingBlur.current = true;
             if (valueProp === undefined) setUncontrolled(next);
             onChangeText?.(next);
-            if (code.length < length && next.length === length) {
-              onComplete?.(next);
-            }
+            if (completed) onComplete?.(next);
           }}
           onFocus={(event) => {
             setFocused(true);

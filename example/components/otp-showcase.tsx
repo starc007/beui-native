@@ -29,11 +29,15 @@ export function OTPShowcase() {
           onComplete={(next) => setStatus(next === CODE ? "success" : "error")}
         />
       </DemoSection>
-      <DemoSection title="Masked PIN" description="Four slots showing dots.">
+      <DemoSection
+        title="Masked PIN"
+        description="Four slots showing dots. The keyboard closes when it fills."
+      >
         <OTPInput
           label="PIN"
           length={4}
           mask
+          blurOnComplete
           value={pin}
           onChangeText={setPin}
         />

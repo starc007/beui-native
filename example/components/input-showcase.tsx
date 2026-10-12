@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Pressable, View } from "react-native";
+import { useRef, useState } from "react";
+import { Pressable, type TextInput, View } from "react-native";
 import { useResolveClassNames } from "uniwind";
 import { Input } from "../../src";
 import { DemoSection } from "./demo";
@@ -11,6 +11,8 @@ export function InputShowcase() {
   const [visible, setVisible] = useState(false);
   const [query, setQuery] = useState("Ada");
   const { color: muted } = useResolveClassNames("text-muted");
+  const passwordRef = useRef<TextInput>(null);
+  const searchRef = useRef<TextInput>(null);
 
   const emailError =
     email.length > 0 && !email.includes("@")
@@ -21,7 +23,7 @@ export function InputShowcase() {
     <>
       <DemoSection
         title="Validation"
-        description="Type an address without @ to see the error shake."
+        description="Type an address without @ to see the error shake. Return moves to the next field."
       >
         <Input
           label="Email"
@@ -29,6 +31,10 @@ export function InputShowcase() {
           keyboardType="email-address"
           autoCapitalize="none"
           autoComplete="email"
+          textContentType="emailAddress"
+          returnKeyType="next"
+          submitBehavior="submit"
+          onSubmitEditing={() => passwordRef.current?.focus()}
           leftIcon={MailIcon}
           value={email}
           onChangeText={setEmail}
@@ -42,7 +48,13 @@ export function InputShowcase() {
       >
         <View className="gap-1">
           <Input
+            ref={passwordRef}
             label="Password"
+            autoComplete="current-password"
+            textContentType="password"
+            returnKeyType="next"
+            submitBehavior="submit"
+            onSubmitEditing={() => searchRef.current?.focus()}
             secureTextEntry={!visible}
             value={password}
             onChangeText={setPassword}
@@ -63,7 +75,9 @@ export function InputShowcase() {
             reserveErrorLine
           />
           <Input
+            ref={searchRef}
             label="Search"
+            returnKeyType="search"
             leftIcon={SearchIcon}
             value={query}
             onChangeText={setQuery}
