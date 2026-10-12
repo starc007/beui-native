@@ -20,6 +20,14 @@ export type { CheckboxProps } from "./components/checkbox";
 export { Checkbox } from "./components/checkbox";
 export type { InputClassNames, InputProps } from "./components/input";
 export { Input } from "./components/input";
+export type {
+  AnimatedNumberProps,
+  NumberTickerProps,
+} from "./components/number";
+export {
+  AnimatedNumber,
+  NumberTicker,
+} from "./components/number";
 export type { OTPInputProps, OTPStatus } from "./components/otp-input";
 export { OTPInput } from "./components/otp-input";
 export type {
@@ -38,5 +46,19 @@ export type {
   TabsVariant,
 } from "./components/tabs";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/tabs";
+export type {
+  ChromaticTextRevealProps,
+  TextCascadeProps,
+  TextRevealProps,
+  TextScrambleProps,
+  TextShimmerProps,
+} from "./components/text-animation";
+export {
+  ChromaticTextReveal,
+  TextCascade,
+  TextReveal,
+  TextScramble,
+  TextShimmer,
+} from "./components/text-animation";
 export type { IconProps, IconSource } from "./primitives/render-icon";
 export { motion } from "./styles/motion";
