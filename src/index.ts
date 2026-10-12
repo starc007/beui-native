@@ -22,6 +22,16 @@ export {
   Spinner,
   StatefulButton,
 } from "./components/button";
+export type { CardProps, CardSize, CardVariant } from "./components/card";
+export {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./components/card";
 export type { CheckboxProps } from "./components/checkbox";
 export { Checkbox } from "./components/checkbox";
 export type { InputClassNames, InputProps } from "./components/input";

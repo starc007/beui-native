@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import { AccordionShowcase } from "./accordion-showcase";
 import { ButtonShowcase } from "./button-showcase";
+import { CardShowcase } from "./card-showcase";
 import { CheckboxShowcase } from "./checkbox-showcase";
 import { InputShowcase } from "./input-showcase";
 import { LoaderShowcase } from "./loader-showcase";
@@ -33,6 +34,12 @@ export const groups: ComponentGroup[] = [
         title: "Button",
         description: "Spring press, ripple, icons and a stateful variant.",
         Showcase: ButtonShowcase,
+      },
+      {
+        slug: "card",
+        title: "Card",
+        description: "Composable surfaces, selectable with press feedback.",
+        Showcase: CardShowcase,
       },
     ],
   },
