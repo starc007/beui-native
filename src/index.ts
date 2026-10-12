@@ -20,6 +20,8 @@ export type { CheckboxProps } from "./components/checkbox";
 export { Checkbox } from "./components/checkbox";
 export type { InputClassNames, InputProps } from "./components/input";
 export { Input } from "./components/input";
+export type { LoaderProps, LoaderVariant } from "./components/loader";
+export { Loader } from "./components/loader";
 export type {
   AnimatedNumberProps,
   NumberTickerProps,
