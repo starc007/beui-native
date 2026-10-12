@@ -38,6 +38,16 @@ export type {
 } from "./components/radio";
 export { RadioGroup, RadioGroupItem } from "./components/radio";
 export { Surface } from "./components/surface";
+export type {
+  SwipeAction,
+  SwipeActionTone,
+  SwipeableListClassNames,
+  SwipeableListItem,
+  SwipeableListProps,
+  SwipeableListValue,
+  SwipeSide,
+} from "./components/swipeable-list";
+export { SwipeableList } from "./components/swipeable-list";
 export type { SwitchProps } from "./components/switch";
 export { Switch } from "./components/switch";
 export type {

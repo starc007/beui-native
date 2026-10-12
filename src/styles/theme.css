@@ -13,6 +13,7 @@
       --color-on-primary: #ffffff;
       --color-destructive: #dc2626;
       --color-success: #059669;
+      --color-warning: #d97706;
     }
   }
 
@@ -28,6 +29,7 @@
       --color-on-primary: #ffffff;
       --color-destructive: #f87171;
       --color-success: #34d399;
+      --color-warning: #fbbf24;
     }
   }
 }

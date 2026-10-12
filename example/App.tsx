@@ -11,6 +11,7 @@ import { ChoiceShowcase } from "./components/choice-showcase";
 import { InputShowcase } from "./components/input-showcase";
 import { LoaderShowcase } from "./components/loader-showcase";
 import { MotionTextShowcase } from "./components/motion-text-showcase";
+import { SwipeShowcase } from "./components/swipe-showcase";
 import { SwitchShowcase } from "./components/switch-showcase";
 import { TabsShowcase } from "./components/tabs-showcase";
 
@@ -50,6 +51,7 @@ function Playground() {
             </Button>
           ))}
         </View>
+        <SwipeShowcase />
         <LoaderShowcase />
         <MotionTextShowcase />
         <InputShowcase />
