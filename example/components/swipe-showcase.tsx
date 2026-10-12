@@ -1,5 +1,6 @@
+import * as Haptics from "expo-haptics";
 import { type ComponentType, useState } from "react";
-import { Text, View } from "react-native";
+import { Platform, Text, View } from "react-native";
 import { useResolveClassNames } from "uniwind";
 import {
   Button,
@@ -20,6 +21,7 @@ import {
   UserIcon,
 } from "./icons";
 
+// Outermost first on the left, outermost last on the right: those run on a full swipe.
 const leftActions: SwipeAction[] = [
   { id: "done", label: "Done", icon: CheckIcon, tone: "success" },
   { id: "pin", label: "Pin", icon: PinIcon, tone: "primary" },
@@ -34,7 +36,7 @@ function Leading({ icon: Icon }: { icon: ComponentType<ButtonIconProps> }) {
   const { color } = useResolveClassNames("text-muted");
   return (
     <View className="h-10 w-10 items-center justify-center rounded-xl border border-border bg-background">
-      <Icon size={16} color={color} />
+      <Icon size={18} color={color} />
     </View>
   );
 }
@@ -69,6 +71,7 @@ const ROWS: [string, string, string, string, ComponentType<ButtonIconProps>][] =
       "Now",
       FlagIcon,
     ],
+    ["invoice", "Invoice #2041", "Due Friday, $1,280", "Fri", FileIcon],
   ];
 
 const initialItems: SwipeableListItem[] = ROWS.map(
@@ -83,9 +86,14 @@ const initialItems: SwipeableListItem[] = ROWS.map(
   }),
 );
 
+// Haptics are native only; the web preview simply skips them.
+const haptics = Platform.OS !== "web";
+
 export function SwipeShowcase() {
   const [items, setItems] = useState(initialItems);
-  const [lastAction, setLastAction] = useState("Swipe a row either way.");
+  const [status, setStatus] = useState(
+    "Swipe either way. Keep going to run the outer action.",
+  );
 
   return (
     <DemoSection>
@@ -98,7 +106,7 @@ export function SwipeShowcase() {
             accessibilityLiveRegion="polite"
             className="text-xs leading-4 text-muted"
           >
-            {lastAction}
+            {status}
           </Text>
         </View>
         <Button
@@ -106,7 +114,7 @@ export function SwipeShowcase() {
           variant="secondary"
           onPress={() => {
             setItems(initialItems);
-            setLastAction("Queue restored.");
+            setStatus("Queue restored.");
           }}
         >
           Reset
@@ -114,9 +122,23 @@ export function SwipeShowcase() {
       </View>
       <SwipeableList
         items={items}
-        onAction={({ item, action }) => {
-          setLastAction(`${action.label} · ${item.title}`);
-          if (action.id === "trash") {
+        onItemPress={(item) => setStatus(`Opened ${item.title}`)}
+        onSwipeThreshold={({ armed }) => {
+          if (haptics && armed) {
+            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          }
+        }}
+        onAction={({ item, action, fullSwipe }) => {
+          setStatus(
+            `${action.label} · ${item.title}${fullSwipe ? " (full swipe)" : ""}`,
+          );
+          // Done and Trash clear the row; the list collapses it away.
+          if (action.id === "trash" || action.id === "done") {
+            if (haptics) {
+              void Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
+            }
             setItems((current) => current.filter((row) => row.id !== item.id));
           }
         }}
