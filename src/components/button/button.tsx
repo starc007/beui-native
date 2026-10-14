@@ -175,7 +175,9 @@ export function ButtonRoot({
         aria-disabled={disabled}
         disabled={disabled}
         hitSlop={hitSlop ?? dimensions.hitSlop}
-        className={`self-start flex-row items-center justify-center border ${appearance.container} ${dimensions.container} ${dimensions.radius} ${className}`}
+        // Hugs its content unless the caller places it with a self-* class; on web,
+        // a default self-start would otherwise win over the caller's.
+        className={`${/\bself-/.test(className) ? "" : "self-start"} flex-row items-center justify-center border ${appearance.container} ${dimensions.container} ${dimensions.radius} ${className}`}
         style={[style, animatedStyle]}
         onPressIn={(event) => {
           pressed.value = true;

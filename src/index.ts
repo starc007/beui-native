@@ -1,4 +1,21 @@
 export type {
+  AlertCloseProps,
+  AlertIconProps,
+  AlertProps,
+  AlertState,
+  AlertVariant,
+} from "./components/alert";
+export {
+  Alert,
+  AlertAction,
+  AlertClose,
+  AlertContent,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  useAlert,
+} from "./components/alert";
+export type {
   AnimatedBadgeProps,
   AnimatedBadgeSize,
   AnimatedBadgeStatus,
