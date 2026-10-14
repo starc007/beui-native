@@ -4,7 +4,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { Uniwind, useResolveClassNames, useUniwind } from "uniwind";
 import { Button } from "../../src";
 import { HomeHeader } from "../components/home-header";
-import { entries, groups } from "../components/registry";
+import { groups, variantCount } from "../components/registry";
 
 function ThemePicker() {
   const { theme, hasAdaptiveThemes } = useUniwind();
@@ -66,8 +66,8 @@ export default function ComponentList() {
         {search ? null : (
           <View className="gap-4">
             <Text className="text-base leading-6 text-muted">
-              {entries.length} animated components for React Native. Small
-              details, a better first touch.
+              {variantCount} animated components and variants for React Native.
+              Small details, a better first touch.
             </Text>
             <ThemePicker />
           </View>

@@ -22,6 +22,8 @@ export type ComponentEntry = {
   Showcase: ComponentType;
   /** Shows previous, next and done controls above the keyboard. */
   keyboard?: boolean;
+  /** Distinct animations the entry ships, when more than one. Colors don't count. */
+  variants?: number;
 };
 
 export type ComponentGroup = { title: string; items: ComponentEntry[] };
@@ -35,6 +37,7 @@ export const groups: ComponentGroup[] = [
         title: "Button",
         description: "Spring press, ripple, icons and a stateful variant.",
         Showcase: ButtonShowcase,
+        variants: 2,
       },
       {
         slug: "card",
@@ -101,6 +104,7 @@ export const groups: ComponentGroup[] = [
         title: "Tabs",
         description: "Pill, segment and underline with a gliding indicator.",
         Showcase: TabsShowcase,
+        variants: 3,
       },
       {
         slug: "swipeable-list",
@@ -118,24 +122,33 @@ export const groups: ComponentGroup[] = [
         title: "Number Animation",
         description: "Rolling tickers and count-ups.",
         Showcase: NumberShowcase,
+        variants: 2,
       },
       {
         slug: "text-animation",
         title: "Text Animation",
         description: "Reveals, sweeps, shimmers, cascades and scrambles.",
         Showcase: TextAnimationShowcase,
+        variants: 5,
       },
       {
         slug: "loader",
         title: "Loader",
         description: "Seventeen indicators from one size prop.",
         Showcase: LoaderShowcase,
+        variants: 17,
       },
     ],
   },
 ];
 
 export const entries = groups.flatMap((group) => group.items);
+
+/** Every animated component and variant, for the home screen's count. */
+export const variantCount = entries.reduce(
+  (total, entry) => total + (entry.variants ?? 1),
+  0,
+);
 
 export function findEntry(slug: string | undefined) {
   return entries.find((entry) => entry.slug === slug);
