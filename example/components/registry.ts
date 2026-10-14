@@ -8,6 +8,7 @@ import { LoaderShowcase } from "./loader-showcase";
 import { NumberShowcase } from "./number-showcase";
 import { OTPShowcase } from "./otp-showcase";
 import { RadioShowcase } from "./radio-showcase";
+import { SelectShowcase } from "./select-showcase";
 import { SwipeShowcase } from "./swipe-showcase";
 import { SwitchShowcase } from "./switch-showcase";
 import { TabsShowcase } from "./tabs-showcase";
@@ -59,6 +60,12 @@ export const groups: ComponentGroup[] = [
         description: "Digits roll into slots, with SMS autofill.",
         Showcase: OTPShowcase,
         keyboard: true,
+      },
+      {
+        slug: "select",
+        title: "Select",
+        description: "A panel that unfolds out of its trigger.",
+        Showcase: SelectShowcase,
       },
       {
         slug: "checkbox",

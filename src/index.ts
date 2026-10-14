@@ -53,6 +53,20 @@ export type {
   RadioGroupProps,
 } from "./components/radio";
 export { RadioGroup, RadioGroupItem } from "./components/radio";
+export type {
+  SelectContentProps,
+  SelectItemProps,
+  SelectProps,
+  SelectTriggerProps,
+  SelectValueProps,
+} from "./components/select";
+export {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./components/select";
 export { Surface } from "./components/surface";
 export type {
   SwipeAction,
