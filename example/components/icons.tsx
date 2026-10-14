@@ -2,6 +2,7 @@
 // not the whole free set (Metro does not tree-shake).
 import ArrowRight02 from "@hugeicons/core-free-icons/ArrowRight02Icon";
 import Calendar03 from "@hugeicons/core-free-icons/Calendar03Icon";
+import Cancel01 from "@hugeicons/core-free-icons/Cancel01Icon";
 import Clock01 from "@hugeicons/core-free-icons/Clock01Icon";
 import Delete02 from "@hugeicons/core-free-icons/Delete02Icon";
 import Favourite from "@hugeicons/core-free-icons/FavouriteIcon";
@@ -53,3 +54,4 @@ export const MegaphoneIcon = hugeicon(Megaphone01);
 export const CalendarIcon = hugeicon(Calendar03);
 export const PackageIcon = hugeicon(Package);
 export const FolderIcon = hugeicon(Folder01);
+export const CloseIcon = hugeicon(Cancel01);

@@ -27,7 +27,8 @@ export default function RootLayout() {
         >
           <Stack.Screen
             name="index"
-            options={{ title: "beUI Native", headerLargeTitleEnabled: true }}
+            // The home screen draws its own header: logo, title and search.
+            options={{ title: "beUI", headerShown: false }}
           />
           <Stack.Screen name="[component]" />
         </Stack>
