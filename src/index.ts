@@ -53,6 +53,8 @@ export type {
   RadioGroupProps,
 } from "./components/radio";
 export { RadioGroup, RadioGroupItem } from "./components/radio";
+export type { RangeSliderProps } from "./components/range-slider";
+export { RangeSlider, snapSliderValue } from "./components/range-slider";
 export type {
   SelectContentProps,
   SelectItemProps,

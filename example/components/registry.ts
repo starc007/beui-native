@@ -8,6 +8,7 @@ import { LoaderShowcase } from "./loader-showcase";
 import { NumberShowcase } from "./number-showcase";
 import { OTPShowcase } from "./otp-showcase";
 import { RadioShowcase } from "./radio-showcase";
+import { RangeSliderShowcase } from "./range-slider-showcase";
 import { SelectShowcase } from "./select-showcase";
 import { SwipeShowcase } from "./swipe-showcase";
 import { SwitchShowcase } from "./switch-showcase";
@@ -81,6 +82,12 @@ export const groups: ComponentGroup[] = [
         title: "Radio Group",
         description: "One dot glides to the option you pick.",
         Showcase: RadioShowcase,
+      },
+      {
+        slug: "range-slider",
+        title: "Range Slider",
+        description: "A bar thumb that glides between steps.",
+        Showcase: RangeSliderShowcase,
       },
       {
         slug: "switch",
