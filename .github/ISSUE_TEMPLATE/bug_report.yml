@@ -1,0 +1,51 @@
+name: Bug report
+description: Something in a component doesn't work or look right.
+labels: [bug]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      placeholder: Select, Color Picker, Swipeable List…
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected, and what happened instead. A screen recording helps a lot for motion and gesture bugs.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the showcase page
+        2. Drag…
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      multiple: true
+      options:
+        - iOS
+        - Android
+        - Web
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device or simulator, and OS version
+      placeholder: iPhone 16 Pro, iOS 26
+  - type: checkboxes
+    id: settings
+    attributes:
+      label: Settings in use
+      options:
+        - label: Reduce Motion is on
+        - label: A screen reader (VoiceOver or TalkBack) is on
+        - label: Large text is on

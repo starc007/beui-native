@@ -1,8 +1,30 @@
 {
   "name": "beui-native",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
-  "description": "Native components and an Expo showcase for beUI.",
+  "description": "Animated, accessible React Native components built for touch: a native companion to beUI.",
+  "keywords": [
+    "react-native",
+    "expo",
+    "components",
+    "animation",
+    "reanimated",
+    "gesture-handler",
+    "uniwind",
+    "tailwind",
+    "beui",
+    "ui"
+  ],
+  "homepage": "https://github.com/starc007/beui-native#readme",
+  "bugs": {
+    "url": "https://github.com/starc007/beui-native/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starc007/beui-native.git"
+  },
+  "license": "MIT",
+  "author": "beUI and Saurabh",
   "packageManager": "bun@1.3.14",
   "workspaces": [
     "example"

@@ -10,3 +10,4 @@ coverage/
 !.env.example
 example/ios/
 example/android/
+.claude/

@@ -1,0 +1,23 @@
+name: Component request
+description: Suggest a component, or a beUI component to bring to native.
+labels: [component request]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Component
+      placeholder: Date Picker
+    validations:
+      required: true
+  - type: input
+    id: beui
+    attributes:
+      label: beUI component, if there is one
+      placeholder: https://beui.dev/components/motion/…
+  - type: textarea
+    id: use
+    attributes:
+      label: What you'd use it for
+      description: The screen or flow it's for, and how it should feel under a finger.
+    validations:
+      required: true
