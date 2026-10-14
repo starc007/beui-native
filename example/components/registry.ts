@@ -5,6 +5,7 @@ import { BadgeShowcase } from "./badge-showcase";
 import { ButtonShowcase } from "./button-showcase";
 import { CardShowcase } from "./card-showcase";
 import { CheckboxShowcase } from "./checkbox-showcase";
+import { ExpandableShowcase } from "./expandable-showcase";
 import { InputShowcase } from "./input-showcase";
 import { LoaderShowcase } from "./loader-showcase";
 import { MultiSelectShowcase } from "./multi-select-showcase";
@@ -42,6 +43,12 @@ export const groups: ComponentGroup[] = [
         description: "Spring press, ripple, icons and a stateful variant.",
         Showcase: ButtonShowcase,
         variants: 2,
+      },
+      {
+        slug: "expandable-control",
+        title: "Expandable Control",
+        description: "Buttons and chips that spring open to reveal more.",
+        Showcase: ExpandableShowcase,
       },
       {
         slug: "card",

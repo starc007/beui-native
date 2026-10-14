@@ -57,6 +57,14 @@ export {
 } from "./components/card";
 export type { CheckboxProps } from "./components/checkbox";
 export { Checkbox } from "./components/checkbox";
+export type {
+  ExpandableButtonProps,
+  ExpandableChipProps,
+} from "./components/expandable-control";
+export {
+  ExpandableButton,
+  ExpandableChip,
+} from "./components/expandable-control";
 export type { InputClassNames, InputProps } from "./components/input";
 export { Input } from "./components/input";
 export type { LoaderProps, LoaderVariant } from "./components/loader";

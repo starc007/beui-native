@@ -1,6 +1,7 @@
 // Hugeicons, imported one file per icon so the bundle holds only these and
 // not the whole free set (Metro does not tree-shake).
 import ArrowRight02 from "@hugeicons/core-free-icons/ArrowRight02Icon";
+import Bookmark02 from "@hugeicons/core-free-icons/Bookmark02Icon";
 import Calendar03 from "@hugeicons/core-free-icons/Calendar03Icon";
 import Cancel01 from "@hugeicons/core-free-icons/Cancel01Icon";
 import Clock01 from "@hugeicons/core-free-icons/Clock01Icon";
@@ -11,11 +12,13 @@ import Flag02 from "@hugeicons/core-free-icons/Flag02Icon";
 import Folder01 from "@hugeicons/core-free-icons/Folder01Icon";
 import Mail01 from "@hugeicons/core-free-icons/Mail01Icon";
 import Megaphone01 from "@hugeicons/core-free-icons/Megaphone01Icon";
+import Notification01 from "@hugeicons/core-free-icons/Notification01Icon";
 import Package from "@hugeicons/core-free-icons/PackageIcon";
 import Pin from "@hugeicons/core-free-icons/PinIcon";
 import PlusSign from "@hugeicons/core-free-icons/PlusSignIcon";
 import Search01 from "@hugeicons/core-free-icons/Search01Icon";
 import SecurityCheck from "@hugeicons/core-free-icons/SecurityCheckIcon";
+import Share08 from "@hugeicons/core-free-icons/Share08Icon";
 import Tick02 from "@hugeicons/core-free-icons/Tick02Icon";
 import User from "@hugeicons/core-free-icons/UserIcon";
 import View from "@hugeicons/core-free-icons/ViewIcon";
@@ -55,3 +58,6 @@ export const CalendarIcon = hugeicon(Calendar03);
 export const PackageIcon = hugeicon(Package);
 export const FolderIcon = hugeicon(Folder01);
 export const CloseIcon = hugeicon(Cancel01);
+export const BellIcon = hugeicon(Notification01);
+export const BookmarkIcon = hugeicon(Bookmark02);
+export const ShareIcon = hugeicon(Share08);
