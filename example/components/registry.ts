@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { AccordionShowcase } from "./accordion-showcase";
+import { BadgeShowcase } from "./badge-showcase";
 import { ButtonShowcase } from "./button-showcase";
 import { CardShowcase } from "./card-showcase";
 import { CheckboxShowcase } from "./checkbox-showcase";
@@ -137,6 +138,12 @@ export const groups: ComponentGroup[] = [
         description: "Reveals, sweeps, shimmers, cascades and scrambles.",
         Showcase: TextAnimationShowcase,
         variants: 5,
+      },
+      {
+        slug: "animated-badge",
+        title: "Animated Badge",
+        description: "Status pills whose icon and label roll.",
+        Showcase: BadgeShowcase,
       },
       {
         slug: "loader",

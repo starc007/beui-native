@@ -1,4 +1,10 @@
 export type {
+  AnimatedBadgeProps,
+  AnimatedBadgeSize,
+  AnimatedBadgeStatus,
+} from "./components/animated-badge";
+export { AnimatedBadge } from "./components/animated-badge";
+export type {
   BouncyAccordionClassNames,
   BouncyAccordionItem,
   BouncyAccordionProps,
