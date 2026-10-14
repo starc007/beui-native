@@ -91,7 +91,7 @@ export const groups: ComponentGroup[] = [
       {
         slug: "color-picker",
         title: "Color Picker",
-        description: "A chip that grows into a color area, with a loupe.",
+        description: "A popover picker with a loupe under your finger.",
         Showcase: ColorPickerShowcase,
       },
       {

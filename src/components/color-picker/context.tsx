@@ -9,11 +9,7 @@ import {
   useState,
 } from "react";
 import { View, type ViewProps } from "react-native";
-import {
-  ReduceMotion,
-  type SharedValue,
-  useSharedValue,
-} from "react-native-reanimated";
+import { type SharedValue, useSharedValue } from "react-native-reanimated";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import {
   BLACK,
@@ -29,15 +25,6 @@ import {
 /** A frame in window coordinates. */
 export type Frame = { x: number; y: number; width: number; height: number };
 
-// The panel's one spring, in both directions: the chip grows into the area
-// and the panel settles with a light bounce, then the same motion plays back
-// to close. Matches the web version's morph (0.5 s, bounce 0.2).
-export const MORPH = {
-  duration: 500,
-  dampingRatio: 0.8,
-  reduceMotion: ReduceMotion.System,
-};
-
 export type ColorPickerContextValue = {
   hsva: Hsva;
   rgba: Rgba;
@@ -51,26 +38,14 @@ export type ColorPickerContextValue = {
   commit: () => void;
   open: boolean;
   setOpen: (open: boolean) => void;
-  /** 0 closed to 1 open; drives the morph, the panel and its rows. */
+  /** 0 closed to 1 open; drives the panel and its rows. */
   progress: SharedValue<number>;
-  /** The trigger's color chip, which the area grows out of. */
-  chipRef: RefObject<View | null>;
-  chipFrame: Frame | null;
   /** The trigger, which the panel lines up under. */
   triggerRef: RefObject<View | null>;
   triggerFrame: Frame | null;
 };
 
 const ColorPickerContext = createContext<ColorPickerContextValue | null>(null);
-
-/**
- * Inside ColorPickerContent: the area reports its frame within the panel, so
- * the trigger's chip can grow into exactly that spot, and it fades in as the
- * chip arrives.
- */
-export const PanelContext = createContext<{
-  reportArea: (frame: Frame) => void;
-} | null>(null);
 
 export function usePickerContext(component: string) {
   const context = useContext(ColorPickerContext);
@@ -130,9 +105,7 @@ export function ColorPicker({
 }: ColorPickerProps) {
   const reducedMotion = useReducedMotionPreference();
   const reduce = reducedMotion || disableAnimation;
-  const chipRef = useRef<View>(null);
   const triggerRef = useRef<View>(null);
-  const [chipFrame, setChipFrame] = useState<Frame | null>(null);
   const [triggerFrame, setTriggerFrame] = useState<Frame | null>(null);
   const progress = useSharedValue(defaultOpen ? 1 : 0);
 
@@ -149,27 +122,15 @@ export function ColorPicker({
         apply();
         return;
       }
-      // Find the trigger and its chip on screen before the panel grows from them.
-      let pending = 2;
-      const done = () => {
-        pending -= 1;
-        if (pending === 0) apply();
-      };
-      const measure = (
-        ref: RefObject<View | null>,
-        set: (frame: Frame) => void,
-      ) => {
-        if (!ref.current) {
-          done();
-          return;
-        }
-        ref.current.measureInWindow((x, y, width, height) => {
-          set({ x, y, width, height });
-          done();
-        });
-      };
-      measure(triggerRef, setTriggerFrame);
-      measure(chipRef, setChipFrame);
+      // Find the trigger on screen before the panel appears beside it.
+      if (!triggerRef.current) {
+        apply();
+        return;
+      }
+      triggerRef.current.measureInWindow((x, y, width, height) => {
+        setTriggerFrame({ x, y, width, height });
+        apply();
+      });
     },
     [disabled, onOpenChange, open, openProp],
   );
@@ -231,14 +192,11 @@ export function ColorPicker({
       open,
       setOpen,
       progress,
-      chipRef,
-      chipFrame,
       triggerRef,
       triggerFrame,
     }),
     [
       alpha,
-      chipFrame,
       commit,
       disabled,
       hex,

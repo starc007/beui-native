@@ -72,7 +72,7 @@ export function ColorPickerShowcase() {
     <>
       <DemoSection
         title="Popover"
-        description="The chip grows into the color area. Drag it, and a loupe lifts above your finger to show the color under it."
+        description="Tap the chip to open the picker. Drag the color area, and a loupe lifts above your finger to show the color under it."
       >
         <View className="gap-3">
           <ColorPicker

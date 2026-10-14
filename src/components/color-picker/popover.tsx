@@ -1,6 +1,5 @@
 import {
   Children,
-  isValidElement,
   type ReactNode,
   useCallback,
   useEffect,
@@ -30,16 +29,22 @@ import Animated, {
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 import { EASE_OUT } from "../../styles/motion";
-import { type Frame, MORPH, PanelContext, usePickerContext } from "./context";
-import { Checkerboard, ColorPickerArea } from "./surfaces";
+import { usePickerContext } from "./context";
+import { Checkerboard } from "./surfaces";
 
+// Opening springs the panel out of the trigger's corner, quick and lightly
+// damped, like a native popover. Closing runs the same path back as a short
+// timed fade, so it has a fixed end: the modal is gone the moment it's done,
+// and the next tap lands on the page instead of an invisible overlay.
+const OPEN = { stiffness: 380, damping: 30, mass: 0.8 };
+const CLOSE = { duration: 160, easing: EASE_OUT };
+const REDUCED = { duration: 150 };
 const PANEL_WIDTH = 288;
 const GUTTER = 8;
 const GAP = 8;
 const EDGE = 16;
 const CHIP = 24;
 const CHIP_RADIUS = 6;
-const AREA_RADIUS = 12;
 const KEYBOARD_SHIFT = { duration: 220, easing: EASE_OUT };
 
 /** The on-screen keyboard's height while `active`, or 0. */
@@ -73,7 +78,7 @@ export type ColorPickerTriggerProps = Omit<
   className?: string;
 };
 
-/** Opens ColorPickerContent. Its color chip is what grows into the area. */
+/** A color chip and the hex. Opens ColorPickerContent. */
 export function ColorPickerTrigger({
   children,
   className = "",
@@ -81,12 +86,8 @@ export function ColorPickerTrigger({
   accessibilityLabel,
   ...props
 }: ColorPickerTriggerProps) {
-  const { hex, open, setOpen, disabled, chipRef, triggerRef, progress } =
+  const { hex, open, setOpen, disabled, triggerRef } =
     usePickerContext("ColorPickerTrigger");
-  // The chip is out being the area while the panel is up; its socket stays.
-  const chipStyle = useAnimatedStyle(() => ({
-    opacity: progress.value > 0.001 ? 0 : 1,
-  }));
   const alpha = hex.slice(7);
 
   return (
@@ -106,21 +107,15 @@ export function ColorPickerTrigger({
       }}
       className={`h-11 flex-row items-center gap-2.5 self-start rounded-xl border border-border bg-background pr-3.5 pl-2.5 active:opacity-80 ${className}`}
     >
-      <View style={styles.socket}>
-        <Animated.View
-          ref={chipRef}
-          collapsable={false}
-          style={[styles.chip, chipStyle]}
-        >
-          <Checkerboard width={CHIP} height={CHIP} />
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              styles.edge,
-              { backgroundColor: hex },
-            ]}
-          />
-        </Animated.View>
+      <View style={styles.chip}>
+        <Checkerboard width={CHIP} height={CHIP} />
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            styles.edge,
+            { backgroundColor: hex },
+          ]}
+        />
       </View>
       {children ?? (
         <Text className="font-mono text-sm uppercase text-foreground tabular-nums">
@@ -132,7 +127,7 @@ export function ColorPickerTrigger({
   );
 }
 
-/** One row of the panel, fading and dropping in on its own beat of the spring. */
+/** One row of the panel, settling in just behind the one above it. */
 function Row({
   index,
   progress,
@@ -143,14 +138,14 @@ function Row({
   children: ReactNode;
 }) {
   const style = useAnimatedStyle(() => {
-    const start = 0.25 + index * 0.06;
+    const start = index * 0.07;
     const q = interpolate(
       progress.value,
-      [start, start + 0.4],
+      [start, start + 0.6],
       [0, 1],
       Extrapolation.CLAMP,
     );
-    return { opacity: q, transform: [{ translateY: -6 * (1 - q) }] };
+    return { opacity: q, transform: [{ translateY: -4 * (1 - q) }] };
   });
   return <Animated.View style={style}>{children}</Animated.View>;
 }
@@ -164,56 +159,52 @@ export type ColorPickerContentProps = {
 
 /**
  * The panel ColorPickerTrigger opens. It floats beside the trigger: below it,
- * unless there's more room above. A ColorPickerArea inside grows out of the
- * trigger's chip, and the other rows stagger in behind it; closing plays the
- * same motion back. A tap outside, or Android's back button, closes it.
+ * unless there's more room above. It springs out of the trigger's corner with
+ * its rows settling in behind, and folds back the same way, quicker. A tap
+ * outside, or Android's back button, closes it.
  */
 export function ColorPickerContent({
   children,
   accessibilityLabel = "Color picker",
   className = "",
 }: ColorPickerContentProps) {
-  const { open, setOpen, progress, reduce, hex, chipFrame, triggerFrame } =
+  const { open, setOpen, progress, reduce, triggerFrame } =
     usePickerContext("ColorPickerContent");
   const window = useWindowDimensions();
   const keyboard = useKeyboardHeight(open);
   const [present, setPresent] = useState(open);
   if (open && !present) setPresent(true);
+  // A modal takes a moment to appear. Waiting for it, and for the panel's
+  // first layout, means the opening plays where it can be seen.
+  const [shown, setShown] = useState(false);
+  if (!present && shown) setShown(false);
   const [panelHeight, setPanelHeight] = useState(0);
-  const [areaFrame, setAreaFrame] = useState<Frame | null>(null);
   const shift = useSharedValue(0);
 
   const hide = useCallback(() => setPresent(false), []);
-  const reportArea = useCallback((frame: Frame) => {
-    setAreaFrame((current) =>
-      current &&
-      current.x === frame.x &&
-      current.y === frame.y &&
-      current.width === frame.width &&
-      current.height === frame.height
-        ? current
-        : frame,
-    );
-  }, []);
+
+  // onShow doesn't fire everywhere, such as on web; don't wait on it forever.
+  useEffect(() => {
+    if (!present || shown) return;
+    const timer = setTimeout(() => setShown(true), 300);
+    return () => clearTimeout(timer);
+  }, [present, shown]);
+
+  const ready = shown && panelHeight > 0;
 
   useEffect(() => {
     if (!present) return;
+    if (open && !ready) return;
     cancelAnimation(progress);
     if (open) {
-      progress.value = reduce
-        ? withTiming(1, { duration: 150 })
-        : withSpring(1, MORPH);
+      progress.value = reduce ? withTiming(1, REDUCED) : withSpring(1, OPEN);
       return;
     }
     Keyboard.dismiss();
-    const done = (finished?: boolean) => {
-      "worklet";
+    progress.value = withTiming(0, reduce ? REDUCED : CLOSE, (finished) => {
       if (finished) scheduleOnRN(hide);
-    };
-    progress.value = reduce
-      ? withTiming(0, { duration: 150 }, done)
-      : withSpring(0, MORPH, done);
-  }, [hide, open, present, progress, reduce]);
+    });
+  }, [hide, open, present, progress, ready, reduce]);
 
   // Side and position, from the trigger's frame.
   const width = Math.min(PANEL_WIDTH, window.width - GUTTER * 2);
@@ -236,42 +227,25 @@ export function ColorPickerContent({
     shift.value = withTiming(-overflow, KEYBOARD_SHIFT);
   }, [keyboard, panelHeight, shift, top, window.height]);
 
+  // The panel grows from the corner nearest the trigger's chip.
   const panelStyle = useAnimatedStyle(() => {
     const p = progress.value;
+    const settled = Math.min(1, Math.max(0, p));
     return {
-      opacity: interpolate(p, [0.05, 0.45], [0, 1], Extrapolation.CLAMP),
+      opacity: interpolate(p, [0, 0.5], [0, 1], Extrapolation.CLAMP),
       transform: [
-        { translateY: shift.value + (isTop ? 6 : -6) * (1 - Math.min(1, p)) },
+        { translateY: shift.value + (isTop ? 8 : -8) * (1 - settled) },
+        { scale: reduce ? 1 : 0.9 + 0.1 * p },
       ],
-    };
-  });
-
-  // The area's frame on screen, from its place in the panel.
-  const area = areaFrame
-    ? { ...areaFrame, x: left + areaFrame.x, y: top + areaFrame.y }
-    : null;
-
-  // The chip, growing out of the trigger into the area and back.
-  const morphStyle = useAnimatedStyle(() => {
-    if (!chipFrame || !area || reduce) return { opacity: 0 };
-    const p = Math.min(1, Math.max(0, progress.value));
-    const mix = (a: number, b: number) => a + (b - a) * p;
-    return {
-      opacity: interpolate(p, [0, 0.6, 0.9], [1, 1, 0], Extrapolation.CLAMP),
-      left: mix(chipFrame.x, area.x),
-      top: mix(chipFrame.y, area.y + shift.value),
-      width: mix(chipFrame.width, area.width),
-      height: mix(chipFrame.height, area.height),
-      borderRadius: mix(CHIP_RADIUS, AREA_RADIUS),
     };
   });
 
   let row = 0;
   const rows = Children.map(children, (child) => {
-    if (isValidElement(child) && child.type === ColorPickerArea) return child;
+    const index = row;
     row += 1;
     return (
-      <Row index={row} progress={progress}>
+      <Row index={index} progress={progress}>
         {child}
       </Row>
     );
@@ -284,6 +258,7 @@ export function ColorPickerContent({
       animationType="none"
       statusBarTranslucent
       navigationBarTranslucent
+      onShow={() => setShown(true)}
       onRequestClose={() => setOpen(false)}
     >
       {/* Gestures inside a modal need their own root on Android. */}
@@ -294,23 +269,22 @@ export function ColorPickerContent({
           style={StyleSheet.absoluteFill}
           onPress={() => setOpen(false)}
         />
-        <PanelContext.Provider value={{ reportArea }}>
-          <Animated.View
-            accessibilityViewIsModal
-            accessibilityLabel={accessibilityLabel}
-            onLayout={({ nativeEvent }) =>
-              setPanelHeight(nativeEvent.layout.height)
-            }
-            className={`gap-3 rounded-2xl border border-border bg-background p-3 ${className}`}
-            style={[styles.panel, { left, top, width }, panelStyle]}
-          >
-            {rows}
-          </Animated.View>
-        </PanelContext.Provider>
         <Animated.View
-          pointerEvents="none"
-          style={[styles.morph, { backgroundColor: hex }, morphStyle]}
-        />
+          accessibilityViewIsModal
+          accessibilityLabel={accessibilityLabel}
+          onLayout={({ nativeEvent }) =>
+            setPanelHeight(nativeEvent.layout.height)
+          }
+          className={`gap-3 rounded-2xl border border-border bg-background p-3 ${className}`}
+          style={[
+            styles.panel,
+            { left, top, width },
+            isTop ? styles.fromBottom : styles.fromTop,
+            panelStyle,
+          ]}
+        >
+          {rows}
+        </Animated.View>
       </GestureHandlerRootView>
     </Modal>
   );
@@ -322,19 +296,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     boxShadow: "0 12px 32px -8px rgba(0, 0, 0, 0.25)",
   },
-  morph: { position: "absolute", overflow: "hidden" },
-  socket: {
-    width: CHIP,
-    height: CHIP,
-    borderRadius: CHIP_RADIUS,
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "rgba(127, 127, 127, 0.35)",
-  },
+  // The corner nearest the trigger's chip, at the panel's left edge.
+  fromTop: { transformOrigin: "24px 0px" },
+  fromBottom: { transformOrigin: "24px 100%" },
   chip: {
-    position: "absolute",
-    top: -1,
-    left: -1,
     width: CHIP,
     height: CHIP,
     borderRadius: CHIP_RADIUS,

@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import {
   type AccessibilityActionEvent,
   Platform,
@@ -8,8 +8,6 @@ import {
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
-  Extrapolation,
-  interpolate,
   type SharedValue,
   useAnimatedStyle,
   useSharedValue,
@@ -19,7 +17,7 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 import { EASE_OUT, SPRING_GLIDE, SPRING_PRESS } from "../../styles/motion";
 import { hueColor, rgbaString } from "./color";
-import { PanelContext, usePickerContext } from "./context";
+import { usePickerContext } from "./context";
 
 // The loupe lifts with a visible overshoot so it reads as picked up, unlike
 // the critically damped glide the thumb itself rides on.
@@ -201,11 +199,10 @@ function Thumb({
   return (
     <Animated.View pointerEvents="none" style={[styles.thumbSlot, position]}>
       <Animated.View style={[styles.loupe, loupe]}>
-        {/* A teardrop: a square with one sharp corner, turned to point down. */}
-        <View style={styles.drop}>
-          <Checkerboard width={40} height={40} />
-          <View style={[StyleSheet.absoluteFill, { backgroundColor: color }]} />
-        </View>
+        {/* A teardrop: a square with one sharp corner, turned to point down.
+            The color is the drop's own background, which follows its mixed
+            corners; iOS wouldn't clip a filled child to them. */}
+        <View style={[styles.drop, { backgroundColor: color }]} />
       </Animated.View>
       <Animated.View style={[styles.dot, { backgroundColor: color }, dot]} />
     </Animated.View>
@@ -220,8 +217,7 @@ export type ColorPickerAreaProps = Omit<ViewProps, "children"> & {
 
 /**
  * The saturation and brightness area. Drag anywhere; a loupe lifts above the
- * finger to show the color under it. Inside ColorPickerContent, it grows out
- * of the trigger's chip.
+ * finger to show the color under it.
  */
 export function ColorPickerArea({
   label = "Saturation and brightness",
@@ -229,9 +225,8 @@ export function ColorPickerArea({
   style,
   ...props
 }: ColorPickerAreaProps) {
-  const { hsva, rgba, update, commit, disabled, reduce, progress } =
+  const { hsva, rgba, update, commit, disabled, reduce } =
     usePickerContext("ColorPickerArea");
-  const panel = useContext(PanelContext);
   const latest = useRef(hsva);
   latest.current = hsva;
 
@@ -245,20 +240,6 @@ export function ColorPickerArea({
   });
   useFollow(track.x, hsva.s / 100, track.dragging, reduce);
   useFollow(track.y, 1 - hsva.v / 100, track.dragging, reduce);
-
-  // In the panel, the area appears as the chip finishes growing into it.
-  const morphStyle = useAnimatedStyle(() =>
-    panel
-      ? {
-          opacity: interpolate(
-            progress.value,
-            [0.55, 0.9],
-            [0, 1],
-            Extrapolation.CLAMP,
-          ),
-        }
-      : {},
-  );
 
   const s = Math.round(hsva.s);
   const v = Math.round(hsva.v);
@@ -295,12 +276,10 @@ export function ColorPickerArea({
         onLayout={(event) => {
           track.width.value = event.nativeEvent.layout.width;
           track.height.value = event.nativeEvent.layout.height;
-          // Its place in the panel; the panel knows where it sits on screen.
-          panel?.reportArea(event.nativeEvent.layout);
           props.onLayout?.(event);
         }}
         className={`h-40 w-full rounded-xl ${className}`}
-        style={[{ backgroundColor: hueColor(hsva.h) }, morphStyle, style]}
+        style={[{ backgroundColor: hueColor(hsva.h) }, style]}
       >
         <View
           pointerEvents="none"
@@ -533,7 +512,6 @@ const styles = StyleSheet.create({
   drop: {
     width: 40,
     height: 40,
-    overflow: "hidden",
     borderWidth: 3,
     borderColor: "#ffffff",
     borderTopLeftRadius: 20,
