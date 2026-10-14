@@ -5,6 +5,7 @@ import { BadgeShowcase } from "./badge-showcase";
 import { ButtonShowcase } from "./button-showcase";
 import { CardShowcase } from "./card-showcase";
 import { CheckboxShowcase } from "./checkbox-showcase";
+import { ColorPickerShowcase } from "./color-picker-showcase";
 import { ExpandableShowcase } from "./expandable-showcase";
 import { InputShowcase } from "./input-showcase";
 import { LoaderShowcase } from "./loader-showcase";
@@ -86,6 +87,12 @@ export const groups: ComponentGroup[] = [
         title: "Multi Select",
         description: "Searchable options that become removable chips.",
         Showcase: MultiSelectShowcase,
+      },
+      {
+        slug: "color-picker",
+        title: "Color Picker",
+        description: "A chip that grows into a color area, with a loupe.",
+        Showcase: ColorPickerShowcase,
       },
       {
         slug: "checkbox",

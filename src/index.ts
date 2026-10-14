@@ -58,6 +58,37 @@ export {
 export type { CheckboxProps } from "./components/checkbox";
 export { Checkbox } from "./components/checkbox";
 export type {
+  ColorPickerAreaProps,
+  ColorPickerChannelsProps,
+  ColorPickerContentProps,
+  ColorPickerHexInputProps,
+  ColorPickerPresetProps,
+  ColorPickerPresetsProps,
+  ColorPickerProps,
+  ColorPickerSliderProps,
+  ColorPickerTriggerProps,
+  Hsva,
+  Rgba,
+} from "./components/color-picker";
+export {
+  ColorPicker,
+  ColorPickerAlpha,
+  ColorPickerArea,
+  ColorPickerChannels,
+  ColorPickerContent,
+  ColorPickerHexInput,
+  ColorPickerHue,
+  ColorPickerPreset,
+  ColorPickerPresets,
+  ColorPickerSwatch,
+  ColorPickerTrigger,
+  formatHex,
+  hsvaToRgba,
+  parseHex,
+  rgbaToHsva,
+  useColorPicker,
+} from "./components/color-picker";
+export type {
   ExpandableButtonProps,
   ExpandableChipProps,
 } from "./components/expandable-control";
