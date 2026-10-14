@@ -7,6 +7,7 @@ import { CardShowcase } from "./card-showcase";
 import { CheckboxShowcase } from "./checkbox-showcase";
 import { InputShowcase } from "./input-showcase";
 import { LoaderShowcase } from "./loader-showcase";
+import { MultiSelectShowcase } from "./multi-select-showcase";
 import { NumberShowcase } from "./number-showcase";
 import { OTPShowcase } from "./otp-showcase";
 import { RadioShowcase } from "./radio-showcase";
@@ -72,6 +73,12 @@ export const groups: ComponentGroup[] = [
         title: "Select",
         description: "A panel that unfolds out of its trigger.",
         Showcase: SelectShowcase,
+      },
+      {
+        slug: "multi-select",
+        title: "Multi Select",
+        description: "Searchable options that become removable chips.",
+        Showcase: MultiSelectShowcase,
       },
       {
         slug: "checkbox",

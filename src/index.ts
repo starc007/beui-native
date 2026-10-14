@@ -62,6 +62,30 @@ export { Input } from "./components/input";
 export type { LoaderProps, LoaderVariant } from "./components/loader";
 export { Loader } from "./components/loader";
 export type {
+  MultiSelectContentProps,
+  MultiSelectFilter,
+  MultiSelectGroupProps,
+  MultiSelectInputProps,
+  MultiSelectItemProps,
+  MultiSelectListProps,
+  MultiSelectProps,
+  MultiSelectTriggerProps,
+  MultiSelectValueProps,
+} from "./components/multi-select";
+export {
+  MultiSelect,
+  MultiSelectContent,
+  MultiSelectEmpty,
+  MultiSelectGroup,
+  MultiSelectInput,
+  MultiSelectItem,
+  MultiSelectLabel,
+  MultiSelectList,
+  MultiSelectSeparator,
+  MultiSelectTrigger,
+  MultiSelectValue,
+} from "./components/multi-select";
+export type {
   AnimatedNumberProps,
   NumberTickerProps,
 } from "./components/number";
