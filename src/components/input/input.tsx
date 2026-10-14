@@ -337,7 +337,13 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     includeFontPadding: false,
     // Web inputs draw a focus outline; the field's border and ring replace it.
-    ...Platform.select({ web: { outlineWidth: 0 }, default: {} }),
+    // Chrome draws an "auto" outline whatever its width, so the style has to
+    // go. React Native's types don't list "none", but React Native Web passes
+    // it through.
+    ...Platform.select({
+      web: { outlineStyle: "none" as "solid" },
+      default: {},
+    }),
   },
   leading: {
     position: "absolute",
