@@ -142,6 +142,10 @@ Bug reports, component requests and pull requests are welcome. Read [CONTRIBUTIN
 - [Uniwind](https://uniwind.dev) for Tailwind styling in React Native
 - [Hugeicons](https://hugeicons.com) for the showcase's icons
 
+## Author
+
+Built by Saurabh ([@saurra3h](https://x.com/saurra3h) on X), the creator of [beUI](https://beui.dev).
+
 ## License
 
 [MIT](LICENSE) © 2026 beUI and Saurabh
