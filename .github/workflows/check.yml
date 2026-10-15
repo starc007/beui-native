@@ -20,5 +20,6 @@ jobs:
           bun-version: 1.3.14
       - run: bun install --frozen-lockfile
       - run: bun check
+      - run: bun run manifest --check
       - run: bun doctor
       - run: bun run export

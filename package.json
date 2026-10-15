@@ -45,7 +45,8 @@
     "format": "biome check --write .",
     "check": "bun run typecheck && bun run lint",
     "doctor": "cd example && bunx expo-doctor",
-    "export": "bun run --cwd example export"
+    "export": "bun run --cwd example export",
+    "manifest": "bun scripts/manifest.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",

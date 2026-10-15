@@ -1,0 +1,599 @@
+{
+  "name": "beUI Native",
+  "version": "0.1.0",
+  "description": "Animated, accessible React Native components built for touch. A native companion to beUI: Reanimated, Gesture Handler and Uniwind.",
+  "repository": "https://github.com/starc007/beui-native",
+  "license": "MIT",
+  "theme": "src/styles/theme.css",
+  "expoGo": {
+    "sdk": 57,
+    "projectId": "93a3a95c-6dc2-4adb-b57c-efbecf859f25",
+    "runtimeVersion": "exposdk:57.0.0",
+    "channel": "production",
+    "url": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25?runtime-version=exposdk%3A57.0.0&channel-name=production",
+    "qr": "https://qr.expo.dev/eas-update?projectId=93a3a95c-6dc2-4adb-b57c-efbecf859f25&runtimeVersion=exposdk:57.0.0&channel=production"
+  },
+  "components": [
+    {
+      "slug": "button",
+      "title": "Button",
+      "description": "Spring press, ripple, icons and a stateful variant.",
+      "group": "Actions",
+      "variants": 2,
+      "readme": "src/components/button/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/button",
+      "files": [
+        "src/components/button/button.styles.ts",
+        "src/components/button/button.tsx",
+        "src/components/button/button.types.ts",
+        "src/components/button/index.ts",
+        "src/components/button/stateful-button.tsx",
+        "src/components/button/status-icons.tsx"
+      ],
+      "shared": [
+        "src/hooks/use-presence.ts",
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/cascade-text.tsx",
+        "src/primitives/render-icon.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/button?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "button-light.mp4",
+        "dark": "button-dark.mp4"
+      }
+    },
+    {
+      "slug": "expandable-control",
+      "title": "Expandable Control",
+      "description": "Buttons and chips that spring open to reveal more.",
+      "group": "Actions",
+      "variants": 1,
+      "readme": "src/components/expandable-control/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/expandable-control",
+      "files": [
+        "src/components/expandable-control/expandable-control.tsx",
+        "src/components/expandable-control/index.ts"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/primitives/render-icon.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/expandable-control?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "expandable-control-light.mp4",
+        "dark": "expandable-control-dark.mp4"
+      }
+    },
+    {
+      "slug": "card",
+      "title": "Card",
+      "description": "Composable surfaces, selectable with press feedback.",
+      "group": "Actions",
+      "variants": 1,
+      "readme": "src/components/card/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/card",
+      "files": ["src/components/card/card.tsx", "src/components/card/index.ts"],
+      "shared": ["src/hooks/use-reduced-motion.ts", "src/styles/motion.ts"],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/card?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "card-light.mp4",
+        "dark": "card-dark.mp4"
+      }
+    },
+    {
+      "slug": "input",
+      "title": "Input",
+      "description": "Error shake, focus ring and a drawn success check.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/input/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/input",
+      "files": [
+        "src/components/input/index.ts",
+        "src/components/input/input.tsx"
+      ],
+      "shared": [
+        "src/hooks/use-presence.ts",
+        "src/hooks/use-reduced-motion.ts",
+        "src/hooks/use-shake.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/primitives/render-icon.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/input?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "input-light.mp4",
+        "dark": "input-dark.mp4"
+      }
+    },
+    {
+      "slug": "otp-input",
+      "title": "OTP Input",
+      "description": "Digits roll into slots, with SMS autofill.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/otp-input/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/otp-input",
+      "files": [
+        "src/components/otp-input/index.ts",
+        "src/components/otp-input/otp-input.tsx"
+      ],
+      "shared": [
+        "src/hooks/use-presence.ts",
+        "src/hooks/use-reduced-motion.ts",
+        "src/hooks/use-shake.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/otp-input?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "otp-input-light.mp4",
+        "dark": "otp-input-dark.mp4"
+      }
+    },
+    {
+      "slug": "select",
+      "title": "Select",
+      "description": "A panel that unfolds out of its trigger.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/select/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/select",
+      "files": [
+        "src/components/select/index.ts",
+        "src/components/select/select.tsx"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/select?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "select-light.mp4",
+        "dark": "select-dark.mp4"
+      }
+    },
+    {
+      "slug": "multi-select",
+      "title": "Multi Select",
+      "description": "Searchable options that become removable chips.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/multi-select/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/multi-select",
+      "files": [
+        "src/components/multi-select/context.tsx",
+        "src/components/multi-select/index.ts",
+        "src/components/multi-select/list.tsx",
+        "src/components/multi-select/trigger.tsx"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/multi-select?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "multi-select-light.mp4",
+        "dark": "multi-select-dark.mp4"
+      }
+    },
+    {
+      "slug": "color-picker",
+      "title": "Color Picker",
+      "description": "A popover picker with a loupe under your finger.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/color-picker/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/color-picker",
+      "files": [
+        "src/components/color-picker/color.ts",
+        "src/components/color-picker/context.tsx",
+        "src/components/color-picker/fields.tsx",
+        "src/components/color-picker/index.ts",
+        "src/components/color-picker/popover.tsx",
+        "src/components/color-picker/presets.tsx",
+        "src/components/color-picker/surfaces.tsx"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/hooks/use-shake.ts",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/color-picker?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "color-picker-light.mp4",
+        "dark": "color-picker-dark.mp4"
+      }
+    },
+    {
+      "slug": "checkbox",
+      "title": "Checkbox",
+      "description": "A checkmark that draws itself in.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/checkbox/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/checkbox",
+      "files": [
+        "src/components/checkbox/checkbox.tsx",
+        "src/components/checkbox/index.ts"
+      ],
+      "shared": [
+        "src/hooks/use-presence.ts",
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/checkbox?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "checkbox-light.mp4",
+        "dark": "checkbox-dark.mp4"
+      }
+    },
+    {
+      "slug": "radio",
+      "title": "Radio Group",
+      "description": "One dot glides to the option you pick.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/radio/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/radio",
+      "files": [
+        "src/components/radio/index.ts",
+        "src/components/radio/radio.tsx"
+      ],
+      "shared": ["src/hooks/use-reduced-motion.ts", "src/styles/motion.ts"],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/radio?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "radio-light.mp4",
+        "dark": "radio-dark.mp4"
+      }
+    },
+    {
+      "slug": "range-slider",
+      "title": "Range Slider",
+      "description": "A bar thumb that glides between steps.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/range-slider/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/range-slider",
+      "files": [
+        "src/components/range-slider/index.ts",
+        "src/components/range-slider/range-slider.tsx"
+      ],
+      "shared": ["src/hooks/use-reduced-motion.ts", "src/styles/motion.ts"],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "react-native-worklets"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/range-slider?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "range-slider-light.mp4",
+        "dark": "range-slider-dark.mp4"
+      }
+    },
+    {
+      "slug": "switch",
+      "title": "Switch",
+      "description": "A weighty thumb that squishes and stretches.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/switch/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/switch",
+      "files": [
+        "src/components/switch/index.ts",
+        "src/components/switch/switch.tsx"
+      ],
+      "shared": ["src/hooks/use-reduced-motion.ts"],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/switch?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "switch-light.mp4",
+        "dark": "switch-dark.mp4"
+      }
+    },
+    {
+      "slug": "bouncy-accordion",
+      "title": "Bouncy Accordion",
+      "description": "FAQ rows that spring apart as they open.",
+      "group": "Navigation and lists",
+      "variants": 1,
+      "readme": "src/components/bouncy-accordion/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/bouncy-accordion",
+      "files": [
+        "src/components/bouncy-accordion/bouncy-accordion.tsx",
+        "src/components/bouncy-accordion/index.ts"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/primitives/render-icon.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/bouncy-accordion?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "bouncy-accordion-light.mp4",
+        "dark": "bouncy-accordion-dark.mp4"
+      }
+    },
+    {
+      "slug": "tabs",
+      "title": "Tabs",
+      "description": "Pill, segment and underline with a gliding indicator.",
+      "group": "Navigation and lists",
+      "variants": 3,
+      "readme": "src/components/tabs/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/tabs",
+      "files": ["src/components/tabs/index.ts", "src/components/tabs/tabs.tsx"],
+      "shared": ["src/hooks/use-reduced-motion.ts", "src/styles/motion.ts"],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/tabs?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "tabs-light.mp4",
+        "dark": "tabs-dark.mp4"
+      }
+    },
+    {
+      "slug": "swipeable-list",
+      "title": "Swipeable List",
+      "description": "Rows that swipe to reveal actions.",
+      "group": "Navigation and lists",
+      "variants": 1,
+      "readme": "src/components/swipeable-list/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/swipeable-list",
+      "files": [
+        "src/components/swipeable-list/index.ts",
+        "src/components/swipeable-list/swipeable-list.tsx"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/render-icon.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/swipeable-list?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "swipeable-list-light.mp4",
+        "dark": "swipeable-list-dark.mp4"
+      }
+    },
+    {
+      "slug": "number",
+      "title": "Number Animation",
+      "description": "Rolling tickers and count-ups.",
+      "group": "Motion",
+      "variants": 2,
+      "readme": "src/components/number/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/number",
+      "files": [
+        "src/components/number/animated-number.tsx",
+        "src/components/number/index.ts",
+        "src/components/number/number-ticker.tsx",
+        "src/components/number/use-glyph-cell.tsx"
+      ],
+      "shared": ["src/hooks/use-reduced-motion.ts", "src/styles/motion.ts"],
+      "libraries": ["react", "react-native", "react-native-reanimated"],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/number?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "number-light.mp4",
+        "dark": "number-dark.mp4"
+      }
+    },
+    {
+      "slug": "text-animation",
+      "title": "Text Animation",
+      "description": "Reveals, sweeps, shimmers, cascades and scrambles.",
+      "group": "Motion",
+      "variants": 5,
+      "readme": "src/components/text-animation/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/text-animation",
+      "files": [
+        "src/components/text-animation/chromatic-text-reveal.tsx",
+        "src/components/text-animation/index.ts",
+        "src/components/text-animation/text-cascade.tsx",
+        "src/components/text-animation/text-reveal.tsx",
+        "src/components/text-animation/text-scramble.tsx",
+        "src/components/text-animation/text-shimmer.tsx"
+      ],
+      "shared": [
+        "src/hooks/use-presence.ts",
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/cascade-text.tsx",
+        "src/primitives/glyph-row.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/text-animation?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "text-animation-light.mp4",
+        "dark": "text-animation-dark.mp4"
+      }
+    },
+    {
+      "slug": "alert",
+      "title": "Alert",
+      "description": "Feedback that eases in and folds away.",
+      "group": "Motion",
+      "variants": 1,
+      "readme": "src/components/alert/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/alert",
+      "files": [
+        "src/components/alert/alert.tsx",
+        "src/components/alert/index.ts"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/alert?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "alert-light.mp4",
+        "dark": "alert-dark.mp4"
+      }
+    },
+    {
+      "slug": "animated-badge",
+      "title": "Animated Badge",
+      "description": "Status pills whose icon and label roll.",
+      "group": "Motion",
+      "variants": 1,
+      "readme": "src/components/animated-badge/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/animated-badge",
+      "files": [
+        "src/components/animated-badge/animated-badge.tsx",
+        "src/components/animated-badge/index.ts"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/primitives/render-icon.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/animated-badge?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "animated-badge-light.mp4",
+        "dark": "animated-badge-dark.mp4"
+      }
+    },
+    {
+      "slug": "loader",
+      "title": "Loader",
+      "description": "Seventeen indicators from one size prop.",
+      "group": "Motion",
+      "variants": 17,
+      "readme": "src/components/loader/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/loader",
+      "files": [
+        "src/components/loader/index.ts",
+        "src/components/loader/loader.tsx",
+        "src/components/loader/use-keyframes.ts"
+      ],
+      "shared": ["src/hooks/use-reduced-motion.ts", "src/styles/motion.ts"],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/loader?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "loader-light.mp4",
+        "dark": "loader-dark.mp4"
+      }
+    }
+  ]
+}

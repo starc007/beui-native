@@ -32,6 +32,7 @@ Each component is a folder in `src/components/` with:
 - the component, exported from the folder's `index.ts` and from `src/index.ts`
 - a `README.md` covering its API, motion and accessibility, and listing the shared files someone needs to copy it
 - a showcase in `example/components/`, registered in `example/components/registry.ts`
+- an updated `showcase.json`: run `bun run manifest` after registering the showcase. beui.dev reads this file, and CI fails if it's out of date
 
 And it follows these rules:
 
