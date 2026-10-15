@@ -134,7 +134,7 @@ export const groups: ComponentGroup[] = [
         title: "Tabs",
         description: "Pill, segment and underline with a gliding indicator.",
         Showcase: TabsShowcase,
-        variants: 3,
+        variants: 4,
       },
       {
         slug: "swipeable-list",

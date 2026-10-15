@@ -1,5 +1,6 @@
 export type {
   TabsContentProps,
+  TabsIcons,
   TabsListProps,
   TabsProps,
   TabsTriggerProps,

@@ -1,6 +1,7 @@
 import { Text } from "react-native";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../src";
 import { DemoSection } from "./demo";
+import { BellIcon, CalendarIcon, UserIcon } from "./icons";
 
 const SECTIONS = [
   "Overview",
@@ -58,6 +59,25 @@ export function TabsShowcase() {
             <TabsTrigger value="day">Day</TabsTrigger>
             <TabsTrigger value="week">Week</TabsTrigger>
             <TabsTrigger value="month">Month</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </DemoSection>
+
+      <DemoSection
+        title="Icon on selected"
+        description="Only the selected tab carries its icon. It springs open beside the label as the pill arrives."
+      >
+        <Tabs defaultValue="feed" icons="selected">
+          <TabsList>
+            <TabsTrigger value="feed" icon={BellIcon}>
+              Feed
+            </TabsTrigger>
+            <TabsTrigger value="events" icon={CalendarIcon}>
+              Events
+            </TabsTrigger>
+            <TabsTrigger value="profile" icon={UserIcon}>
+              Profile
+            </TabsTrigger>
           </TabsList>
         </Tabs>
       </DemoSection>

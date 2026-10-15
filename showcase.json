@@ -403,11 +403,15 @@
       "title": "Tabs",
       "description": "Pill, segment and underline with a gliding indicator.",
       "group": "Navigation and lists",
-      "variants": 3,
+      "variants": 4,
       "readme": "src/components/tabs/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/tabs",
       "files": ["src/components/tabs/index.ts", "src/components/tabs/tabs.tsx"],
-      "shared": ["src/hooks/use-reduced-motion.ts", "src/styles/motion.ts"],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/render-icon.tsx",
+        "src/styles/motion.ts"
+      ],
       "libraries": [
         "react",
         "react-native",

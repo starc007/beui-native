@@ -29,9 +29,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
-import { EASE_OUT } from "../../styles/motion";
+import { type IconSource, renderIcon } from "../../primitives/render-icon";
+import { EASE_OUT, SPRING_SWAP } from "../../styles/motion";
 
 export type TabsVariant = "pill" | "segment" | "underline";
+/** Whether trigger icons show on every tab or only on the selected one. */
+export type TabsIcons = "always" | "selected";
 
 // Settles without overshoot, so the indicator never pokes past the list edges.
 const INDICATOR_SPRING = {
@@ -48,6 +51,9 @@ const CONTENT_FADE = {
 // Layout sizes can round below the text's real width; a little slack stops the
 // overlay label from truncating while keeping it centered.
 const SLACK = 1;
+// Trigger icons sit before the label at the label's text size.
+const ICON_SIZE = 14;
+const ICON_GAP = 6;
 // Width of the fade over a list edge that has more tabs past it.
 const EDGE_FADE = 24;
 // Space kept between a revealed tab and the edge, so it clears the fade.
@@ -107,6 +113,7 @@ type TabsContextValue = {
   value: string;
   select: (value: string) => void;
   variant: TabsVariant;
+  icons: TabsIcons;
   animate: boolean;
 };
 
@@ -132,6 +139,11 @@ export type TabsProps = ViewProps & {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   variant?: TabsVariant;
+  /**
+   * With "selected", a trigger's icon springs open only on the selected tab
+   * and folds away when another is chosen. Defaults to "always".
+   */
+  icons?: TabsIcons;
   /** Disables indicator and content motion independently of the system preference. */
   disableAnimation?: boolean;
   className?: string;
@@ -142,6 +154,7 @@ export function Tabs({
   defaultValue = "",
   onValueChange,
   variant = "pill",
+  icons = "always",
   disableAnimation = false,
   ...props
 }: TabsProps) {
@@ -154,13 +167,14 @@ export function Tabs({
     () => ({
       value,
       variant,
+      icons,
       animate,
       select: (next) => {
         if (valueProp === undefined) setUncontrolled(next);
         onValueChange?.(next);
       },
     }),
-    [animate, onValueChange, value, valueProp, variant],
+    [animate, icons, onValueChange, value, valueProp, variant],
   );
 
   return (
@@ -237,7 +251,10 @@ export function TabsList({
   }, []);
 
   const move = useCallback(
-    (target: string) => {
+    // `follow` is a size change on the tab already targeted, such as its icon
+    // springing open. The indicator tracks it on the icon's own spring, so
+    // the pill never lags behind a tab that is still growing.
+    (target: string, follow = false) => {
       const layout = layouts.current.get(target);
       if (!layout) {
         visible.value = 0;
@@ -250,8 +267,9 @@ export function TabsList({
         x.value = layout.x;
         width.value = layout.width;
       } else {
-        x.value = withSpring(layout.x, INDICATOR_SPRING);
-        width.value = withSpring(layout.width, INDICATOR_SPRING);
+        const spring = follow ? SPRING_SWAP : INDICATOR_SPRING;
+        x.value = withSpring(layout.x, spring);
+        width.value = withSpring(layout.width, spring);
       }
       visible.value = 1;
       reveal(layout);
@@ -266,7 +284,7 @@ export function TabsList({
   const report = useCallback(
     (item: string, layout: LayoutRectangle) => {
       layouts.current.set(item, layout);
-      if (item === valueRef.current) move(item);
+      if (item === valueRef.current) move(item, true);
     },
     [move],
   );
@@ -359,6 +377,11 @@ export type TabsTriggerProps = Omit<
   "children" | "style" | "onPress"
 > & {
   value: string;
+  /**
+   * An icon before the label: a component given `{ size, color }`, or a
+   * prebuilt node. Colored like the label in each state.
+   */
+  icon?: IconSource;
   /** Text children are colored for each state. Other elements render as given. */
   children: ReactNode;
   className?: string;
@@ -381,8 +404,39 @@ function TabLabel({
   );
 }
 
+/** A label with an optional icon before it, in one layer's colors. */
+function TabContent({
+  children,
+  className,
+  icon,
+  color,
+  iconStyle,
+}: {
+  children: ReactNode;
+  className: string;
+  icon?: IconSource;
+  color: string | undefined;
+  iconStyle: object;
+}) {
+  const label = <TabLabel className={className}>{children}</TabLabel>;
+  if (icon == null) return label;
+  return (
+    <View style={styles.content}>
+      <Animated.View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={[styles.icon, iconStyle]}
+      >
+        {renderIcon(icon, { size: ICON_SIZE, color })}
+      </Animated.View>
+      {label}
+    </View>
+  );
+}
+
 export function TabsTrigger({
   value,
+  icon,
   children,
   className = "",
   disabled,
@@ -391,10 +445,32 @@ export function TabsTrigger({
   onPress,
   ...props
 }: TabsTriggerProps) {
-  const { value: current, select, variant } = useTabs();
+  const { value: current, select, variant, icons, animate } = useTabs();
   const indicator = useContext(IndicatorContext);
   if (!indicator) throw new Error("TabsTrigger must be rendered in TabsList.");
   const selected = current === value;
+  const underline = variant === "underline";
+  const labelClass = underline && selected ? "text-foreground" : "text-muted";
+  const { color: labelColor } = useResolveClassNames(labelClass);
+  const { color: onPrimary } = useResolveClassNames("text-on-primary");
+
+  // One progress value opens the icon on both label layers at once, so the
+  // on-indicator copy never drifts from the one beneath it.
+  const shown = icons === "always" || selected;
+  const reveal = useSharedValue(shown ? 1 : 0);
+  useEffect(() => {
+    reveal.value = animate
+      ? withSpring(shown ? 1 : 0, SPRING_SWAP)
+      : shown
+        ? 1
+        : 0;
+  }, [animate, reveal, shown]);
+  const iconStyle = useAnimatedStyle(() => ({
+    width: ICON_SIZE * reveal.value,
+    marginRight: ICON_GAP * reveal.value,
+    opacity: reveal.value,
+    transform: [{ scale: 0.6 + 0.4 * reveal.value }],
+  }));
   const left = useSharedValue(0);
   const width = useSharedValue(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -425,8 +501,6 @@ export function TabsTrigger({
       SLACK,
   }));
 
-  const underline = variant === "underline";
-
   return (
     <Pressable
       {...props}
@@ -452,11 +526,14 @@ export function TabsTrigger({
         if (!event.defaultPrevented) select(value);
       }}
     >
-      <TabLabel
-        className={underline && selected ? "text-foreground" : "text-muted"}
+      <TabContent
+        className={labelClass}
+        icon={icon}
+        color={labelColor == null ? undefined : String(labelColor)}
+        iconStyle={iconStyle}
       >
         {children}
-      </TabLabel>
+      </TabContent>
       {underline ? null : (
         <Animated.View
           accessibilityElementsHidden
@@ -472,7 +549,14 @@ export function TabsTrigger({
               innerStyle,
             ]}
           >
-            <TabLabel className="text-on-primary">{children}</TabLabel>
+            <TabContent
+              className="text-on-primary"
+              icon={icon}
+              color={onPrimary == null ? undefined : String(onPrimary)}
+              iconStyle={iconStyle}
+            >
+              {children}
+            </TabContent>
           </Animated.View>
         </Animated.View>
       )}
@@ -542,4 +626,11 @@ const styles = StyleSheet.create({
     pointerEvents: "none",
   },
   clipInner: { position: "absolute", top: 0 },
+  content: { flexDirection: "row", alignItems: "center" },
+  icon: {
+    height: ICON_SIZE,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
