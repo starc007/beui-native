@@ -7,7 +7,8 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.beui.showcase"
     },
     "android": {
       "adaptiveIcon": {
@@ -16,12 +17,26 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "dev.beui.showcase"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "scheme": "beui-native",
-    "plugins": ["expo-router"]
+    "plugins": ["expo-router"],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "93a3a95c-6dc2-4adb-b57c-efbecf859f25"
+      }
+    },
+    "owner": "saurrabhh",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25"
+    }
   }
 }

@@ -40,7 +40,13 @@ beUI Native isn't an npm package. Like beUI on the web, you copy the components 
 
 ## Try the showcase
 
-The `example/` app shows every component on its own page, in light and dark. You need Node.js 22.13 or later and [Bun](https://bun.sh) 1.3.14.
+The `example/` app shows every component on its own page, in light and dark.
+
+To try it on your phone without cloning, scan this code with [Expo Go](https://expo.dev/go) (SDK 57). It loads the latest published showcase.
+
+<img alt="QR code that opens the beUI Native showcase in Expo Go" src="https://qr.expo.dev/eas-update?projectId=93a3a95c-6dc2-4adb-b57c-efbecf859f25&runtimeVersion=exposdk:57.0.0&channel=production" width="180" />
+
+To run it from source, you need Node.js 22.13 or later and [Bun](https://bun.sh) 1.3.14.
 
 ```sh
 git clone https://github.com/starc007/beui-native.git

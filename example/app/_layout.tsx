@@ -6,6 +6,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useResolveClassNames, useUniwind } from "uniwind";
 
+// A deep link straight to a component, like a docs QR code, still gets the
+// list underneath, so back returns to every other component.
+export const unstable_settings = { initialRouteName: "index" };
+
 export default function RootLayout() {
   const { theme } = useUniwind();
   const { backgroundColor: background } = useResolveClassNames("bg-background");
