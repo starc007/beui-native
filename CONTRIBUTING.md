@@ -32,7 +32,7 @@ Each component is a folder in `src/components/` with:
 - the component, exported from the folder's `index.ts` and from `src/index.ts`
 - a `README.md` covering its API, motion and accessibility, and listing the shared files someone needs to copy it
 - a showcase in `example/components/`, registered in `example/components/registry.ts`
-- an updated `showcase.json`: run `bun run manifest` after registering the showcase. beui.dev reads this file, and CI fails if it's out of date
+- an updated `showcase.json`: run `bun run manifest` after registering the showcase (see [The manifest](#the-manifest))
 
 And it follows these rules:
 
@@ -43,13 +43,26 @@ And it follows these rules:
 - **Accessibility:** accessible names, roles and states, adjustable actions where it makes sense, comfortable touch targets and support for large text.
 - **Haptics:** offer callbacks, like `onValueCommit`, rather than calling a haptics library from `src/`.
 
+## The manifest
+
+`showcase.json` describes every component for beui.dev and the `beui-native` CLI: its title, description, group and variant count, its own files, the shared files it needs, the libraries it imports, and its README, source and Expo Go links. `bun run manifest` (`scripts/manifest.ts`) generates it from the showcase registry, following each component's imports to find its shared files and libraries. Don't edit it by hand.
+
+Run `bun run manifest` and commit `showcase.json` whenever you:
+
+- add a component or register its showcase
+- change what a component imports, including a new library or shared file, even inside an existing component
+- change a component's title, description, group or variants in `example/components/registry.ts`
+
+CI runs `bun run manifest --check` and fails if the committed file is out of date. Out of date, beui.dev would show the wrong install steps and the CLI would skip files a component needs.
+
 ## Checks
 
 Run these before opening a pull request:
 
 ```sh
-bun check          # TypeScript and Biome
-bun run format     # Format and apply safe lint fixes
+bun check                  # TypeScript and Biome
+bun run format             # Format and apply safe lint fixes
+bun run manifest --check   # showcase.json matches the source
 ```
 
 If you change dependencies or the Metro config, also run `bun doctor` and `bun run export`. Install app dependencies from `example/` with `bunx expo install <package> --bun`, and commit the root `bun.lock`.
