@@ -130,7 +130,7 @@ In ui-components:
 bun scripts/sync-native.ts
 ```
 
-It uploads new clips and posters to R2 (media.beui.dev), and rewrites the catalog, slugs and summary in `lib/native/`. Check the component's React Native tab on the dev server: the clip, the Expo Go QR code, the install command and the related components. Then commit and release the site.
+It uploads new clips and posters to R2 (media.beui.dev), and rewrites the catalog, slugs, sidebar list and summary in `lib/native/`. Check the component's page at `/react-native/<slug>` on the dev server: the clip, the Expo Go QR code, the install command, its README and the related components. Then commit and release the site.
 
 If the shape of `/native/r` changed, redeploy the MCP worker after the release with `cd mcp && bun run deploy`.
 
