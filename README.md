@@ -59,6 +59,14 @@ Scan the QR code with [Expo Go](https://expo.dev/go) (SDK 57) on a phone on the 
 
 ## Use a component in your app
 
+The quickest way is the CLI. After the [one-time setup](https://beui.dev/docs/native-setup), it copies a component and the shared files it needs into `src/` and installs its libraries:
+
+```sh
+npx beui-native add tabs
+```
+
+To do it by hand instead, follow these steps.
+
 ### 1. Install the dependencies
 
 The components need these libraries. In an Expo app, `expo install` picks versions that match your SDK:

@@ -1,0 +1,38 @@
+{
+  "name": "beui-native",
+  "version": "0.1.0",
+  "description": "Add beUI Native components to your React Native app: animated, accessible components built for touch.",
+  "keywords": [
+    "react-native",
+    "expo",
+    "ui-components",
+    "cli",
+    "reanimated",
+    "uniwind",
+    "beui"
+  ],
+  "homepage": "https://beui.dev/docs/native-setup",
+  "bugs": {
+    "url": "https://github.com/starc007/beui-native/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starc007/beui-native.git",
+    "directory": "cli"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Saurabh",
+    "url": "https://x.com/saurra3h"
+  },
+  "type": "module",
+  "bin": {
+    "beui-native": "./index.mjs"
+  },
+  "files": [
+    "index.mjs"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
