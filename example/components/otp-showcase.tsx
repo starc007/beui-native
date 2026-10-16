@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OTPInput, type OTPStatus } from "../../src";
 import { DemoSection } from "./demo";
 
@@ -9,11 +9,19 @@ export function OTPShowcase() {
   const [status, setStatus] = useState<OTPStatus>("idle");
   const [pin, setPin] = useState("");
 
+  // After the shake, clear the slots for another try. The error message stays
+  // until the next digit.
+  useEffect(() => {
+    if (status !== "error") return;
+    const timer = setTimeout(() => setCode(""), 900);
+    return () => clearTimeout(timer);
+  }, [status]);
+
   return (
     <>
       <DemoSection
         title="Verification"
-        description="A wrong code shakes; the right one draws a check."
+        description="A wrong code shakes and clears; the right one draws a check."
       >
         <OTPInput
           label="Verification code"
