@@ -23,7 +23,7 @@ Open the showcase in Expo Go (SDK 57), or run `bun ios`, `bun android` or `bun w
 
 - `src/` holds the shared components. It must not import from `example/` or depend on Expo, so the components can be copied into any React Native app.
 - `example/` is an Expo Router app that imports `../src` directly. `example/app/index.tsx` lists components and `example/app/[component].tsx` shows one. Showcases and helpers live in `example/components/`, not in `example/app/`.
-- There's no build or npm package. People copy components from `src/`.
+- There's no npm package of the components. People copy them from `src/`, by hand or with the `beui-native` CLI in `cli/`, which reads beui.dev's registry.
 
 ## Building a component
 
@@ -61,5 +61,81 @@ Passing checks and bundles doesn't prove a component works on a device. In your 
 - Use [Conventional Commits](https://www.conventionalcommits.org): `feat: add date picker`, `fix: let the accordion bounce on close`.
 - Keep a pull request to one component or one fix.
 - Include a screen recording or GIF for anything that moves.
+
+## After your pull request merges
+
+You're done. A maintainer records the clips for beui.dev, updates the Expo Go showcase and syncs the component to the site. It appears on beui.dev, and installs with `npx beui-native add`, after the next site release.
+
+## Publishing to beui.dev (maintainers)
+
+These steps need accounts and a Mac, so maintainers do them after a component merges:
+
+- a Mac with Xcode, the iOS Simulator and `ffmpeg`
+- this repo and [ui-components](https://github.com/starc007/ui-components) (beui.dev) cloned side by side
+- an Expo login for EAS Update, and `wrangler login` on the beUI Cloudflare account
+
+### 1. Record the clips
+
+Every component gets a light and a dark clip, recorded from a Release build so they show production motion without developer overlays:
+
+```sh
+cd example
+LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 bunx expo run:ios --configuration Release
+git checkout package.json   # expo run rewrites its scripts
+cd ..
+```
+
+Then record each theme with `scripts/record.sh` (run it without arguments to see every command):
+
+```sh
+scripts/record.sh prepare                       # 9:41, full battery
+xcrun simctl spawn booted defaults write -g AppleLocale en_US
+scripts/record.sh theme light
+xcrun simctl openurl booted "beui-native://"    # start from the list, for a fresh page
+scripts/record.sh open <slug>                   # opens with ?record=1, which hides the back button
+scripts/record.sh start <slug> light
+# Use the component: tap through each section, and scroll a long page down
+# and back to the top, so the loop ends where it starts.
+scripts/record.sh stop
+scripts/record.sh encode <slug> light           # writes recordings/<slug>-light.mp4
+```
+
+Repeat with `dark`. `encode` trims the still start itself. To drop a pause in the middle, such as while you checked a screenshot, pass the raw seconds: `CUT=14.7-24.5 scripts/record.sh encode <slug> light`. Watch the clip before moving on.
+
+When you're done, put the Simulator back:
+
+```sh
+xcrun simctl status_bar booted clear
+xcrun simctl spawn booted defaults write -g AppleLocale <your locale>
+```
+
+Clips live in `recordings/`, which git ignores.
+
+### 2. Update the Expo Go showcase
+
+The QR codes on beui.dev open the `production` channel, so publish the merged showcase there:
+
+```sh
+cd example
+bunx eas-cli update --channel production --environment production --platform all --message <OneWord> --non-interactive
+```
+
+Keep the message to one word: `bunx` splits arguments at spaces.
+
+### 3. Sync to beui.dev
+
+In ui-components:
+
+```sh
+bun scripts/sync-native.ts
+```
+
+It uploads new clips and posters to R2 (media.beui.dev), and rewrites the catalog, slugs and summary in `lib/native/`. Check the component's React Native tab on the dev server: the clip, the Expo Go QR code, the install command and the related components. Then commit and release the site.
+
+If the shape of `/native/r` changed, redeploy the MCP worker after the release with `cd mcp && bun run deploy`.
+
+### 4. Publish the CLI, if it changed
+
+Only when `cli/` changed: bump its version in `cli/package.json`, then run `npm publish` from `cli/`.
 
 By contributing, you agree that your contributions are licensed under the [MIT License](LICENSE).
