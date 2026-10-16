@@ -416,6 +416,7 @@
         "react",
         "react-native",
         "react-native-reanimated",
+        "react-native-worklets",
         "uniwind"
       ],
       "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/tabs?runtime-version=exposdk%3A57.0.0&channel-name=production",
