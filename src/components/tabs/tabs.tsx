@@ -27,6 +27,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import { type IconSource, renderIcon } from "../../primitives/render-icon";
@@ -93,10 +94,17 @@ const surfaces: Record<TabsVariant, string> = {
   underline: "",
 };
 const lists: Record<TabsVariant, string> = {
-  pill: "p-1 gap-1",
+  pill: "p-1",
   segment: "p-0.5",
   // The border sits on the list so the indicator can overlap it inside the scroll view.
-  underline: "gap-1 border-b border-border",
+  underline: "border-b border-border",
+};
+// Space between tabs. A number rather than a class, so the indicator can work
+// out where tabs will settle while their icons are still opening.
+const listGaps: Record<TabsVariant, number> = {
+  pill: 4,
+  segment: 0,
+  underline: 4,
 };
 const triggers: Record<TabsVariant, string> = {
   pill: "px-3.5 py-1.5 rounded-full",
@@ -117,11 +125,14 @@ type TabsContextValue = {
   animate: boolean;
 };
 
+/** A tab's width with its selected-only icon folded and open. */
+type TabWidths = { folded: number; open: number };
+
 type Indicator = {
   x: SharedValue<number>;
   width: SharedValue<number>;
   visible: SharedValue<number>;
-  report: (value: string, layout: LayoutRectangle) => void;
+  report: (value: string, layout: LayoutRectangle, widths: TabWidths) => void;
 };
 
 const TabsContext = createContext<TabsContextValue | null>(null);
@@ -200,6 +211,9 @@ export function TabsList({
 }: TabsListProps) {
   const { value, variant, animate } = useTabs();
   const layouts = useRef(new Map<string, LayoutRectangle>());
+  const widths = useRef(new Map<string, TabWidths>());
+  // The box the indicator is heading for, so repeat reports don't restart it.
+  const heading = useRef<LayoutRectangle | null>(null);
   const scrollRef = useRef<ScrollView>(null);
   const scrollX = useRef(0);
   const viewportWidth = useRef(0);
@@ -234,7 +248,8 @@ export function TabsList({
   // Keep the selected tab clear of the viewport edges when the list scrolls.
   const reveal = useCallback((layout: LayoutRectangle) => {
     const viewport = viewportWidth.current;
-    if (!viewport) return;
+    // A list that fits has nothing to scroll; asking anyway nudges it sideways.
+    if (!viewport || contentWidth.current <= viewport + 1) return;
     const start = scrollX.current;
     let target = start;
     if (layout.x < start + REVEAL_MARGIN) {
@@ -250,31 +265,65 @@ export function TabsList({
     }
   }, []);
 
-  const move = useCallback(
-    // `follow` is a size change on the tab already targeted, such as its icon
-    // springing open. The indicator tracks it on the icon's own spring, so
-    // the pill never lags behind a tab that is still growing.
-    (target: string, follow = false) => {
+  // Where the target tab will settle once every icon has finished opening or
+  // folding. With icons="selected" tabs resize as the selection changes, and
+  // their reported layouts trail the icon's spring by a frame or more. Aiming
+  // at the settled box gives one glide instead of chasing late measurements.
+  const settled = useCallback(
+    (target: string): LayoutRectangle | null => {
       const layout = layouts.current.get(target);
-      if (!layout) {
+      if (!layout) return null;
+      const tabs = [...layouts.current.entries()].sort(
+        (a, b) => a[1].x - b[1].x,
+      );
+      // The first tab never moves; the rest follow from the widths.
+      let x = tabs[0]?.[1].x ?? 0;
+      for (const [item] of tabs) {
+        const size = widths.current.get(item);
+        const width = size ? (item === target ? size.open : size.folded) : 0;
+        if (item === target)
+          return { x, y: layout.y, width, height: layout.height };
+        x += width + listGaps[variant];
+      }
+      return null;
+    },
+    [variant],
+  );
+
+  const move = useCallback(
+    (target: string) => {
+      const box = settled(target);
+      if (!box) {
         visible.value = 0;
+        heading.current = null;
         return;
       }
+      const last = heading.current;
+      if (
+        last &&
+        visible.value === 1 &&
+        Math.abs(last.x - box.x) < 0.5 &&
+        Math.abs(last.width - box.width) < 0.5 &&
+        Math.abs(last.y - box.y) < 0.5 &&
+        Math.abs(last.height - box.height) < 0.5
+      ) {
+        return;
+      }
+      heading.current = box;
       // Height and vertical position never animate; only the glide does.
-      y.value = layout.y;
-      height.value = layout.height;
+      y.value = box.y;
+      height.value = box.height;
       if (visible.value === 0 || !animateRef.current) {
-        x.value = layout.x;
-        width.value = layout.width;
+        x.value = box.x;
+        width.value = box.width;
       } else {
-        const spring = follow ? SPRING_SWAP : INDICATOR_SPRING;
-        x.value = withSpring(layout.x, spring);
-        width.value = withSpring(layout.width, spring);
+        x.value = withSpring(box.x, INDICATOR_SPRING);
+        width.value = withSpring(box.width, INDICATOR_SPRING);
       }
       visible.value = 1;
-      reveal(layout);
+      reveal(box);
     },
-    [height, reveal, visible, width, x, y],
+    [height, reveal, settled, visible, width, x, y],
   );
 
   useEffect(() => {
@@ -282,9 +331,11 @@ export function TabsList({
   }, [move, value]);
 
   const report = useCallback(
-    (item: string, layout: LayoutRectangle) => {
+    (item: string, layout: LayoutRectangle, size: TabWidths) => {
       layouts.current.set(item, layout);
-      if (item === valueRef.current) move(item, true);
+      widths.current.set(item, size);
+      // Any tab can move the target, such as one before it changing size.
+      move(valueRef.current);
     },
     [move],
   );
@@ -337,6 +388,7 @@ export function TabsList({
           <View
             accessibilityRole="tablist"
             className={`flex-row items-center ${lists[variant]}`}
+            style={{ gap: listGaps[variant] }}
           >
             <Animated.View
               className={indicatorClassName ?? "bg-primary"}
@@ -434,6 +486,29 @@ function TabContent({
   );
 }
 
+function clamp01(value: number) {
+  "worklet";
+  return Math.min(1, Math.max(0, value));
+}
+
+/** How much of a tab the indicator leaves uncovered on each side. */
+function overlap(
+  left: number,
+  width: number,
+  indicatorX: number,
+  indicatorWidth: number,
+  visible: number,
+) {
+  "worklet";
+  const start = Math.min(width, Math.max(0, indicatorX - left));
+  const end = Math.min(
+    width,
+    Math.max(0, left + width - (indicatorX + indicatorWidth)),
+  );
+  const hidden = visible === 0 || start + end >= width;
+  return hidden ? { start: 0, end: 0, hidden } : { start, end, hidden };
+}
+
 export function TabsTrigger({
   value,
   icon,
@@ -458,48 +533,81 @@ export function TabsTrigger({
   // on-indicator copy never drifts from the one beneath it.
   const shown = icons === "always" || selected;
   const reveal = useSharedValue(shown ? 1 : 0);
-  useEffect(() => {
-    reveal.value = animate
-      ? withSpring(shown ? 1 : 0, SPRING_SWAP)
-      : shown
-        ? 1
-        : 0;
-  }, [animate, reveal, shown]);
-  const iconStyle = useAnimatedStyle(() => ({
-    width: ICON_SIZE * reveal.value,
-    marginRight: ICON_GAP * reveal.value,
-    opacity: reveal.value,
-    transform: [{ scale: 0.6 + 0.4 * reveal.value }],
-  }));
+  // Only a selected-only icon changes the tab's width.
+  const slot = icon != null && icons === "selected" ? ICON_SIZE + ICON_GAP : 0;
   const left = useSharedValue(0);
-  const width = useSharedValue(0);
-  const [size, setSize] = useState({ width: 0, height: 0 });
+  // The folded width. The live width follows the icon's spring on the UI
+  // thread, rather than layout events that arrive a frame or more late.
+  const folded = useSharedValue(0);
+  const sizes = useRef<TabWidths | null>(null);
+  const layout = useRef<LayoutRectangle | null>(null);
+  // Whether the icon is at rest. Layouts measured mid-spring are already
+  // stale when they arrive, so only resting ones set the widths.
+  const resting = useRef(true);
+  const shownRef = useRef(shown);
+  shownRef.current = shown;
 
-  // The on-indicator label shows only where the indicator overlaps this tab.
-  const clipStyle = useAnimatedStyle(() => {
-    const start = Math.min(
-      width.value,
-      Math.max(0, indicator.x.value - left.value),
-    );
-    const end = Math.min(
-      width.value,
-      Math.max(
-        0,
-        left.value + width.value - (indicator.x.value + indicator.width.value),
-      ),
-    );
-    const hidden = indicator.visible.value === 0 || start + end >= width.value;
+  const measure = useCallback(
+    (next: LayoutRectangle) => {
+      const base = next.width - (shownRef.current ? slot : 0);
+      sizes.current = { folded: base, open: base + slot };
+      folded.value = base;
+    },
+    [folded, slot],
+  );
+
+  useEffect(() => {
+    if (!animate) {
+      reveal.value = shown ? 1 : 0;
+      return;
+    }
+    resting.current = false;
+    const rest = () => {
+      resting.current = true;
+      if (!layout.current) return;
+      measure(layout.current);
+      if (sizes.current) indicator.report(value, layout.current, sizes.current);
+    };
+    reveal.value = withSpring(shown ? 1 : 0, SPRING_SWAP, (finished) => {
+      if (finished) scheduleOnRN(rest);
+    });
+  }, [animate, indicator, measure, reveal, shown, value]);
+  const iconStyle = useAnimatedStyle(() => {
+    // The spring overshoots a little. Below zero a width is invalid and the
+    // icon snaps to its natural size, so layout uses the clamped progress.
+    const open = clamp01(reveal.value);
     return {
-      opacity: hidden ? 0 : 1,
-      left: hidden ? 0 : start,
-      right: hidden ? 0 : end,
+      width: ICON_SIZE * open,
+      marginRight: ICON_GAP * open,
+      opacity: open,
+      transform: [{ scale: 0.6 + 0.4 * reveal.value }],
     };
   });
-  const innerStyle = useAnimatedStyle(() => ({
-    left:
-      -Math.min(width.value, Math.max(0, indicator.x.value - left.value)) -
-      SLACK,
-  }));
+  // The on-indicator label shows only where the indicator overlaps this tab.
+  // Each style reads its shared values itself: a style only updates for the
+  // values its own worklet reads, not ones read inside a helper it calls.
+  const clipStyle = useAnimatedStyle(() => {
+    const { start, end, hidden } = overlap(
+      left.value,
+      folded.value + slot * clamp01(reveal.value),
+      indicator.x.value,
+      indicator.width.value,
+      indicator.visible.value,
+    );
+    return { opacity: hidden ? 0 : 1, left: start, right: end };
+  });
+  // The inner layer spans the whole tab by its insets, so it resizes with the
+  // tab natively and its label sits exactly over the one beneath.
+  const innerStyle = useAnimatedStyle(() => {
+    const { start, end } = overlap(
+      left.value,
+      folded.value + slot * clamp01(reveal.value),
+      indicator.x.value,
+      indicator.width.value,
+      indicator.visible.value,
+    );
+    return { left: -start - SLACK, right: -end - SLACK };
+  });
 
   return (
     <Pressable
@@ -514,11 +622,11 @@ export function TabsTrigger({
       disabled={disabled}
       className={`shrink-0 items-center justify-center ${triggers[variant]} ${disabled ? "opacity-50" : ""} ${className}`}
       onLayout={(event) => {
-        const layout = event.nativeEvent.layout;
-        left.value = layout.x;
-        width.value = layout.width;
-        setSize({ width: layout.width, height: layout.height });
-        indicator.report(value, layout);
+        const next = event.nativeEvent.layout;
+        layout.current = next;
+        left.value = next.x;
+        if (resting.current || !sizes.current) measure(next);
+        if (sizes.current) indicator.report(value, next, sizes.current);
         onLayout?.(event);
       }}
       onPress={(event) => {
@@ -543,11 +651,7 @@ export function TabsTrigger({
         >
           <Animated.View
             className={`items-center justify-center ${triggers[variant]}`}
-            style={[
-              styles.clipInner,
-              { width: size.width + SLACK * 2, height: size.height },
-              innerStyle,
-            ]}
+            style={[styles.clipInner, innerStyle]}
           >
             <TabContent
               className="text-on-primary"
@@ -625,7 +729,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     pointerEvents: "none",
   },
-  clipInner: { position: "absolute", top: 0 },
+  clipInner: { position: "absolute", top: 0, bottom: 0 },
   content: { flexDirection: "row", alignItems: "center" },
   icon: {
     height: ICON_SIZE,
