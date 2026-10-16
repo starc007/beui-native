@@ -27,7 +27,10 @@ function useToolbarTheme() {
 }
 
 export default function ComponentPage() {
-  const { component } = useLocalSearchParams<{ component: string }>();
+  const { component, record } = useLocalSearchParams<{
+    component: string;
+    record?: string;
+  }>();
   const entry = findEntry(component);
   const toolbarTheme = useToolbarTheme();
 
@@ -45,7 +48,10 @@ export default function ComponentPage() {
   const { Showcase, keyboard } = entry;
   return (
     <>
-      <Stack.Screen options={{ title: entry.title }} />
+      {/* `?record=1` hides the back button for the beui.dev clips. */}
+      <Stack.Screen
+        options={{ title: entry.title, headerBackVisible: record !== "1" }}
+      />
       <KeyboardAwareScrollView
         contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"

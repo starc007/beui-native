@@ -6,10 +6,10 @@
 #   scripts/record.sh open <slug>          Open a component's showcase page
 #   scripts/record.sh start <slug> <theme> Start recording recordings/raw/<slug>-<theme>.mov
 #   scripts/record.sh stop                 Stop the recording in progress
-#   scripts/record.sh encode <slug> <theme> [trim-start]
+#   scripts/record.sh encode <slug> <theme> [trim-start|auto]
 #                                          Write recordings/<slug>-<theme>.mp4
-#                                          CUT=a-b drops raw seconds a to b,
-#                                          such as a pause between takes.
+#                                          CUT=a-b[,c-d] drops raw seconds a
+#                                          to b, such as a pause between takes.
 #
 # Record from a Release build (`bunx expo run:ios --configuration Release`)
 # so clips show production motion and no developer overlays. Set DEVICE to a
@@ -40,7 +40,8 @@ case "${1:-}" in
     xcrun simctl ui "$DEVICE" appearance "${2:?light or dark}"
     ;;
   open)
-    xcrun simctl openurl "$DEVICE" "$SCHEME://${2:?slug}"
+    # record=1 hides the back button, which the clips don't need.
+    xcrun simctl openurl "$DEVICE" "$SCHEME://${2:?slug}?record=1"
     ;;
   start)
     slug="${2:?slug}"
@@ -64,17 +65,25 @@ case "${1:-}" in
   encode)
     slug="${2:?slug}"
     theme="${3:?theme}"
-    start="${4:-0}"
+    start="${4:-auto}"
+    if [[ "$start" == "auto" ]]; then
+      # Half a second of rest before the first change on screen.
+      first=$(ffprobe -v error -select_streams v -show_entries frame=pts_time \
+        -of csv=p=0 "$RAW/$slug-$theme.mov" | tr -d , | sed -n 2p)
+      start=$(awk -v t="${first:-0}" 'BEGIN { s = t - 0.5; printf "%.3f", (s < 0 ? 0 : s) }')
+    fi
     # The Simulator writes frames only when the screen changes, so a resting
     # screen is one frame. Convert to constant 60 fps first, so trimming the
-    # start keeps that frame instead of seeking past it.
-    filters="fps=60,trim=start=$start,setpts=PTS-STARTPTS"
+    # start keeps that frame instead of seeking past it. Keep frames from the
+    # start on, minus any CUT ranges, then renumber them.
+    keep="gte(t,$start)"
     if [[ -n "${CUT:-}" ]]; then
-      # CUT times are in the raw clip; shift them past the trimmed start.
-      a=$(echo "${CUT%-*} - $start" | bc)
-      b=$(echo "${CUT#*-} - $start" | bc)
-      filters="$filters,split[x][y];[x]trim=end=$a,setpts=PTS-STARTPTS[p];[y]trim=start=$b,setpts=PTS-STARTPTS[q];[p][q]concat"
+      IFS=, read -ra cuts <<<"$CUT"
+      for cut in "${cuts[@]}"; do
+        keep="$keep*not(between(t,${cut%-*},${cut#*-}))"
+      done
     fi
+    filters="fps=60,select='$keep',setpts=N/60/TB"
     # The raw clip ends on the last change. Hold that frame for HOLD seconds
     # so the loop rests before it restarts. Then H.264 that every browser
     # plays, no audio, and the index up front for streaming.
