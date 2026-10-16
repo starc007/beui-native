@@ -3,50 +3,87 @@
 Animated, accessible components for React Native, built for touch. A native companion to [beUI](https://beui.dev): the same component APIs and motion language, rebuilt for phones with Reanimated, Gesture Handler and Uniwind.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![npm](https://img.shields.io/npm/v/beui-native.svg?label=cli)](https://www.npmjs.com/package/beui-native)
 ![Expo SDK 57](https://img.shields.io/badge/Expo%20SDK-57-000020.svg)
 ![React Native 0.86](https://img.shields.io/badge/React%20Native-0.86-61dafb.svg)
 ![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android%20%7C%20web-lightgrey.svg)
 
-beUI Native isn't an npm package. Like beUI on the web, you copy the components you want into your app and own the code. Every component lives in its own folder with a README covering its API, motion and accessibility.
+**[Components](https://beui.dev/react-native)** · **[Setup guide](https://beui.dev/docs/native-setup)** · **[Try in Expo Go](#try-it-on-your-phone)** · **[CLI](cli/README.md)**
+
+<table>
+  <tr>
+    <td align="center"><a href="https://beui.dev/react-native/tabs"><picture><source media="(prefers-color-scheme: dark)" srcset="https://media.beui.dev/clips/tabs-dark.368c58debc.jpg" /><img alt="Tabs on iOS" src="https://media.beui.dev/clips/tabs-light.dde453bfa1.jpg" width="180" /></picture></a><br /><sub>Tabs</sub></td>
+    <td align="center"><a href="https://beui.dev/react-native/color-picker"><picture><source media="(prefers-color-scheme: dark)" srcset="https://media.beui.dev/clips/color-picker-dark.14d23a1a36.jpg" /><img alt="Color Picker on iOS" src="https://media.beui.dev/clips/color-picker-light.30675dbd04.jpg" width="180" /></picture></a><br /><sub>Color Picker</sub></td>
+    <td align="center"><a href="https://beui.dev/react-native/alert"><picture><source media="(prefers-color-scheme: dark)" srcset="https://media.beui.dev/clips/alert-dark.9d416affc2.jpg" /><img alt="Alert on iOS" src="https://media.beui.dev/clips/alert-light.ff37d25947.jpg" width="180" /></picture></a><br /><sub>Alert</sub></td>
+    <td align="center"><a href="https://beui.dev/react-native/swipeable-list"><picture><source media="(prefers-color-scheme: dark)" srcset="https://media.beui.dev/clips/swipeable-list-dark.93379a92fd.jpg" /><img alt="Swipeable List on iOS" src="https://media.beui.dev/clips/swipeable-list-light.70546afcf5.jpg" width="180" /></picture></a><br /><sub>Swipeable List</sub></td>
+  </tr>
+</table>
+
+Like beUI on the web, beUI Native isn't a dependency. You copy each component's source into your app and own it, by hand or with the CLI. Every component has a page on [beui.dev](https://beui.dev/react-native) with a recording, install steps and its docs, and a README here covering its API, motion and accessibility.
+
+## Quick start
+
+1. Do the [one-time setup](https://beui.dev/docs/native-setup) in your Expo or React Native app: Reanimated, Gesture Handler, Uniwind and the theme tokens.
+2. Add a component from your app's root:
+
+   ```sh
+   npx beui-native add tabs
+   ```
+
+   It copies the component and the shared files it needs into `src/`, and installs any libraries your app is missing.
+3. Use it:
+
+   ```tsx
+   import { Tabs, TabsContent, TabsList, TabsTrigger } from "./src/components/tabs";
+
+   <Tabs defaultValue="overview">
+     <TabsList>
+       <TabsTrigger value="overview">Overview</TabsTrigger>
+       <TabsTrigger value="activity">Activity</TabsTrigger>
+     </TabsList>
+     <TabsContent value="overview">…</TabsContent>
+     <TabsContent value="activity">…</TabsContent>
+   </Tabs>
+   ```
 
 ## Components
 
-| Component | What it does |
-| --- | --- |
-| **Actions** | |
-| [Button](src/components/button/README.md) | Spring press, ripple, icons, and a stateful variant for async actions. |
-| [Expandable Control](src/components/expandable-control/README.md) | Buttons and chips that spring open to reveal a label or an action. |
-| [Card](src/components/card/README.md) | Composable surfaces, selectable with press feedback. |
-| **Forms** | |
-| [Input](src/components/input/README.md) | Error shake, focus ring and a drawn success check. |
-| [OTP Input](src/components/otp-input/README.md) | Digits roll into slots, with SMS autofill. |
-| [Select](src/components/select/README.md) | A panel that unfolds out of its trigger. |
-| [Multi Select](src/components/multi-select/README.md) | Searchable options that become removable chips. |
-| [Color Picker](src/components/color-picker/README.md) | A popover picker with a loupe under your finger. |
-| [Checkbox](src/components/checkbox/README.md) | A checkmark that draws itself in. |
-| [Radio Group](src/components/radio/README.md) | One dot glides to the option you pick. |
-| [Range Slider](src/components/range-slider/README.md) | A bar thumb that glides between steps. |
-| [Switch](src/components/switch/README.md) | A weighty thumb that squishes and stretches. |
-| **Navigation and lists** | |
-| [Bouncy Accordion](src/components/bouncy-accordion/README.md) | FAQ rows that spring apart as they open. |
-| [Tabs](src/components/tabs/README.md) | Pill, segment and underline tabs with a gliding indicator. |
-| [Swipeable List](src/components/swipeable-list/README.md) | Rows that swipe to reveal actions. |
-| **Motion and feedback** | |
-| [Number Animation](src/components/number/README.md) | Rolling tickers and count-ups. |
-| [Text Animation](src/components/text-animation/README.md) | Reveals, sweeps, shimmers, cascades and scrambles. |
-| [Alert](src/components/alert/README.md) | Feedback that eases in and folds away. |
-| [Animated Badge](src/components/animated-badge/README.md) | Status pills whose icon and label roll. |
-| [Loader](src/components/loader/README.md) | Seventeen loading indicators from one size prop. |
+Each name opens the component's page on beui.dev, with a recording from iOS and install steps.
 
-## Try the showcase
+| Component | What it does | Docs |
+| --- | --- | --- |
+| **Actions** | | |
+| [Button](https://beui.dev/react-native/button) | Spring press, ripple, icons, and a stateful variant for async actions. | [README](src/components/button/README.md) |
+| [Expandable Control](https://beui.dev/react-native/expandable-control) | Buttons and chips that spring open to reveal a label or an action. | [README](src/components/expandable-control/README.md) |
+| [Card](https://beui.dev/react-native/card) | Composable surfaces, selectable with press feedback. | [README](src/components/card/README.md) |
+| **Forms** | | |
+| [Input](https://beui.dev/react-native/input) | Error shake, focus ring and a drawn success check. | [README](src/components/input/README.md) |
+| [OTP Input](https://beui.dev/react-native/otp-input) | Digits roll into slots, with SMS autofill. | [README](src/components/otp-input/README.md) |
+| [Select](https://beui.dev/react-native/select) | A panel that unfolds out of its trigger. | [README](src/components/select/README.md) |
+| [Multi Select](https://beui.dev/react-native/multi-select) | Searchable options that become removable chips. | [README](src/components/multi-select/README.md) |
+| [Color Picker](https://beui.dev/react-native/color-picker) | A popover picker with a loupe under your finger. | [README](src/components/color-picker/README.md) |
+| [Checkbox](https://beui.dev/react-native/checkbox) | A checkmark that draws itself in. | [README](src/components/checkbox/README.md) |
+| [Radio Group](https://beui.dev/react-native/radio) | One dot glides to the option you pick. | [README](src/components/radio/README.md) |
+| [Range Slider](https://beui.dev/react-native/range-slider) | A bar thumb that glides between steps. | [README](src/components/range-slider/README.md) |
+| [Switch](https://beui.dev/react-native/switch) | A weighty thumb that squishes and stretches. | [README](src/components/switch/README.md) |
+| **Navigation and lists** | | |
+| [Bouncy Accordion](https://beui.dev/react-native/bouncy-accordion) | FAQ rows that spring apart as they open. | [README](src/components/bouncy-accordion/README.md) |
+| [Tabs](https://beui.dev/react-native/tabs) | Pill, segment and underline tabs with a gliding indicator. | [README](src/components/tabs/README.md) |
+| [Swipeable List](https://beui.dev/react-native/swipeable-list) | Rows that swipe to reveal actions. | [README](src/components/swipeable-list/README.md) |
+| **Motion and feedback** | | |
+| [Number Animation](https://beui.dev/react-native/number) | Rolling tickers and count-ups. | [README](src/components/number/README.md) |
+| [Text Animation](https://beui.dev/react-native/text-animation) | Reveals, sweeps, shimmers, cascades and scrambles. | [README](src/components/text-animation/README.md) |
+| [Alert](https://beui.dev/react-native/alert) | Feedback that eases in and folds away. | [README](src/components/alert/README.md) |
+| [Animated Badge](https://beui.dev/react-native/animated-badge) | Status pills whose icon and label roll. | [README](src/components/animated-badge/README.md) |
+| [Loader](https://beui.dev/react-native/loader) | Seventeen loading indicators from one size prop. | [README](src/components/loader/README.md) |
 
-The `example/` app shows every component on its own page, in light and dark.
+## Try it on your phone
 
-To try it on your phone without cloning, scan this code with [Expo Go](https://expo.dev/go) (SDK 57). It loads the latest published showcase.
+Scan this code with [Expo Go](https://expo.dev/go) (SDK 57) to open the showcase, with every component on its own page in light and dark. Each component's page on beui.dev has a code that opens it directly.
 
 <img alt="QR code that opens the beUI Native showcase in Expo Go" src="https://qr.expo.dev/eas-update?projectId=93a3a95c-6dc2-4adb-b57c-efbecf859f25&runtimeVersion=exposdk:57.0.0&channel=production" width="180" />
 
-To run it from source, you need Node.js 22.13 or later and [Bun](https://bun.sh) 1.3.14.
+To run the showcase from source, you need Node.js 22.13 or later and [Bun](https://bun.sh) 1.3.14:
 
 ```sh
 git clone https://github.com/starc007/beui-native.git
@@ -55,28 +92,22 @@ bun install --frozen-lockfile
 bun dev
 ```
 
-Scan the QR code with [Expo Go](https://expo.dev/go) (SDK 57) on a phone on the same network. To use a simulator or browser instead, run `bun ios`, `bun android` or `bun web`.
+Scan the code it prints with Expo Go on a phone on the same network, or run `bun ios`, `bun android` or `bun web`.
 
-## Use a component in your app
+## Adding components by hand
 
-The quickest way is the CLI. After the [one-time setup](https://beui.dev/docs/native-setup), it copies a component and the shared files it needs into `src/` and installs its libraries:
+The CLI does these steps for you. To do them yourself:
 
-```sh
-npx beui-native add tabs
-```
+1. **Set up your app once** with the [setup guide](https://beui.dev/docs/native-setup): it installs the libraries, adds Uniwind to your Metro config and `global.css`, adds the theme tokens from [`src/styles/theme.css`](src/styles/theme.css), and wraps your app in `GestureHandlerRootView`.
+2. **Copy the component's folder** from `src/components/`, with the shared files its README lists at the end. Keep the folder layout, since components import them by relative path:
+   - `src/hooks/`: reduced motion, presence and shake helpers
+   - `src/primitives/`: drawn paths and icons
+   - `src/styles/motion.ts`: beUI's springs and easing curves
+3. **Install its libraries.** Each component's page on beui.dev lists the exact commands. In an Expo app, use `npx expo install` so versions match your SDK.
 
-To do it by hand instead, follow these steps.
+The components are tested with:
 
-### 1. Install the dependencies
-
-The components need these libraries. In an Expo app, `expo install` picks versions that match your SDK:
-
-```sh
-npx expo install react-native-reanimated react-native-worklets react-native-gesture-handler
-npm install uniwind tailwindcss
-```
-
-| Library | Tested with |
+| Library | Version |
 | --- | --- |
 | React Native | 0.86 (Expo SDK 57), React 19 |
 | [Reanimated](https://docs.swmansion.com/react-native-reanimated/) and Worklets | 4.5 and 0.10 |
@@ -84,28 +115,6 @@ npm install uniwind tailwindcss
 | [Uniwind](https://docs.uniwind.dev) with Tailwind CSS | 1.12 with 4.3 |
 
 The shared source doesn't depend on Expo, so the components also work in a bare React Native app.
-
-### 2. Set up the theme
-
-If your app doesn't use Uniwind yet, follow its [quickstart](https://docs.uniwind.dev/quickstart) to add it to your Metro config. Components are styled with semantic color tokens, so they follow light and dark mode. Copy [`src/styles/theme.css`](src/styles/theme.css) into your app and import it from the CSS file Uniwind reads, next to Tailwind and Uniwind:
-
-```css
-@import "tailwindcss";
-@import "uniwind";
-@import "./theme.css";
-```
-
-Change the token values to match your brand. Wrap your app in `GestureHandlerRootView` if it isn't already.
-
-### 3. Copy the component
-
-Copy the component's folder from `src/components/`, along with the shared pieces its README lists at the end, usually some of:
-
-- `src/hooks/`: reduced motion, presence and shake helpers
-- `src/primitives/`: drawn paths and icons
-- `src/styles/motion.ts`: beUI's springs and easing curves
-
-Then import it like any other component in your app.
 
 ### Icons
 
@@ -118,7 +127,7 @@ Components take any icon library. An icon is a component given `{ size, color }`
 - **Accessible by default.** Accessible names, roles and states, adjustable actions for screen readers, comfortable touch targets and support for large text are part of each component.
 - **Yours to change.** Components are plain source with semantic tokens, so restyling one is editing a class name.
 
-## Project structure
+## Development
 
 ```text
 src/
@@ -130,9 +139,8 @@ src/
 example/        Expo Router showcase that imports ../src directly
   app/          The component list and one page per component
   components/   Showcases, and registry.ts listing every component
+cli/            The beui-native CLI, published to npm
 ```
-
-## Development
 
 ```sh
 bun check          # TypeScript and Biome
