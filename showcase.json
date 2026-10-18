@@ -80,6 +80,36 @@
       }
     },
     {
+      "slug": "menu",
+      "title": "Menu",
+      "description": "A pull-down menu you can slide a finger through.",
+      "group": "Actions",
+      "variants": 1,
+      "readme": "src/components/menu/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/menu",
+      "files": ["src/components/menu/index.ts", "src/components/menu/menu.tsx"],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/agent-icons.tsx",
+        "src/primitives/render-icon.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "react-native-svg",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/menu?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "menu-light.mp4",
+        "dark": "menu-dark.mp4"
+      }
+    },
+    {
       "slug": "card",
       "title": "Card",
       "description": "Composable surfaces, selectable with press feedback.",
@@ -703,7 +733,7 @@
     {
       "slug": "prompt-input",
       "title": "Prompt Input",
-      "description": "A composer that grows, with models, actions and stop.",
+      "description": "A chat composer with attachments, voice and stop.",
       "group": "AI agents",
       "variants": 1,
       "readme": "src/components/prompt-input/README.md",
@@ -713,15 +743,18 @@
         "src/components/prompt-input/prompt-input.tsx"
       ],
       "shared": [
+        "src/components/menu/menu.tsx",
         "src/hooks/use-presence.ts",
         "src/hooks/use-reduced-motion.ts",
         "src/primitives/agent-icons.tsx",
         "src/primitives/render-icon.tsx",
+        "src/primitives/rise-in.tsx",
         "src/styles/motion.ts"
       ],
       "libraries": [
         "react",
         "react-native",
+        "react-native-gesture-handler",
         "react-native-reanimated",
         "react-native-svg",
         "react-native-worklets",

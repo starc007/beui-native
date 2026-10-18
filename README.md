@@ -55,6 +55,7 @@ Each name opens the component's page on beui.dev, with a recording from iOS and 
 | **Actions** | | |
 | [Button](https://beui.dev/react-native/button) | Spring press, ripple, icons, and a stateful variant for async actions. | [README](src/components/button/README.md) |
 | [Expandable Control](https://beui.dev/react-native/expandable-control) | Buttons and chips that spring open to reveal a label or an action. | [README](src/components/expandable-control/README.md) |
+| [Menu](https://beui.dev/react-native/menu) | A pull-down menu you can slide a finger through. | [README](src/components/menu/README.md) |
 | [Card](https://beui.dev/react-native/card) | Composable surfaces, selectable with press feedback. | [README](src/components/card/README.md) |
 | **Forms** | | |
 | [Input](https://beui.dev/react-native/input) | Error shake, focus ring and a drawn success check. | [README](src/components/input/README.md) |
@@ -80,7 +81,7 @@ Each name opens the component's page on beui.dev, with a recording from iOS and 
 | [Message](https://beui.dev/react-native/message) | Rows that rise out of their corner, with avatars and typing dots. | [README](src/components/message/README.md) |
 | [Message Bubble](https://beui.dev/react-native/message-bubble) | Six surfaces that pop from their corner, and a show more. | [README](src/components/message-bubble/README.md) |
 | [Message Scroller](https://beui.dev/react-native/message-scroller) | Follows new output and lets go when you scroll up. | [README](src/components/message-scroller/README.md) |
-| [Prompt Input](https://beui.dev/react-native/prompt-input) | A composer that grows, with models, actions and stop. | [README](src/components/prompt-input/README.md) |
+| [Prompt Input](https://beui.dev/react-native/prompt-input) | A chat composer with attachments, voice and stop. | [README](src/components/prompt-input/README.md) |
 | [Streaming Response](https://beui.dev/react-native/streaming-response) | A reply that streams in, then settles with actions. | [README](src/components/streaming-response/README.md) |
 | [Agent Loading States](https://beui.dev/react-native/loading-states) | Shimmers, cycling reasoning text and a progress timer. | [README](src/components/loading-states/README.md) |
 | [Agent Activity](https://beui.dev/react-native/agent-activity) | Steps, searches and tool calls in one live log. | [README](src/components/agent-activity/README.md) |

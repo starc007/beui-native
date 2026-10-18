@@ -169,6 +169,27 @@ export {
   ThinkingShimmer,
 } from "./components/loading-states";
 export type {
+  MenuCheckboxItemProps,
+  MenuContentProps,
+  MenuItemProps,
+  MenuProps,
+  MenuRadioGroupProps,
+  MenuRadioItemProps,
+  MenuTriggerProps,
+} from "./components/menu";
+export {
+  Menu,
+  MenuCheckboxItem,
+  MenuContent,
+  MenuItem,
+  MenuLabel,
+  MenuRadioGroup,
+  MenuRadioItem,
+  MenuSeparator,
+  MenuTrigger,
+  useMenu,
+} from "./components/menu";
+export type {
   MessageAvatarProps,
   MessageDelivery,
   MessageFrom,
@@ -245,6 +266,7 @@ export type { OTPInputProps, OTPStatus } from "./components/otp-input";
 export { OTPInput } from "./components/otp-input";
 export type {
   PromptAction,
+  PromptAttachment,
   PromptInputProps,
   PromptModel,
 } from "./components/prompt-input";
