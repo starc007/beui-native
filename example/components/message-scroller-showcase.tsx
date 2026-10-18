@@ -55,10 +55,8 @@ const ACTIONS: PromptAction[] = [
 const REPLY =
   "Done. I renamed every “workspace” on the onboarding screens to “project”, updated the illustration captions, and checked the empty states too. Scroll up while this streams: the conversation stops following you, and the pill brings you back. Back at the bottom, it follows the reply again as it grows.";
 
-const now = () => {
-  const date = new Date();
-  return `${date.getHours() % 12 || 12}:${String(date.getMinutes()).padStart(2, "0")}`;
-};
+// New messages continue the seeded conversation's clock.
+const now = () => "9:41";
 
 /** Consecutive entries from one side, shown as one row of joined bubbles. */
 function runs(entries: Entry[]) {

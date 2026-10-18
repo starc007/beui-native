@@ -113,7 +113,10 @@ export function ToolResultShowcase() {
           className="self-center"
           size="sm"
           variant="ghost"
-          onPress={() => setRequestRun((n) => n + 1)}
+          onPress={() => {
+            setTerminalRun((n) => n + 1);
+            setRequestRun((n) => n + 1);
+          }}
         >
           Replay
         </Button>
