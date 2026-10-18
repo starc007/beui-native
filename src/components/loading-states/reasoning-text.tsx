@@ -172,7 +172,7 @@ export function ReasoningText({
       ) : (
         indicator
       )}
-      <View style={[styles.slot, variant === "scramble" && styles.overflow]}>
+      <View style={[styles.slot, variant !== "swap" && styles.overflow]}>
         {/* Lays out every phrase, invisibly, so the slot is as wide as the widest. */}
         <View style={styles.reserve}>
           {phrases.map((candidate, position) => (
@@ -222,7 +222,8 @@ const styles = StyleSheet.create({
   slot: { overflow: "hidden" },
   reserve: { opacity: 0 },
   collapsed: { height: 0 },
-  // Scrambling glyphs can run wider than the settled phrase; let them.
+  // Letter-by-letter layout and scrambling glyphs can run a little wider than
+  // the kerned phrase that reserves the width; let them.
   overflow: { overflow: "visible" },
   layer: {
     position: "absolute",
