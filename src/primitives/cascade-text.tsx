@@ -13,7 +13,8 @@ import { motion } from "../styles/motion";
 const CASCADE_STAGGER = 25;
 const TEXT_DISTANCE = 14;
 // Splitting into letters breaks shaping in connected and complex scripts.
-const CASCADE_SAFE = /^[\u0020-\u007e\u00a0-\u024f]+$/;
+// Latin plus general punctuation (dashes, quotes, the ellipsis), none of which shape.
+const CASCADE_SAFE = /^[\u0020-\u007e\u00a0-\u024f\u2000-\u206f]+$/;
 
 function letters(text: string) {
   // Whitespace-only Text can measure zero-width on Android.

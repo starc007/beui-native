@@ -16,7 +16,8 @@ export type GlyphColor = (
 ) => { color: string; opacity: number };
 
 // Splitting into glyphs breaks shaping in connected and complex scripts.
-const SPLIT_SAFE = /^[ -~ -ɏ]+$/;
+// Latin plus general punctuation (dashes, quotes, the ellipsis), none of which shape.
+const SPLIT_SAFE = /^[\u0020-\u007e\u00a0-\u024f\u2000-\u206f]+$/;
 
 export type GlyphRowProps = {
   text: string;
