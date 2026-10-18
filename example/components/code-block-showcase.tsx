@@ -1,7 +1,11 @@
 import * as Clipboard from "expo-clipboard";
 import { useEffect, useState } from "react";
+import { View } from "react-native";
 import { Button, CodeBlock } from "../../src";
 import { DemoSection } from "./demo";
+
+// The header, the 240 point code area with its padding, and the borders.
+const STREAM_HEIGHT = 44 + 1 + 240 + 2;
 
 const LINES = [
   'import { generateText } from "ai";',
@@ -44,15 +48,18 @@ export function CodeBlockShowcase() {
         title="Streaming code"
         description="Lines stream in and stay highlighted as they arrive. Drag up and it stops following."
       >
-        <CodeBlock
-          code={code}
-          filename="summarize.ts"
-          language="typescript"
-          status={done ? "complete" : "streaming"}
-          highlightLines={[4, 5, 6, 7]}
-          maxHeight={240}
-          onCopy={() => Clipboard.setStringAsync(LINES.join("\n"))}
-        />
+        {/* Holds the block at its tallest, so streaming never moves the page. */}
+        <View style={{ minHeight: STREAM_HEIGHT }}>
+          <CodeBlock
+            code={code}
+            filename="summarize.ts"
+            language="typescript"
+            status={done ? "complete" : "streaming"}
+            highlightLines={[4, 5, 6, 7]}
+            maxHeight={240}
+            onCopy={() => Clipboard.setStringAsync(LINES.join("\n"))}
+          />
+        </View>
         <Button
           className="self-center"
           size="sm"

@@ -1,7 +1,11 @@
 import * as Clipboard from "expo-clipboard";
 import { useEffect, useState } from "react";
+import { View } from "react-native";
 import { Button, FileDiff, type FileDiffLine } from "../../src";
 import { DemoSection } from "./demo";
+
+// The header, the gap above the panel, the 150 point diff and its copy footer.
+const DIFF_HEIGHT = 40 + 6 + 150 + 38;
 
 const DIFF: FileDiffLine[] = [
   {
@@ -90,17 +94,20 @@ export function FileDiffShowcase() {
         title="Applying changes"
         description="Lines arrive with live counts, then the diff folds away once it's applied. Tap the file to reopen it."
       >
-        <FileDiff
-          file="src/runner.ts"
-          lines={DIFF.slice(0, visible)}
-          status={complete ? "complete" : "streaming"}
-          maxHeight={150}
-          onCopy={() =>
-            Clipboard.setStringAsync(
-              DIFF.map((line) => line.content).join("\n"),
-            )
-          }
-        />
+        {/* Holds the diff at its tallest, so streaming and folding never move the page. */}
+        <View style={{ minHeight: DIFF_HEIGHT }}>
+          <FileDiff
+            file="src/runner.ts"
+            lines={DIFF.slice(0, visible)}
+            status={complete ? "complete" : "streaming"}
+            maxHeight={150}
+            onCopy={() =>
+              Clipboard.setStringAsync(
+                DIFF.map((line) => line.content).join("\n"),
+              )
+            }
+          />
+        </View>
         <Button
           className="self-center"
           size="sm"
