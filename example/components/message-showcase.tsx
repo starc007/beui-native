@@ -5,10 +5,10 @@ import {
   MessageAvatar,
   MessageBubble,
   MessageContent,
-  MessageFooter,
   MessageGroup,
   MessageHeader,
   MessageMarker,
+  MessageStatus,
   MessageTyping,
 } from "../../src";
 import { DemoSection } from "./demo";
@@ -16,6 +16,8 @@ import { DemoSection } from "./demo";
 /** Remounted by Replay, so the conversation plays again from the start. */
 function Conversation() {
   const [stage, setStage] = useState(0);
+  // Your message moves from sending to read as the assistant picks it up.
+  const delivery = stage === 0 ? "sending" : stage === 1 ? "delivered" : "read";
 
   useEffect(() => {
     const timers = [
@@ -32,11 +34,11 @@ function Conversation() {
       <Message from="user" animateIn>
         <MessageAvatar>Y</MessageAvatar>
         <MessageContent>
-          <MessageHeader>You · 9:41</MessageHeader>
+          <MessageHeader>You</MessageHeader>
           <MessageBubble variant="solid">
             Can you summarize yesterday's release notes?
           </MessageBubble>
-          <MessageFooter>Delivered</MessageFooter>
+          <MessageStatus time="9:41" delivery={delivery} />
         </MessageContent>
       </Message>
       {stage === 1 ? (
@@ -66,6 +68,7 @@ function Conversation() {
           <MessageAvatar placeholder />
           <MessageContent>
             <MessageBubble>Want the full changelog too?</MessageBubble>
+            <MessageStatus time="9:42" />
           </MessageContent>
         </Message>
       ) : null}

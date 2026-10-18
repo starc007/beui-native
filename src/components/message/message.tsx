@@ -11,8 +11,16 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useResolveClassNames } from "uniwind";
+import { usePresence } from "../../hooks/use-presence";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
-import { EASE_OUT } from "../../styles/motion";
+import {
+  AlertGlyph,
+  CheckGlyph,
+  ClockGlyph,
+  DoubleCheckGlyph,
+} from "../../primitives/agent-icons";
+import { RollText } from "../../primitives/roll-text";
+import { EASE_OUT, SPRING_SWAP } from "../../styles/motion";
 import { MessageSideContext } from "../message-bubble/message-bubble";
 
 export type MessageFrom = "user" | "assistant";
@@ -186,6 +194,137 @@ export const MessageHeader = metaRow(false);
 /** A small line below the bubbles: delivery state, actions. */
 export const MessageFooter = metaRow(true);
 
+export type MessageDelivery =
+  | "sending"
+  | "sent"
+  | "delivered"
+  | "read"
+  | "failed";
+
+const DELIVERY_LABEL: Record<MessageDelivery, string> = {
+  sending: "Sending",
+  sent: "Sent",
+  delivered: "Delivered",
+  read: "Read",
+  failed: "Not delivered",
+};
+
+/** The delivery icon, swapping with a quick scale as the state moves on. */
+function DeliveryIcon({
+  delivery,
+  appear,
+  exiting,
+  reduce,
+}: {
+  delivery: MessageDelivery;
+  appear: boolean;
+  exiting: boolean;
+  reduce: boolean;
+}) {
+  const { color: muted } = useResolveClassNames("text-muted");
+  const { color: primary } = useResolveClassNames("text-primary");
+  const { color: destructive } = useResolveClassNames("text-destructive");
+  const shown = useSharedValue(appear && !reduce ? 0 : 1);
+  useEffect(() => {
+    shown.value = reduce
+      ? exiting
+        ? 0
+        : 1
+      : withSpring(exiting ? 0 : 1, SPRING_SWAP);
+  }, [exiting, reduce, shown]);
+  const style = useAnimatedStyle(() => ({
+    opacity: shown.value,
+    transform: [{ scale: 0.6 + shown.value * 0.4 }],
+  }));
+  const props = { size: 13, strokeWidth: 2 };
+  return (
+    <Animated.View style={[styles.deliveryIcon, style]}>
+      {delivery === "sending" ? (
+        <ClockGlyph {...props} color={muted} />
+      ) : delivery === "sent" ? (
+        <CheckGlyph {...props} color={muted} />
+      ) : delivery === "failed" ? (
+        <AlertGlyph {...props} color={destructive} />
+      ) : (
+        <DoubleCheckGlyph
+          {...props}
+          color={delivery === "read" ? primary : muted}
+        />
+      )}
+    </Animated.View>
+  );
+}
+
+export type MessageStatusProps = ViewProps & {
+  /** When the message was sent, already formatted, such as "9:41". */
+  time?: string;
+  /** Where the message is. The icon and label roll as it changes. */
+  delivery?: MessageDelivery;
+  /** Shows the delivery word beside its icon. Defaults to true. */
+  showLabel?: boolean;
+  disableAnimation?: boolean;
+};
+
+/**
+ * The time and delivery state under a message, such as "9:41 · Delivered"
+ * with two checks. As the state moves on, the label rolls and the icon swaps.
+ */
+export function MessageStatus({
+  time,
+  delivery,
+  showLabel = true,
+  disableAnimation = false,
+  ...props
+}: MessageStatusProps) {
+  const reducedMotion = useReducedMotionPreference();
+  const reduce = reducedMotion || disableAnimation;
+  const icons = usePresence(
+    delivery ?? null,
+    delivery as MessageDelivery,
+    () => (reduce ? 0 : 220),
+  );
+  const spoken = [time, delivery ? DELIVERY_LABEL[delivery] : undefined]
+    .filter(Boolean)
+    .join(", ");
+  return (
+    <MessageFooter
+      accessible
+      accessibilityLabel={spoken}
+      accessibilityLiveRegion="polite"
+      {...props}
+    >
+      {time ? (
+        <Text className="text-[11px] text-muted" style={styles.tabular}>
+          {time}
+        </Text>
+      ) : null}
+      {time && delivery && showLabel ? (
+        <Text className="text-[11px] text-muted">·</Text>
+      ) : null}
+      {delivery && showLabel ? (
+        <RollText
+          text={DELIVERY_LABEL[delivery]}
+          className={`text-[11px] ${delivery === "failed" ? "text-destructive" : "text-muted"}`}
+          reduce={reduce}
+        />
+      ) : null}
+      {delivery ? (
+        <View style={styles.deliverySlot}>
+          {icons.map((item) => (
+            <DeliveryIcon
+              key={item.key}
+              delivery={item.value}
+              appear={item.appear}
+              exiting={item.exiting}
+              reduce={reduce}
+            />
+          ))}
+        </View>
+      ) : null}
+    </MessageFooter>
+  );
+}
+
 /** A centered pill between messages, for dates and system notes. */
 export function MessageMarker({
   className = "",
@@ -303,4 +442,7 @@ const styles = StyleSheet.create({
   footer: { minHeight: 20 },
   typing: { flexDirection: "row", alignItems: "center", gap: 4, height: 20 },
   dot: { width: 4, height: 4, borderRadius: 2 },
+  deliverySlot: { width: 14, height: 14 },
+  deliveryIcon: { position: "absolute", left: 0, top: 0 },
+  tabular: { fontVariant: ["tabular-nums"] },
 });

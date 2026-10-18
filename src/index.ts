@@ -170,9 +170,11 @@ export {
 } from "./components/loading-states";
 export type {
   MessageAvatarProps,
+  MessageDelivery,
   MessageFrom,
   MessageGroupProps,
   MessageProps,
+  MessageStatusProps,
   MessageTypingProps,
 } from "./components/message";
 export {
@@ -183,6 +185,7 @@ export {
   MessageGroup,
   MessageHeader,
   MessageMarker,
+  MessageStatus,
   MessageTyping,
 } from "./components/message";
 export type {
