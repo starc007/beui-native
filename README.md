@@ -76,6 +76,13 @@ Each name opens the component's page on beui.dev, with a recording from iOS and 
 | [Alert](https://beui.dev/react-native/alert) | Feedback that eases in and folds away. | [README](src/components/alert/README.md) |
 | [Animated Badge](https://beui.dev/react-native/animated-badge) | Status pills whose icon and label roll. | [README](src/components/animated-badge/README.md) |
 | [Loader](https://beui.dev/react-native/loader) | Seventeen loading indicators from one size prop. | [README](src/components/loader/README.md) |
+| **AI agents** | | |
+| [Message](https://beui.dev/react-native/message) | Rows that rise out of their corner, with avatars and typing dots. | [README](src/components/message/README.md) |
+| [Message Bubble](https://beui.dev/react-native/message-bubble) | Six surfaces that pop from their corner, and a show more. | [README](src/components/message-bubble/README.md) |
+| [Message Scroller](https://beui.dev/react-native/message-scroller) | Follows new output and lets go when you scroll up. | [README](src/components/message-scroller/README.md) |
+| [Prompt Input](https://beui.dev/react-native/prompt-input) | A composer that grows, with models, actions and stop. | [README](src/components/prompt-input/README.md) |
+| [Streaming Response](https://beui.dev/react-native/streaming-response) | A reply that streams in, then settles with actions. | [README](src/components/streaming-response/README.md) |
+| [Agent Loading States](https://beui.dev/react-native/loading-states) | Shimmers, cycling reasoning text and a progress timer. | [README](src/components/loading-states/README.md) |
 
 ## Try it on your phone
 

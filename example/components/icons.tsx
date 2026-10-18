@@ -1,6 +1,8 @@
 // Hugeicons, imported one file per icon so the bundle holds only these and
 // not the whole free set (Metro does not tree-shake).
+import AiBrain01 from "@hugeicons/core-free-icons/AiBrain01Icon";
 import ArrowRight02 from "@hugeicons/core-free-icons/ArrowRight02Icon";
+import Attachment01 from "@hugeicons/core-free-icons/Attachment01Icon";
 import Bookmark02 from "@hugeicons/core-free-icons/Bookmark02Icon";
 import Calendar03 from "@hugeicons/core-free-icons/Calendar03Icon";
 import Cancel01 from "@hugeicons/core-free-icons/Cancel01Icon";
@@ -9,7 +11,9 @@ import Delete02 from "@hugeicons/core-free-icons/Delete02Icon";
 import Favourite from "@hugeicons/core-free-icons/FavouriteIcon";
 import File01 from "@hugeicons/core-free-icons/File01Icon";
 import Flag02 from "@hugeicons/core-free-icons/Flag02Icon";
+import Flash from "@hugeicons/core-free-icons/FlashIcon";
 import Folder01 from "@hugeicons/core-free-icons/Folder01Icon";
+import Image01 from "@hugeicons/core-free-icons/Image01Icon";
 import Mail01 from "@hugeicons/core-free-icons/Mail01Icon";
 import Megaphone01 from "@hugeicons/core-free-icons/Megaphone01Icon";
 import Notification01 from "@hugeicons/core-free-icons/Notification01Icon";
@@ -19,6 +23,7 @@ import PlusSign from "@hugeicons/core-free-icons/PlusSignIcon";
 import Search01 from "@hugeicons/core-free-icons/Search01Icon";
 import SecurityCheck from "@hugeicons/core-free-icons/SecurityCheckIcon";
 import Share08 from "@hugeicons/core-free-icons/Share08Icon";
+import Sparkles from "@hugeicons/core-free-icons/SparklesIcon";
 import Tick02 from "@hugeicons/core-free-icons/Tick02Icon";
 import User from "@hugeicons/core-free-icons/UserIcon";
 import View from "@hugeicons/core-free-icons/ViewIcon";
@@ -61,3 +66,8 @@ export const CloseIcon = hugeicon(Cancel01);
 export const BellIcon = hugeicon(Notification01);
 export const BookmarkIcon = hugeicon(Bookmark02);
 export const ShareIcon = hugeicon(Share08);
+export const BrainIcon = hugeicon(AiBrain01);
+export const AttachIcon = hugeicon(Attachment01);
+export const FlashIcon = hugeicon(Flash);
+export const ImageIcon = hugeicon(Image01);
+export const SparklesIcon = hugeicon(Sparkles);

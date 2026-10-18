@@ -101,6 +101,54 @@ export { Input } from "./components/input";
 export type { LoaderProps, LoaderVariant } from "./components/loader";
 export { Loader } from "./components/loader";
 export type {
+  AgentProgressProps,
+  ReasoningTextProps,
+  ReasoningTextVariant,
+  ThinkingShimmerProps,
+} from "./components/loading-states";
+export {
+  AgentProgress,
+  ReasoningText,
+  ThinkingShimmer,
+} from "./components/loading-states";
+export type {
+  MessageAvatarProps,
+  MessageFrom,
+  MessageGroupProps,
+  MessageProps,
+  MessageTypingProps,
+} from "./components/message";
+export {
+  Message,
+  MessageAvatar,
+  MessageContent,
+  MessageFooter,
+  MessageGroup,
+  MessageHeader,
+  MessageMarker,
+  MessageTyping,
+} from "./components/message";
+export type {
+  MessageBubbleAlign,
+  MessageBubbleCollapsibleProps,
+  MessageBubbleGroupProps,
+  MessageBubbleProps,
+  MessageBubbleTextProps,
+  MessageBubbleVariant,
+} from "./components/message-bubble";
+export {
+  MessageBubble,
+  MessageBubbleCollapsible,
+  MessageBubbleGroup,
+  MessageBubbleText,
+  MessageSideContext,
+} from "./components/message-bubble";
+export type {
+  MessageScrollerHandle,
+  MessageScrollerProps,
+} from "./components/message-scroller";
+export { MessageScroller } from "./components/message-scroller";
+export type {
   MultiSelectContentProps,
   MultiSelectFilter,
   MultiSelectGroupProps,
@@ -135,6 +183,12 @@ export {
 export type { OTPInputProps, OTPStatus } from "./components/otp-input";
 export { OTPInput } from "./components/otp-input";
 export type {
+  PromptAction,
+  PromptInputProps,
+  PromptModel,
+} from "./components/prompt-input";
+export { PromptInput } from "./components/prompt-input";
+export type {
   RadioGroupItemProps,
   RadioGroupProps,
 } from "./components/radio";
@@ -155,6 +209,12 @@ export {
   SelectTrigger,
   SelectValue,
 } from "./components/select";
+export type {
+  StreamingResponseFeedback,
+  StreamingResponseProps,
+  StreamingResponseStatus,
+} from "./components/streaming-response";
+export { StreamingResponse } from "./components/streaming-response";
 export { Surface } from "./components/surface";
 export type {
   SwipeAction,

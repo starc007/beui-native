@@ -9,12 +9,18 @@ import { ColorPickerShowcase } from "./color-picker-showcase";
 import { ExpandableShowcase } from "./expandable-showcase";
 import { InputShowcase } from "./input-showcase";
 import { LoaderShowcase } from "./loader-showcase";
+import { LoadingStatesShowcase } from "./loading-states-showcase";
+import { MessageBubbleShowcase } from "./message-bubble-showcase";
+import { MessageScrollerShowcase } from "./message-scroller-showcase";
+import { MessageShowcase } from "./message-showcase";
 import { MultiSelectShowcase } from "./multi-select-showcase";
 import { NumberShowcase } from "./number-showcase";
 import { OTPShowcase } from "./otp-showcase";
+import { PromptInputShowcase } from "./prompt-input-showcase";
 import { RadioShowcase } from "./radio-showcase";
 import { RangeSliderShowcase } from "./range-slider-showcase";
 import { SelectShowcase } from "./select-showcase";
+import { StreamingResponseShowcase } from "./streaming-response-showcase";
 import { SwipeShowcase } from "./swipe-showcase";
 import { SwitchShowcase } from "./switch-showcase";
 import { TabsShowcase } from "./tabs-showcase";
@@ -179,6 +185,53 @@ export const groups: ComponentGroup[] = [
         description: "Seventeen indicators from one size prop.",
         Showcase: LoaderShowcase,
         variants: 17,
+      },
+    ],
+  },
+  {
+    title: "AI agents",
+    items: [
+      {
+        slug: "message",
+        title: "Message",
+        description:
+          "Rows that rise out of their corner, with avatars and typing dots.",
+        Showcase: MessageShowcase,
+      },
+      {
+        slug: "message-bubble",
+        title: "Message Bubble",
+        description:
+          "Six surfaces that pop from their corner, and a show more.",
+        Showcase: MessageBubbleShowcase,
+        variants: 2,
+      },
+      {
+        slug: "message-scroller",
+        title: "Message Scroller",
+        description: "Follows new output and lets go when you scroll up.",
+        Showcase: MessageScrollerShowcase,
+        keyboard: true,
+      },
+      {
+        slug: "prompt-input",
+        title: "Prompt Input",
+        description: "A composer that grows, with models, actions and stop.",
+        Showcase: PromptInputShowcase,
+        keyboard: true,
+      },
+      {
+        slug: "streaming-response",
+        title: "Streaming Response",
+        description: "A reply that streams in, then settles with actions.",
+        Showcase: StreamingResponseShowcase,
+      },
+      {
+        slug: "loading-states",
+        title: "Agent Loading States",
+        description: "Shimmers, cycling reasoning text and a progress timer.",
+        Showcase: LoadingStatesShowcase,
+        variants: 3,
       },
     ],
   },
