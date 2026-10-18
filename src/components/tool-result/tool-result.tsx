@@ -28,6 +28,7 @@ import {
 } from "../../primitives/agent-icons";
 import { Disclosure } from "../../primitives/disclosure";
 import { RollText } from "../../primitives/roll-text";
+import { RunningBar } from "../../primitives/running-bar";
 import { SpinGlyph } from "../../primitives/spin-glyph";
 import { SPRING_PRESS, SPRING_SWAP } from "../../styles/motion";
 
@@ -207,6 +208,22 @@ export function ToolResult({
     copiedTimer.current = setTimeout(() => setCopied(false), COPIED_FOR);
   };
 
+  // Times the run when no note is given: ticks while running, then holds.
+  const [elapsed, setElapsed] = useState<number | null>(null);
+  const startedAt = useRef<number | null>(running ? Date.now() : null);
+  useEffect(() => {
+    if (!running) return;
+    if (startedAt.current === null) startedAt.current = Date.now();
+    const start = startedAt.current;
+    setElapsed(Date.now() - start);
+    const timer = setInterval(() => setElapsed(Date.now() - start), 100);
+    return () => {
+      clearInterval(timer);
+      setElapsed(Date.now() - start);
+      startedAt.current = null;
+    };
+  }, [running]);
+
   const kindIcon =
     icon ??
     (kind === "terminal" ? (
@@ -226,44 +243,75 @@ export function ToolResult({
     <BanGlyph size={12} color={tone} />
   );
 
+  const lineCount =
+    typeof children === "string" && children.trim()
+      ? children.trimEnd().split("\n").length
+      : 0;
+  const shownMeta =
+    meta ?? (elapsed === null ? undefined : formatElapsed(elapsed));
+  const failed = status === "error";
+
   return (
     <View
       accessibilityState={{ busy: running }}
-      className={`w-full ${className}`}
+      className={`w-full overflow-hidden rounded-2xl border border-border bg-surface/50 ${className}`}
       {...props}
     >
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
-        accessibilityLabel={`${title}${meta ? `, ${meta}` : ""}, ${tool}, ${STATUS_LABEL[status]}`}
+        accessibilityLabel={`${title}${shownMeta ? `, ${shownMeta}` : ""}, ${tool}, ${STATUS_LABEL[status]}`}
         onPress={() => setOpen(!open)}
         style={styles.header}
-        className="py-1"
+        className="px-3.5 py-3"
       >
-        <View style={styles.icon}>{kindIcon}</View>
+        <View
+          style={styles.tile}
+          className="rounded-lg border border-border bg-background"
+        >
+          {kindIcon}
+        </View>
         {/* Two lines, so a phone-width header never truncates everything at once. */}
         <View style={styles.texts}>
           <RollText
             text={title}
-            className="text-sm font-medium text-foreground"
+            className="text-sm font-semibold text-foreground"
             reduce={reduce}
           />
           <View style={styles.subline}>
-            {meta ? (
-              <RollText
-                text={meta}
-                className="text-xs text-muted"
-                reduce={reduce}
-              />
+            <Text
+              numberOfLines={1}
+              className="shrink font-mono text-[11px] text-muted"
+            >
+              {tool}
+            </Text>
+            {shownMeta ? (
+              <>
+                <Text className="text-[11px] text-muted/60">·</Text>
+                {/* A live timer ticks as plain text; a given note rolls. */}
+                {meta ? (
+                  <RollText
+                    text={meta}
+                    className="text-[11px] text-muted"
+                    reduce={reduce}
+                  />
+                ) : (
+                  <Text
+                    className="text-[11px] text-muted"
+                    style={styles.tabular}
+                  >
+                    {shownMeta}
+                  </Text>
+                )}
+              </>
             ) : null}
-            <RollText
-              text={tool}
-              className="font-mono text-[11px] text-muted/60"
-              reduce={reduce}
-            />
           </View>
         </View>
-        <View accessibilityLiveRegion="polite" style={styles.status}>
+        <View
+          accessibilityLiveRegion="polite"
+          style={styles.status}
+          className={`rounded-full px-2 py-1 ${STATUS_PILL[status]}`}
+        >
           {statusIcon}
           <RollText
             text={STATUS_LABEL[status]}
@@ -276,89 +324,109 @@ export function ToolResult({
         </Animated.View>
       </Pressable>
       <Disclosure open={open} reduce={reduce}>
-        <View className="pl-6 pt-1.5">
-          <View className="overflow-hidden rounded-xl bg-surface">
-            <ScrollView
-              ref={scrollRef}
-              style={[styles.fixed, { maxHeight }]}
-              nestedScrollEnabled
-              showsVerticalScrollIndicator={false}
-              scrollEventThrottle={32}
-              onScrollBeginDrag={() => {
-                dragging.current = true;
-              }}
-              onMomentumScrollEnd={() => {
-                dragging.current = false;
-              }}
-              onScrollEndDrag={({ nativeEvent }) => {
-                if (!nativeEvent.velocity?.y) dragging.current = false;
-              }}
-              onScroll={({ nativeEvent }) => {
-                if (!dragging.current) return;
-                const { contentOffset, contentSize, layoutMeasurement } =
-                  nativeEvent;
-                following.current =
-                  contentSize.height -
-                    contentOffset.y -
-                    layoutMeasurement.height <
-                  24;
-              }}
-              onContentSizeChange={() => {
-                if (running && following.current && !dragging.current) {
-                  scrollRef.current?.scrollToEnd({ animated: !reduce });
-                }
-              }}
+        <View
+          className={`mx-3 mb-3 overflow-hidden rounded-xl border ${failed ? "border-destructive/20 bg-destructive/5" : "border-border bg-background"}`}
+        >
+          <ScrollView
+            ref={scrollRef}
+            style={[styles.fixed, { maxHeight }]}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={32}
+            onScrollBeginDrag={() => {
+              dragging.current = true;
+            }}
+            onMomentumScrollEnd={() => {
+              dragging.current = false;
+            }}
+            onScrollEndDrag={({ nativeEvent }) => {
+              if (!nativeEvent.velocity?.y) dragging.current = false;
+            }}
+            onScroll={({ nativeEvent }) => {
+              if (!dragging.current) return;
+              const { contentOffset, contentSize, layoutMeasurement } =
+                nativeEvent;
+              following.current =
+                contentSize.height -
+                  contentOffset.y -
+                  layoutMeasurement.height <
+                24;
+            }}
+            onContentSizeChange={() => {
+              if (running && following.current && !dragging.current) {
+                scrollRef.current?.scrollToEnd({ animated: !reduce });
+              }
+            }}
+          >
+            <View
+              accessibilityLiveRegion="polite"
+              className={`p-3 ${contentClassName}`}
             >
-              <View
-                accessibilityLiveRegion="polite"
-                className={`p-3 ${contentClassName}`}
-              >
-                {typeof children === "string" ? (
-                  <ToolResultOutput>{children}</ToolResultOutput>
-                ) : (
-                  children
-                )}
-              </View>
-            </ScrollView>
-            {onCopy || onRetry ? (
-              <View style={styles.bar} className="px-2 pb-1.5">
-                {onCopy ? (
-                  <SmallAction
-                    label={copied ? "Copied" : "Copy result"}
-                    reduce={reduce}
-                    onPress={() => void copy()}
-                  >
-                    {copied ? (
-                      <CheckGlyph size={14} color={foreground} />
-                    ) : (
-                      <CopyGlyph size={14} color={muted} />
-                    )}
-                  </SmallAction>
-                ) : null}
-                {onRetry ? (
-                  <SmallAction
-                    label="Run again"
-                    reduce={reduce}
-                    onPress={onRetry}
-                  >
-                    <RetryGlyph size={14} color={muted} />
-                  </SmallAction>
-                ) : null}
-                <View style={styles.barLabel}>
-                  <RollText
-                    text={STATUS_LABEL[status]}
-                    className="text-[11px] text-muted/60"
-                    reduce={reduce}
-                  />
-                </View>
-              </View>
-            ) : null}
-          </View>
+              {typeof children === "string" ? (
+                <ToolResultOutput>{children}</ToolResultOutput>
+              ) : (
+                children
+              )}
+            </View>
+          </ScrollView>
+          {onCopy || onRetry || lineCount > 0 ? (
+            <View
+              style={styles.bar}
+              className="border-t border-border px-1.5 py-1"
+            >
+              {onCopy ? (
+                <SmallAction
+                  label={copied ? "Copied" : "Copy result"}
+                  reduce={reduce}
+                  onPress={() => void copy()}
+                >
+                  {copied ? (
+                    <CheckGlyph size={14} color={foreground} />
+                  ) : (
+                    <CopyGlyph size={14} color={muted} />
+                  )}
+                </SmallAction>
+              ) : null}
+              {onRetry ? (
+                <SmallAction
+                  label="Run again"
+                  reduce={reduce}
+                  onPress={onRetry}
+                >
+                  <RetryGlyph size={14} color={muted} />
+                </SmallAction>
+              ) : null}
+              {lineCount > 0 ? (
+                <Text
+                  className="ml-auto pr-1.5 text-[11px] text-muted/70"
+                  style={styles.tabular}
+                >
+                  {lineCount} {lineCount === 1 ? "line" : "lines"}
+                </Text>
+              ) : null}
+            </View>
+          ) : null}
         </View>
       </Disclosure>
+      {running ? <RunningBar reduce={reduce} /> : null}
     </View>
   );
 }
+
+function formatElapsed(ms: number) {
+  const seconds = ms / 1000;
+  if (seconds < 60) return `${seconds.toFixed(1)}s`;
+  const minutes = Math.floor(seconds / 60);
+  return `${minutes}m ${Math.round(seconds - minutes * 60)}s`;
+}
+
+// Full class strings, so Uniwind can see every token at build time.
+const STATUS_PILL: Record<ToolResultStatus, string> = {
+  running: "bg-primary/10",
+  success: "bg-success/10",
+  error: "bg-destructive/10",
+  cancelled: "bg-foreground/5",
+};
 
 const styles = StyleSheet.create({
   // Scroll views shrink to fit the space above them; inside a closing
@@ -368,22 +436,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    minHeight: 44,
+    minHeight: 56,
   },
-  icon: {
-    width: 16,
-    height: 16,
+  tile: {
+    width: 30,
+    height: 30,
     alignItems: "center",
     justifyContent: "center",
   },
   texts: { flex: 1, minWidth: 0, gap: 2 },
-  subline: { flexDirection: "row", alignItems: "center", gap: 8 },
+  subline: { flexDirection: "row", alignItems: "center", gap: 6 },
   status: { flexDirection: "row", alignItems: "center", gap: 4 },
   bar: { flexDirection: "row", alignItems: "center", gap: 2 },
-  barLabel: { marginLeft: "auto" },
+  tabular: { fontVariant: ["tabular-nums"] },
   small: {
-    width: 30,
-    height: 30,
+    width: 32,
+    height: 32,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",

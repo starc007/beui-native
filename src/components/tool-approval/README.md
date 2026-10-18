@@ -52,4 +52,4 @@ import { ToolApproval, ToolApprovalCode } from "./src";
 - The status line is a polite live region, and the card is marked busy while approving or running.
 - Reduced motion, or `disableAnimation`, folds without movement, holds the spinner still and shows the running bar as a static tint. The hold fill still shows progress.
 
-Copy this directory, `hooks/use-presence.ts`, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/disclosure.tsx`, `primitives/roll-text.tsx`, `primitives/spin-glyph.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icons.
+Copy this directory, `primitives/running-bar.tsx`, `hooks/use-presence.ts`, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/disclosure.tsx`, `primitives/roll-text.tsx`, `primitives/spin-glyph.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icons.
