@@ -22,7 +22,7 @@ Open the showcase in Expo Go (SDK 57), or run `bun ios` or `bun android`. Edits 
 ## How the repository works
 
 - `src/` holds the shared components. It must not import from `example/` or depend on Expo, so the components can be copied into any React Native app.
-- `example/` is an Expo Router app that imports `../src` directly. `example/app/index.tsx` lists components and `example/app/[component].tsx` shows one. Showcases and helpers live in `example/components/`, not in `example/app/`.
+- `example/` is an Expo Router app that imports `../src` directly. Bottom tabs in `example/app/_layout.tsx` (All, Components, Agents, Settings) each hold a stack whose `index.tsx` lists components and whose `[component].tsx` shows one. Showcases and helpers live in `example/components/`, not in `example/app/`.
 - There's no npm package of the components. People copy them from `src/`, by hand or with the `beui-native` CLI in `cli/`, which reads beui.dev's registry.
 
 ## Building a component

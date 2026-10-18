@@ -5,7 +5,7 @@ import {
   KeyboardToolbar,
 } from "react-native-keyboard-controller";
 import { useResolveClassNames } from "uniwind";
-import { findEntry } from "../components/registry";
+import { findEntry } from "./registry";
 
 // Space kept between a focused field and the top of the keyboard or toolbar.
 const KEYBOARD_GAP = 24;
@@ -26,7 +26,8 @@ function useToolbarTheme() {
   return { light: colors, dark: colors };
 }
 
-export default function ComponentPage() {
+/** One component's showcase, shown in whichever tab opened it. */
+export function ComponentPage() {
   const { component, record } = useLocalSearchParams<{
     component: string;
     record?: string;

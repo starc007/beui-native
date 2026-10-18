@@ -1,32 +1,13 @@
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import { Uniwind, useResolveClassNames, useUniwind } from "uniwind";
-import { Button } from "../../src";
-import { HomeHeader } from "../components/home-header";
-import { groups, variantCount } from "../components/registry";
+import { useResolveClassNames } from "uniwind";
+import { HomeHeader } from "./home-header";
+import { type ComponentGroup, groups, variantCount } from "./registry";
 
-function ThemePicker() {
-  const { theme, hasAdaptiveThemes } = useUniwind();
-  const selected = hasAdaptiveThemes ? "system" : theme;
+export const AGENTS_GROUP = "AI agents";
 
-  return (
-    <View className="flex-row flex-wrap gap-2">
-      {(["system", "light", "dark"] as const).map((value) => (
-        <Button
-          key={value}
-          size="sm"
-          variant={selected === value ? "primary" : "ghost"}
-          accessibilityLabel={`${value} theme`}
-          accessibilityState={{ selected: selected === value }}
-          onPress={() => Uniwind.setTheme(value)}
-        >
-          {value.charAt(0).toUpperCase() + value.slice(1)}
-        </Button>
-      ))}
-    </View>
-  );
-}
+export type ListFilter = "all" | "components" | "agents";
 
 function Chevron() {
   const { color } = useResolveClassNames("text-muted");
@@ -41,10 +22,34 @@ function Chevron() {
   );
 }
 
-export default function ComponentList() {
+function groupsFor(filter: ListFilter): ComponentGroup[] {
+  if (filter === "agents")
+    return groups.filter((group) => group.title === AGENTS_GROUP);
+  if (filter === "components")
+    return groups.filter((group) => group.title !== AGENTS_GROUP);
+  return groups;
+}
+
+const TITLES: Record<ListFilter, string> = {
+  all: "beUI",
+  components: "Components",
+  agents: "Agents",
+};
+
+/**
+ * A searchable list of showcases for one tab. Links open in the tab's own
+ * stack, under `basePath`, so back returns to this list.
+ */
+export function ComponentList({
+  filter,
+  basePath,
+}: {
+  filter: ListFilter;
+  basePath: string;
+}) {
   const [query, setQuery] = useState("");
   const search = query.trim().toLowerCase();
-  const shown = groups
+  const shown = groupsFor(filter)
     .map((group) => ({
       ...group,
       items: group.items.filter((entry) =>
@@ -54,23 +59,31 @@ export default function ComponentList() {
       ),
     }))
     .filter((group) => group.items.length > 0);
+  const count = groupsFor(filter)
+    .flatMap((group) => group.items)
+    .reduce((total, entry) => total + (entry.variants ?? 1), 0);
+  const intro =
+    filter === "agents"
+      ? `${count} animated parts for chats and AI agents: messages, tools, approvals and more.`
+      : filter === "components"
+        ? `${count} animated controls, forms, lists and feedback.`
+        : `${variantCount} animated components and variants for React Native. Small details, a better first touch.`;
 
   return (
     <View className="flex-1 bg-background">
-      <HomeHeader query={query} onQueryChange={setQuery} />
+      <HomeHeader
+        title={TITLES[filter]}
+        query={query}
+        onQueryChange={setQuery}
+      />
       <ScrollView
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
+        contentInsetAdjustmentBehavior="automatic"
         contentContainerClassName="w-full max-w-160 self-center gap-8 px-5 pt-2 pb-12"
       >
         {search ? null : (
-          <View className="gap-4">
-            <Text className="text-base leading-6 text-muted">
-              {variantCount} animated components and variants for React Native.
-              Small details, a better first touch.
-            </Text>
-            <ThemePicker />
-          </View>
+          <Text className="text-base leading-6 text-muted">{intro}</Text>
         )}
 
         {search && shown.length === 0 ? (
@@ -92,7 +105,11 @@ export default function ComponentList() {
             </Text>
             <View className="overflow-hidden rounded-2xl border border-border bg-surface">
               {group.items.map((entry, index) => (
-                <Link key={entry.slug} href={`/${entry.slug}`} asChild>
+                <Link
+                  key={entry.slug}
+                  href={`${basePath}${entry.slug}`}
+                  asChild
+                >
                   <Pressable
                     accessibilityRole="link"
                     accessibilityHint={entry.description}
