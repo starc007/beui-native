@@ -214,9 +214,11 @@ export function AgentActivity({
         </Pressable>
       )}
       <Disclosure open={expanded} reduce={reduce}>
-        <View style={{ height: viewport }}>
+        {/* Sizes to its content up to maxHeight, so there's no height to go stale. */}
+        <View>
           <ScrollView
             ref={scrollRef}
+            style={[styles.fixed, { maxHeight }]}
             scrollEnabled={!working && capped}
             showsVerticalScrollIndicator={false}
             nestedScrollEnabled
@@ -228,12 +230,16 @@ export function AgentActivity({
                 }
                 className={`gap-0.5 py-2 ${contentClassName}`}
               >
-                {items.map((item) => (
+                {items.map((item, index) => (
                   <RiseIn key={item.id} reduce={reduce}>
                     <ActivityRow
                       item={item}
                       reduce={reduce}
                       onOpenResult={onOpenResult}
+                      connect={
+                        item.type === "step" &&
+                        items[index + 1]?.type === "step"
+                      }
                     />
                   </RiseIn>
                 ))}
@@ -249,6 +255,9 @@ export function AgentActivity({
 }
 
 const styles = StyleSheet.create({
+  // Scroll views shrink to fit the space above them; inside a closing
+  // disclosure that would collapse the log to nothing.
+  fixed: { flexGrow: 0, flexShrink: 0 },
   header: {
     flexDirection: "row",
     alignItems: "center",

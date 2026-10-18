@@ -20,7 +20,7 @@ import { AgentActivity } from "./src";
 
 Append or update items as events stream in. Each has an `id` and a `type`:
 
-- `step`: a label with a `pending`, `active` (pulsing) or `complete` (checked) status, and optional `meta`.
+- `step`: a label with a `pending`, `active` or `complete` status, and optional `meta`. The active step has a pulsing primary dot and a bold label, and a thin line joins each step's mark to the next, so a run of steps reads as a sequence. Labels wrap.
 - `text`: freeform reasoning.
 - `search`: a query with `results` that rise in one by one, and a `moreCount`. Results with a `url` call `onOpenResult` when tapped.
 - `tool`: a `read`, `edit` or `run` (or any action) on a `target`, with optional line counts.

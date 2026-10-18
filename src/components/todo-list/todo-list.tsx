@@ -473,7 +473,7 @@ export function TodoList({
       <Disclosure open={open} reduce={reduce}>
         <ScrollView
           ref={scrollRef}
-          style={{ maxHeight }}
+          style={[styles.fixed, { maxHeight }]}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled
           contentContainerClassName="px-2 pb-2"
@@ -501,6 +501,9 @@ export function TodoList({
 }
 
 const styles = StyleSheet.create({
+  // Scroll views shrink to fit the space above them; inside a closing
+  // disclosure that would collapse the content to nothing.
+  fixed: { flexGrow: 0, flexShrink: 0 },
   header: { flexDirection: "row", alignItems: "center", gap: 10, height: 44 },
   headerIcon: {
     width: 24,
