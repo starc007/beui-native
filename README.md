@@ -83,6 +83,11 @@ Each name opens the component's page on beui.dev, with a recording from iOS and 
 | [Prompt Input](https://beui.dev/react-native/prompt-input) | A composer that grows, with models, actions and stop. | [README](src/components/prompt-input/README.md) |
 | [Streaming Response](https://beui.dev/react-native/streaming-response) | A reply that streams in, then settles with actions. | [README](src/components/streaming-response/README.md) |
 | [Agent Loading States](https://beui.dev/react-native/loading-states) | Shimmers, cycling reasoning text and a progress timer. | [README](src/components/loading-states/README.md) |
+| [Agent Activity](https://beui.dev/react-native/agent-activity) | Steps, searches and tool calls in one live log. | [README](src/components/agent-activity/README.md) |
+| [Todo List](https://beui.dev/react-native/todo-list) | A plan whose marks morph as tasks finish. | [README](src/components/todo-list/README.md) |
+| [Tool Approval](https://beui.dev/react-native/tool-approval) | Hold to let an agent run a tool. | [README](src/components/tool-approval/README.md) |
+| [Approval Card](https://beui.dev/react-native/approval-card) | Swipeable questions, or a review to approve. | [README](src/components/approval-card/README.md) |
+| [Tool Result](https://beui.dev/react-native/tool-result) | Output that streams in, then folds into a result. | [README](src/components/tool-result/README.md) |
 
 ## Try it on your phone
 

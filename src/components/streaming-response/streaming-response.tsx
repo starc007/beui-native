@@ -123,7 +123,7 @@ export type StreamingResponseProps = Omit<ViewProps, "children"> & {
   /** Defaults to "streaming". Actions appear once it isn't. */
   status?: StreamingResponseStatus;
   /** Shows a copy button. Copy the text with your clipboard library here. */
-  onCopy?: () => void | Promise<void>;
+  onCopy?: () => unknown;
   /** Shows a retry button. */
   onRetry?: () => void;
   feedback?: StreamingResponseFeedback;
