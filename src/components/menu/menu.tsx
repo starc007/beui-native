@@ -21,6 +21,7 @@ import {
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+  LinearTransition,
   ReduceMotion,
   type SharedValue,
   useAnimatedReaction,
@@ -33,7 +34,7 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
-import { CheckGlyph } from "../../primitives/agent-icons";
+import { CheckGlyph, ChevronDownGlyph } from "../../primitives/agent-icons";
 import { type IconSource, renderIcon } from "../../primitives/render-icon";
 import { EASE_OUT, SPRING_LAYOUT, SPRING_SWAP } from "../../styles/motion";
 
@@ -41,6 +42,11 @@ const EDGE = 12;
 const GAP = 8;
 const TOP_CLEARANCE = 56;
 const STAGGER = 24;
+// The panel's height glides as a submenu replaces the items.
+const PANEL_RESIZE = LinearTransition.springify()
+  .stiffness(SPRING_LAYOUT.stiffness)
+  .damping(SPRING_LAYOUT.damping)
+  .mass(SPRING_LAYOUT.mass);
 const SPRING_OPEN = {
   stiffness: 380,
   damping: 30,
@@ -66,7 +72,26 @@ type MenuContextValue = {
   selectAt: (index: number) => void;
   /** Order in which items mount, for the entrance stagger. */
   order: (id: string) => number;
+  /** The page on show: the root list, or a submenu's id. */
+  page: string;
+  /** The open submenus, outermost first. */
+  stack: { id: string; label: string }[];
+  /** 1 after opening a submenu, -1 after going back. */
+  direction: number;
+  push: (id: string, label: string) => void;
+  back: () => void;
 };
+
+const ROOT = "root";
+/** Which page an item belongs to. */
+const PageContext = createContext(ROOT);
+
+/** True when the item's page is the one on show. */
+function useOnPage() {
+  const page = useContext(PageContext);
+  const context = useContext(MenuContext);
+  return context ? context.page === page : false;
+}
 
 const MenuContext = createContext<MenuContextValue | null>(null);
 
@@ -115,6 +140,9 @@ export function Menu({
   const entries = useRef(new Map<string, Entry>());
   const sorted = useRef<Entry[]>([]);
   const mountOrder = useRef(new Map<string, number>());
+  const [stack, setStack] = useState<{ id: string; label: string }[]>([]);
+  const [direction, setDirection] = useState(1);
+  const page = stack[stack.length - 1]?.id ?? ROOT;
 
   const setOpen = useCallback(
     (next: boolean) => {
@@ -140,8 +168,20 @@ export function Menu({
     if (!open) {
       highlight.value = -1;
       mountOrder.current.clear();
+      setStack([]);
     }
   }, [highlight, open]);
+
+  const push = useCallback((id: string, label: string) => {
+    mountOrder.current.clear();
+    setDirection(1);
+    setStack((current) => [...current, { id, label }]);
+  }, []);
+  const back = useCallback(() => {
+    mountOrder.current.clear();
+    setDirection(-1);
+    setStack((current) => current.slice(0, -1));
+  }, []);
 
   // A controlled open without a measured trigger still needs its anchor.
   useEffect(() => {
@@ -191,8 +231,18 @@ export function Menu({
       register,
       selectAt,
       order,
+      page,
+      stack,
+      direction,
+      push,
+      back,
     }),
     [
+      back,
+      direction,
+      page,
+      push,
+      stack,
       anchor,
       highlight,
       open,
@@ -239,6 +289,24 @@ const SectionContext = createContext({
   radio: undefined as RadioContextValue | undefined,
 });
 
+/** Each row fades down into place, a beat after the one above. */
+function useEntrance(index: number) {
+  const { open, reduce } = useMenuContext("Menu items");
+  const shown = useSharedValue(0);
+  useEffect(() => {
+    shown.value = open
+      ? withDelay(
+          reduce ? 0 : 50 + index * STAGGER,
+          withTiming(1, { duration: 160, easing: EASE_OUT }),
+        )
+      : withTiming(0, { duration: 90 });
+  }, [index, open, reduce, shown]);
+  return useAnimatedStyle(() => ({
+    opacity: shown.value,
+    transform: [{ translateY: reduce ? 0 : (1 - shown.value) * -6 }],
+  }));
+}
+
 function useSlot({
   disabled,
   select,
@@ -248,8 +316,7 @@ function useSlot({
   select: () => void;
   closes: boolean;
 }) {
-  const { register, slots, highlight, reduce, open, order } =
-    useMenuContext("Menu items");
+  const { register, slots, highlight, order } = useMenuContext("Menu items");
   const id = useId();
   const latest = useRef({ select, closes, disabled });
   latest.current = { select, closes, disabled };
@@ -280,20 +347,7 @@ function useSlot({
     sync();
   };
 
-  // Each row fades down into place, a beat after the one above.
-  const shown = useSharedValue(0);
-  useEffect(() => {
-    shown.value = open
-      ? withDelay(
-          reduce ? 0 : 50 + index * STAGGER,
-          withTiming(1, { duration: 160, easing: EASE_OUT }),
-        )
-      : withTiming(0, { duration: 90 });
-  }, [index, open, reduce, shown]);
-  const style = useAnimatedStyle(() => ({
-    opacity: shown.value,
-    transform: [{ translateY: reduce ? 0 : (1 - shown.value) * -6 }],
-  }));
+  const style = useEntrance(index);
 
   return { onLayout, style, slots, highlight };
 }
@@ -358,7 +412,7 @@ export type MenuItemProps = Omit<ItemBodyProps, "trailing"> & {
 };
 
 /** An action. Tap it, or slide onto it and let go. */
-export function MenuItem({
+function MenuItemRow({
   onSelect,
   closeOnSelect = true,
   disabled = false,
@@ -420,7 +474,7 @@ export type MenuCheckboxItemProps = Omit<ItemBodyProps, "trailing"> & {
 };
 
 /** An option that toggles on and off, with a check that springs in. */
-export function MenuCheckboxItem({
+function MenuCheckboxItemRow({
   checked,
   onCheckedChange,
   closeOnSelect = false,
@@ -503,7 +557,7 @@ export type MenuRadioItemProps = Omit<ItemBodyProps, "trailing"> & {
 };
 
 /** One choice in a MenuRadioGroup, checked when it's the group's value. */
-export function MenuRadioItem({
+function MenuRadioItemRow({
   value,
   closeOnSelect = true,
   disabled = false,
@@ -545,22 +599,175 @@ export function MenuRadioItem({
   );
 }
 
+/** An action. Tap it, or slide onto it and let go. */
+export function MenuItem(props: MenuItemProps) {
+  return useOnPage() ? <MenuItemRow {...props} /> : null;
+}
+
+/** An option that toggles on and off, with a check that springs in. */
+export function MenuCheckboxItem(props: MenuCheckboxItemProps) {
+  return useOnPage() ? <MenuCheckboxItemRow {...props} /> : null;
+}
+
+/** One choice in a MenuRadioGroup, checked when it's the group's value. */
+export function MenuRadioItem(props: MenuRadioItemProps) {
+  return useOnPage() ? <MenuRadioItemRow {...props} /> : null;
+}
+
+type SubContextValue = { id: string };
+const SubContext = createContext<SubContextValue | null>(null);
+
+/** A submenu: a MenuSubTrigger and the MenuSubContent it opens. */
+export function MenuSub({ children }: { children: ReactNode }) {
+  const id = useId();
+  const value = useMemo(() => ({ id }), [id]);
+  return <SubContext.Provider value={value}>{children}</SubContext.Provider>;
+}
+
+function Chevron({ back = false }: { back?: boolean }) {
+  const { color: muted } = useResolveClassNames("text-muted");
+  return (
+    <View style={{ transform: [{ rotate: back ? "90deg" : "-90deg" }] }}>
+      <ChevronDownGlyph size={16} color={muted} />
+    </View>
+  );
+}
+
+export type MenuSubTriggerProps = Omit<
+  ItemBodyProps,
+  "trailing" | "destructive"
+> & {
+  /** The submenu's title on its back row. Defaults to the text of the trigger. */
+  title?: string;
+};
+
+function MenuSubTriggerRow({
+  disabled = false,
+  title,
+  ...body
+}: MenuSubTriggerProps) {
+  const { push } = useMenuContext("MenuSubTrigger");
+  const sub = useContext(SubContext);
+  if (!sub) throw new Error("MenuSubTrigger must be used within <MenuSub>");
+  const label =
+    title ?? (typeof body.children === "string" ? body.children : "Back");
+  const open = () => push(sub.id, label);
+  const { onLayout, style } = useSlot({
+    disabled,
+    select: open,
+    closes: false,
+  });
+  return (
+    <Animated.View
+      onLayout={onLayout}
+      style={style}
+      accessible
+      accessibilityRole="menuitem"
+      accessibilityLabel={label}
+      accessibilityHint="Opens a submenu"
+      accessibilityState={{ disabled }}
+      onAccessibilityTap={() => {
+        if (!disabled) open();
+      }}
+    >
+      <ItemBody disabled={disabled} trailing={<Chevron />} {...body} />
+    </Animated.View>
+  );
+}
+
+/** A row that opens its submenu in place of the current items. */
+export function MenuSubTrigger(props: MenuSubTriggerProps) {
+  return useOnPage() ? <MenuSubTriggerRow {...props} /> : null;
+}
+
+/** The back row at the top of a submenu, titled with the submenu's name. */
+function BackRow({ label }: { label: string }) {
+  const { back } = useMenuContext("MenuSubContent");
+  const { onLayout, style } = useSlot({
+    disabled: false,
+    select: back,
+    closes: false,
+  });
+  return (
+    <Animated.View
+      onLayout={onLayout}
+      style={style}
+      accessible
+      accessibilityRole="button"
+      accessibilityLabel={`Back from ${label}`}
+      onAccessibilityTap={back}
+    >
+      <View style={styles.item} className="px-3 py-2.5">
+        <View style={styles.icon}>
+          <Chevron back />
+        </View>
+        <Text
+          numberOfLines={1}
+          className="flex-1 text-[15px] font-semibold text-foreground"
+        >
+          {label}
+        </Text>
+      </View>
+    </Animated.View>
+  );
+}
+
+/**
+ * The items a MenuSubTrigger opens. They replace the current items, with a
+ * back row on top; submenus can nest.
+ */
+export function MenuSubContent({ children }: { children: ReactNode }) {
+  const sub = useContext(SubContext);
+  const context = useContext(MenuContext);
+  if (!sub) throw new Error("MenuSubContent must be used within <MenuSub>");
+  const active = context?.page === sub.id;
+  const label =
+    context?.stack.find((entry) => entry.id === sub.id)?.label ?? "";
+  return (
+    <PageContext.Provider value={sub.id}>
+      {active ? (
+        <>
+          <BackRow label={label} />
+          <MenuSeparator />
+        </>
+      ) : null}
+      {children}
+    </PageContext.Provider>
+  );
+}
+
 /** A small heading over a group of items. */
 export function MenuLabel({ children }: { children: string }) {
+  return useOnPage() ? <MenuLabelRow>{children}</MenuLabelRow> : null;
+}
+
+function MenuLabelRow({ children }: { children: string }) {
+  const { order } = useMenuContext("MenuLabel");
+  const style = useEntrance(order(useId()));
   return (
-    <Text
-      accessibilityRole="header"
-      className="px-3 pb-1 pt-2 text-xs font-medium text-muted"
-    >
-      {children}
-    </Text>
+    <Animated.View style={style}>
+      <Text
+        accessibilityRole="header"
+        className="px-3 pb-1 pt-2 text-xs font-medium text-muted"
+      >
+        {children}
+      </Text>
+    </Animated.View>
   );
 }
 
 /** A hairline between groups of items. */
 export function MenuSeparator() {
+  return useOnPage() ? <MenuSeparatorRow /> : null;
+}
+
+function MenuSeparatorRow() {
+  const { order } = useMenuContext("MenuSeparator");
+  const style = useEntrance(order(useId()));
   return (
-    <View style={styles.separator} className="mx-3 my-1 bg-border-strong" />
+    <Animated.View style={style}>
+      <View style={styles.separator} className="mx-3 my-1 bg-border-strong" />
+    </Animated.View>
   );
 }
 
@@ -604,6 +811,41 @@ function Highlight({
   );
 }
 
+const PAGE_SLIDE = 28;
+
+/**
+ * Slides each new page in from the side it's arriving from. It stays mounted
+ * across pages, so submenus keep their identity.
+ */
+function PageSlide({
+  page,
+  direction,
+  reduce,
+  children,
+}: {
+  page: string;
+  direction: number;
+  reduce: boolean;
+  children: ReactNode;
+}) {
+  const progress = useSharedValue(1);
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    if (reduce) return;
+    progress.value = 0;
+    progress.value = withSpring(1, SPRING_LAYOUT);
+  }, [page, progress, reduce]);
+  const style = useAnimatedStyle(() => ({
+    opacity: Math.min(1, progress.value * 1.4),
+    transform: [{ translateX: (1 - progress.value) * PAGE_SLIDE * direction }],
+  }));
+  return <Animated.View style={style}>{children}</Animated.View>;
+}
+
 export type MenuContentProps = {
   children: ReactNode;
   /** Which edge lines up with the trigger. Defaults to "start". */
@@ -627,8 +869,19 @@ export function MenuContent({
   width: preferredWidth = 260,
   className = "",
 }: MenuContentProps) {
-  const { open, setOpen, anchor, reduce, slots, highlight, selectAt } =
-    useMenuContext("MenuContent");
+  const {
+    open,
+    setOpen,
+    anchor,
+    reduce,
+    slots,
+    highlight,
+    selectAt,
+    page,
+    direction,
+    back,
+    stack,
+  } = useMenuContext("MenuContent");
   const window = useWindowDimensions();
   const [present, setPresent] = useState(open);
   const [contentHeight, setContentHeight] = useState(0);
@@ -701,35 +954,40 @@ export function MenuContent({
     return -1;
   };
 
-  // Slide to choose when everything fits; tap to choose when it scrolls.
+  const tap = Gesture.Tap()
+    .maxDuration(600)
+    .onBegin((event) => {
+      highlight.value = indexAt(event.y);
+    })
+    .onEnd((event, success) => {
+      const index = indexAt(event.y);
+      if (success && index >= 0) scheduleOnRN(selectAt, index);
+    })
+    .onFinalize(() => {
+      highlight.value = -1;
+    });
+  // Slide to choose when everything fits; a still tap falls through to the
+  // tap. A scrolling menu leaves dragging to the scroll and chooses on tap.
   const choose = scrollable
-    ? Gesture.Tap()
-        .maxDuration(600)
-        .onBegin((event) => {
-          highlight.value = indexAt(event.y);
-        })
-        .onEnd((event, success) => {
-          const index = indexAt(event.y);
-          if (success && index >= 0) scheduleOnRN(selectAt, index);
-        })
-        .onFinalize(() => {
-          highlight.value = -1;
-        })
-    : Gesture.Pan()
-        .minDistance(0)
-        .onBegin((event) => {
-          highlight.value = indexAt(event.y);
-        })
-        .onUpdate((event) => {
-          highlight.value = indexAt(event.y);
-        })
-        .onEnd((event) => {
-          const index = indexAt(event.y);
-          if (index >= 0) scheduleOnRN(selectAt, index);
-        })
-        .onFinalize(() => {
-          highlight.value = -1;
-        });
+    ? tap
+    : Gesture.Exclusive(
+        Gesture.Pan()
+          .minDistance(4)
+          .onBegin((event) => {
+            highlight.value = indexAt(event.y);
+          })
+          .onUpdate((event) => {
+            highlight.value = indexAt(event.y);
+          })
+          .onEnd((event) => {
+            const index = indexAt(event.y);
+            if (index >= 0) scheduleOnRN(selectAt, index);
+          })
+          .onFinalize(() => {
+            highlight.value = -1;
+          }),
+        tap,
+      );
 
   const list = (
     <GestureDetector gesture={choose}>
@@ -740,7 +998,9 @@ export function MenuContent({
         }
       >
         <Highlight slots={slots} highlight={highlight} />
-        {children}
+        <PageSlide page={page} direction={direction} reduce={reduce}>
+          {children}
+        </PageSlide>
       </View>
     </GestureDetector>
   );
@@ -752,7 +1012,7 @@ export function MenuContent({
       animationType="none"
       statusBarTranslucent
       navigationBarTranslucent
-      onRequestClose={() => setOpen(false)}
+      onRequestClose={() => (stack.length > 0 ? back() : setOpen(false))}
     >
       <Animated.View
         style={[StyleSheet.absoluteFill, scrimStyle]}
@@ -767,6 +1027,7 @@ export function MenuContent({
       <Animated.View
         accessibilityViewIsModal
         accessibilityRole="menu"
+        layout={reduce ? undefined : PANEL_RESIZE}
         style={[
           styles.panel,
           {

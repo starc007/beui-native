@@ -175,6 +175,7 @@ export type {
   MenuProps,
   MenuRadioGroupProps,
   MenuRadioItemProps,
+  MenuSubTriggerProps,
   MenuTriggerProps,
 } from "./components/menu";
 export {
@@ -186,6 +187,9 @@ export {
   MenuRadioGroup,
   MenuRadioItem,
   MenuSeparator,
+  MenuSub,
+  MenuSubContent,
+  MenuSubTrigger,
   MenuTrigger,
   useMenu,
 } from "./components/menu";

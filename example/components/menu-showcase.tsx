@@ -10,10 +10,20 @@ import {
   MenuRadioGroup,
   MenuRadioItem,
   MenuSeparator,
+  MenuSub,
+  MenuSubContent,
+  MenuSubTrigger,
   MenuTrigger,
 } from "../../src";
 import { DemoSection, DemoStatus } from "./demo";
-import { EditIcon, MoreIcon, PinIcon, ShareIcon, TrashIcon } from "./icons";
+import {
+  EditIcon,
+  FolderIcon,
+  MoreIcon,
+  PinIcon,
+  ShareIcon,
+  TrashIcon,
+} from "./icons";
 
 const SORTS = [
   { value: "recent", label: "Most recent" },
@@ -32,7 +42,7 @@ export function MenuShowcase() {
   return (
     <DemoSection
       title="Actions"
-      description="It springs out of its button. Slide a finger down the menu and the highlight follows; let go to choose."
+      description="It springs out of its button. Slide a finger down the menu and the highlight follows; let go to choose. Move to opens a submenu in place, with a way back on top."
     >
       <DemoStatus>{note}</DemoStatus>
       <View className="flex-row items-center justify-between rounded-2xl bg-surface px-4 py-3">
@@ -55,6 +65,28 @@ export function MenuShowcase() {
             <MenuItem icon={EditIcon} onSelect={() => setNote("Rename.")}>
               Rename
             </MenuItem>
+            <MenuSub>
+              <MenuSubTrigger icon={FolderIcon}>Move to</MenuSubTrigger>
+              <MenuSubContent>
+                <MenuItem onSelect={() => setNote("Moved to Inbox.")}>
+                  Inbox
+                </MenuItem>
+                <MenuItem onSelect={() => setNote("Moved to Archive.")}>
+                  Archive
+                </MenuItem>
+                <MenuSub>
+                  <MenuSubTrigger>Projects</MenuSubTrigger>
+                  <MenuSubContent>
+                    <MenuItem onSelect={() => setNote("Moved to beUI Native.")}>
+                      beUI Native
+                    </MenuItem>
+                    <MenuItem onSelect={() => setNote("Moved to Launch.")}>
+                      Launch
+                    </MenuItem>
+                  </MenuSubContent>
+                </MenuSub>
+              </MenuSubContent>
+            </MenuSub>
             <MenuCheckboxItem
               icon={PinIcon}
               checked={pinned}
