@@ -16,6 +16,7 @@ import { ImageGenerationShowcase } from "./image-generation-showcase";
 import { InputShowcase } from "./input-showcase";
 import { LoaderShowcase } from "./loader-showcase";
 import { LoadingStatesShowcase } from "./loading-states-showcase";
+import { MenuShowcase } from "./menu-showcase";
 import { MessageBubbleShowcase } from "./message-bubble-showcase";
 import { MessageScrollerShowcase } from "./message-scroller-showcase";
 import { MessageShowcase } from "./message-showcase";
@@ -66,6 +67,12 @@ export const groups: ComponentGroup[] = [
         title: "Expandable Control",
         description: "Buttons and chips that spring open to reveal more.",
         Showcase: ExpandableShowcase,
+      },
+      {
+        slug: "menu",
+        title: "Menu",
+        description: "A pull-down menu you can slide a finger through.",
+        Showcase: MenuShowcase,
       },
       {
         slug: "card",
@@ -226,7 +233,7 @@ export const groups: ComponentGroup[] = [
       {
         slug: "prompt-input",
         title: "Prompt Input",
-        description: "A composer that grows, with models, actions and stop.",
+        description: "A chat composer with attachments, voice and stop.",
         Showcase: PromptInputShowcase,
         keyboard: true,
       },

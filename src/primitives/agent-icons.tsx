@@ -329,3 +329,12 @@ export function ClockGlyph(props: GlyphProps) {
     </Glyph>
   );
 }
+
+export function MicGlyph(props: GlyphProps) {
+  return (
+    <Glyph {...props}>
+      <Rect x={9} y={3.5} width={6} height={11} rx={3} />
+      <Path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5v3" />
+    </Glyph>
+  );
+}
