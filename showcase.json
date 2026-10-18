@@ -714,6 +714,7 @@
         "src/hooks/use-presence.ts",
         "src/hooks/use-reduced-motion.ts",
         "src/primitives/agent-icons.tsx",
+        "src/primitives/fade-edge.tsx",
         "src/primitives/roll-text.tsx",
         "src/styles/motion.ts"
       ],

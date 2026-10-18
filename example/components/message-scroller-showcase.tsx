@@ -3,30 +3,35 @@ import { View } from "react-native";
 import {
   Message,
   MessageBubble,
+  MessageBubbleGroup,
   MessageContent,
+  type MessageDelivery,
   MessageGroup,
   MessageScroller,
+  MessageStatus,
+  type PromptAction,
   PromptInput,
-  StreamingResponse,
   ThinkingShimmer,
 } from "../../src";
 import { DemoSection, DemoStatus } from "./demo";
+import { AttachIcon, ImageIcon } from "./icons";
 
+type From = "user" | "assistant";
 type Entry = {
   id: number;
-  from: "user" | "assistant";
+  from: From;
   text: string;
+  time: string;
   fresh?: boolean;
 };
 
-const SEED: Entry[] = [
+const SEED: [From, string][] = [
   ["user", "What's left before the launch?"],
   [
     "assistant",
     "Three things: the store screenshots, the release notes, and a last pass on onboarding.",
   ],
   ["user", "Screenshots are done."],
-  ["assistant", "Great. That leaves the notes and onboarding."],
   ["user", "Can you draft the notes?"],
   ["assistant", "Sure. Do you want them short, or with a line per fix?"],
   ["user", "Short, please."],
@@ -34,111 +39,182 @@ const SEED: Entry[] = [
     "assistant",
     "Faster sync, a new export menu, and fewer duplicate notifications.",
   ],
-  ["user", "Perfect. And onboarding?"],
+  ["assistant", "Want me to post them to the release channel too?"],
+  ["user", "Not yet. What about onboarding?"],
   [
     "assistant",
     "The second screen still says “workspace”. I'd change it to “project” to match the app.",
   ],
-].map(([from, text], id) => ({
-  id,
-  from: from as Entry["from"],
-  text: text as string,
-}));
+];
+
+const ACTIONS: PromptAction[] = [
+  { value: "photos", label: "Add photos", icon: ImageIcon },
+  { value: "files", label: "Add files", icon: AttachIcon },
+];
 
 const REPLY =
-  "Done. I renamed every “workspace” on the onboarding screens to “project”, updated the illustration captions to match, and checked the empty states too. Scroll up while this streams: the conversation stops following you, and the pill brings you back to the newest message. Once you're at the bottom again it keeps following as the reply grows, line after line, until it's finished.";
+  "Done. I renamed every “workspace” on the onboarding screens to “project”, updated the illustration captions, and checked the empty states too. Scroll up while this streams: the conversation stops following you, and the pill brings you back. Back at the bottom, it follows the reply again as it grows.";
+
+const now = () => {
+  const date = new Date();
+  return `${date.getHours() % 12 || 12}:${String(date.getMinutes()).padStart(2, "0")}`;
+};
+
+/** Consecutive entries from one side, shown as one row of joined bubbles. */
+function runs(entries: Entry[]) {
+  const grouped: Entry[][] = [];
+  for (const entry of entries) {
+    const last = grouped[grouped.length - 1];
+    if (last?.[0]?.from === entry.from) last.push(entry);
+    else grouped.push([entry]);
+  }
+  return grouped;
+}
 
 export function MessageScrollerShowcase() {
-  const [entries, setEntries] = useState(SEED);
-  const [streamed, setStreamed] = useState<string | null>(null);
+  const [entries, setEntries] = useState<Entry[]>(() =>
+    SEED.map(([from, text], index) => ({
+      id: index,
+      from,
+      text,
+      time: `9:${30 + index}`,
+    })),
+  );
+  const [streamingId, setStreamingId] = useState<number | null>(null);
   const [thinking, setThinking] = useState(false);
   const [following, setFollowing] = useState(true);
-  const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  useEffect(() => () => clearInterval(timer.current), []);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
-  const send = (text: string) => {
-    clearInterval(timer.current);
-    setEntries((previous) => [
-      ...previous,
-      { id: Date.now(), from: "user", text, fresh: true },
-    ]);
-    setThinking(true);
-    setStreamed(null);
-    setTimeout(() => {
-      setThinking(false);
-      const startedAt = Date.now();
-      timer.current = setInterval(() => {
-        const length = Math.floor(((Date.now() - startedAt) / 1000) * 70);
-        if (length >= REPLY.length) {
-          clearInterval(timer.current);
-          setStreamed(null);
-          setEntries((previous) => [
-            ...previous,
-            { id: Date.now(), from: "assistant", text: REPLY },
-          ]);
-        } else {
-          setStreamed(REPLY.slice(0, length));
-        }
-      }, 32);
-    }, 700);
+  const stopAll = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
   };
 
-  const busy = thinking || streamed !== null;
+  const send = (text: string) => {
+    stopAll();
+    setStreamingId(null);
+    setEntries((previous) => [
+      ...previous,
+      { id: Date.now(), from: "user", text, time: now(), fresh: true },
+    ]);
+    setThinking(true);
+    timers.current.push(
+      setTimeout(() => {
+        setThinking(false);
+        // The reply streams into one bubble that stays put when it finishes.
+        const id = Date.now();
+        setStreamingId(id);
+        setEntries((previous) => [
+          ...previous,
+          { id, from: "assistant", text: "", time: now() },
+        ]);
+        const startedAt = Date.now();
+        const tick = () => {
+          const length = Math.floor(((Date.now() - startedAt) / 1000) * 70);
+          setEntries((previous) =>
+            previous.map((entry) =>
+              entry.id === id
+                ? { ...entry, text: REPLY.slice(0, length) }
+                : entry,
+            ),
+          );
+          if (length >= REPLY.length) setStreamingId(null);
+          else timers.current.push(setTimeout(tick, 32));
+        };
+        tick();
+      }, 900),
+    );
+  };
+
+  const stop = () => {
+    stopAll();
+    setThinking(false);
+    setStreamingId(null);
+  };
+
+  const busy = thinking || streamingId !== null;
+  const grouped = runs(entries);
+  const lastUserRun = grouped.map((run) => run[0]?.from).lastIndexOf("user");
+  const replied = lastUserRun < grouped.length - 1;
+  const delivery: MessageDelivery = replied
+    ? "read"
+    : thinking
+      ? "delivered"
+      : "sent";
 
   return (
     <DemoSection
       title="Following output"
-      description="New output keeps the latest message in view. Drag up to read and it lets go."
+      description="Send a message: the conversation follows the reply as it streams. Drag up to read and it lets go; the pill brings you back."
     >
       <DemoStatus>
         {following ? "Following the latest message." : "Paused while you read."}
       </DemoStatus>
-      <View className="h-[460px] overflow-hidden rounded-2xl border border-border bg-background">
+      <View className="h-[470px] gap-3">
         <MessageScroller
           busy={busy}
           messageCount={entries.length}
           nestedScrollEnabled
           onFollowChange={setFollowing}
-          contentClassName="p-4"
+          contentClassName="pb-2 pt-1"
         >
           <MessageGroup spacing="default">
-            {entries.map((entry) => (
-              <Message key={entry.id} from={entry.from} animateIn={entry.fresh}>
-                <MessageContent>
-                  <MessageBubble
-                    variant={entry.from === "user" ? "solid" : "soft"}
-                  >
-                    {entry.text}
-                  </MessageBubble>
-                </MessageContent>
-              </Message>
-            ))}
+            {grouped.map((run, runIndex) => {
+              const first = run[0] as Entry;
+              const last = run[run.length - 1] as Entry;
+              const user = first.from === "user";
+              const streaming = run.some((entry) => entry.id === streamingId);
+              return (
+                <Message
+                  key={first.id}
+                  from={first.from}
+                  animateIn={first.fresh}
+                >
+                  <MessageContent>
+                    <MessageBubbleGroup>
+                      {run.map((entry, index) => (
+                        <MessageBubble
+                          key={entry.id}
+                          variant={user ? "solid" : "soft"}
+                          animateIn={entry.fresh && index > 0}
+                        >
+                          {entry.text || " "}
+                        </MessageBubble>
+                      ))}
+                    </MessageBubbleGroup>
+                    {streaming ? null : (
+                      <MessageStatus
+                        time={last.time}
+                        delivery={
+                          user && runIndex === lastUserRun
+                            ? delivery
+                            : undefined
+                        }
+                      />
+                    )}
+                  </MessageContent>
+                </Message>
+              );
+            })}
             {thinking ? (
-              <ThinkingShimmer>Reviewing your direction…</ThinkingShimmer>
-            ) : null}
-            {streamed !== null ? (
               <Message from="assistant">
                 <MessageContent>
-                  <MessageBubble variant="ghost">
-                    <StreamingResponse status="streaming" announce={false}>
-                      {streamed}
-                    </StreamingResponse>
-                  </MessageBubble>
+                  <ThinkingShimmer>Reviewing your direction…</ThinkingShimmer>
                 </MessageContent>
               </Message>
             ) : null}
           </MessageGroup>
         </MessageScroller>
-        <View className="border-t border-border p-2">
-          <PromptInput
-            defaultValue="Fix the onboarding copy"
-            placeholder="Message the agent…"
-            loading={busy}
-            onSubmit={send}
-            className="border-0"
-          />
-        </View>
+        <PromptInput
+          defaultValue="Fix the onboarding copy"
+          placeholder="Message the agent"
+          actions={ACTIONS}
+          loading={busy}
+          onSubmit={send}
+          onStop={stop}
+        />
       </View>
     </DemoSection>
   );
