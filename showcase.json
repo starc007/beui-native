@@ -85,6 +85,7 @@
       "description": "A pull-down menu with submenus you can slide a finger through.",
       "group": "Actions",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/menu/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/menu",
       "files": ["src/components/menu/index.ts", "src/components/menu/menu.tsx"],
@@ -636,6 +637,7 @@
       "description": "Rows that rise out of their corner, with avatars and typing dots.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/message/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/message",
       "files": [
@@ -671,6 +673,7 @@
       "description": "Six surfaces that pop from their corner, and a show more.",
       "group": "AI agents",
       "variants": 2,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/message-bubble/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/message-bubble",
       "files": [
@@ -704,6 +707,7 @@
       "description": "Follows new output and lets go when you scroll up.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/message-scroller/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/message-scroller",
       "files": [
@@ -737,6 +741,7 @@
       "description": "A chat composer with attachments, voice and stop.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/prompt-input/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/prompt-input",
       "files": [
@@ -773,6 +778,7 @@
       "description": "A reply that streams in, then settles with actions.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/streaming-response/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/streaming-response",
       "files": [
@@ -808,6 +814,7 @@
       "description": "Shimmers, cycling reasoning text and a progress timer.",
       "group": "AI agents",
       "variants": 3,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/loading-states/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/loading-states",
       "files": [
@@ -843,6 +850,7 @@
       "description": "Steps, searches and tool calls in one live log.",
       "group": "AI agents",
       "variants": 5,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/agent-activity/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/agent-activity",
       "files": [
@@ -882,6 +890,7 @@
       "description": "A plan whose marks morph as tasks finish.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/todo-list/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/todo-list",
       "files": [
@@ -917,6 +926,7 @@
       "description": "Hold to let an agent run a tool.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/tool-approval/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/tool-approval",
       "files": [
@@ -953,6 +963,7 @@
       "description": "Swipeable questions, or a review to approve.",
       "group": "AI agents",
       "variants": 2,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/approval-card/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/approval-card",
       "files": [
@@ -997,6 +1008,7 @@
       "description": "Output that streams in, then folds into a result.",
       "group": "AI agents",
       "variants": 2,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/tool-result/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/tool-result",
       "files": [
@@ -1033,6 +1045,7 @@
       "description": "Tap a number and its source springs up.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/citations/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/citations",
       "files": [
@@ -1066,6 +1079,7 @@
       "description": "Streaming code with fixed line numbers and wrap.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/code-block/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/code-block",
       "files": [
@@ -1099,6 +1113,7 @@
       "description": "Changes with live counts and folded context.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/file-diff/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/file-diff",
       "files": [
@@ -1135,6 +1150,7 @@
       "description": "A dot field you can steer while the image forms.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/image-generation/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/image-generation",
       "files": [
@@ -1171,6 +1187,7 @@
       "description": "A liquid sphere that moves with your voice.",
       "group": "AI agents",
       "variants": 1,
+      "launchedAt": "2026-10-18",
       "readme": "src/components/voice-orb/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/voice-orb",
       "files": [

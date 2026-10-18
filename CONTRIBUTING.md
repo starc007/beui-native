@@ -45,13 +45,13 @@ And it follows these rules:
 
 ## The manifest
 
-`showcase.json` describes every component for beui.dev and the `beui-native` CLI: its title, description, group and variant count, its own files, the shared files it needs, the libraries it imports, and its README, source and Expo Go links. `bun run manifest` (`scripts/manifest.ts`) generates it from the showcase registry, following each component's imports to find its shared files and libraries. Don't edit it by hand.
+`showcase.json` describes every component for beui.dev and the `beui-native` CLI: its title, description, group, variant count and launch date, its own files, the shared files it needs, the libraries it imports, and its README, source and Expo Go links. `bun run manifest` (`scripts/manifest.ts`) generates it from the showcase registry, following each component's imports to find its shared files and libraries. Don't edit it by hand.
 
 Run `bun run manifest` and commit `showcase.json` whenever you:
 
 - add a component or register its showcase
 - change what a component imports, including a new library or shared file, even inside an existing component
-- change a component's title, description, group or variants in `example/components/registry.ts`
+- change a component's title, description, group, variants or `launchedAt` in `example/components/registry.ts`
 
 CI runs `bun run manifest --check` and fails if the committed file is out of date. Out of date, beui.dev would show the wrong install steps and the CLI would skip files a component needs.
 
@@ -137,7 +137,9 @@ Keep the message to one word: `bunx` splits arguments at spaces.
 
 ### 3. Sync to beui.dev
 
-In ui-components:
+First give each new entry in `example/components/registry.ts` a `launchedAt` with the release date, such as `"2026-10-18"`, and run `bun run manifest`. beui.dev marks a component New for a week after that date.
+
+Then, in ui-components:
 
 ```sh
 bun scripts/sync-native.ts

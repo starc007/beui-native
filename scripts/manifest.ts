@@ -36,6 +36,8 @@ type Entry = {
   description: string;
   group: string;
   variants: number;
+  /** When it reached beui.dev, which shows it as New for a week. */
+  launchedAt?: string;
 };
 
 function readRegistry(): Entry[] {
@@ -75,6 +77,7 @@ function readRegistry(): Entry[] {
           const name = literal(item, "title");
           const description = literal(item, "description");
           const variants = literal(item, "variants");
+          const launchedAt = literal(item, "launchedAt");
           if (
             typeof slug !== "string" ||
             typeof name !== "string" ||
@@ -90,6 +93,7 @@ function readRegistry(): Entry[] {
             description,
             group: title,
             variants: typeof variants === "number" ? variants : 1,
+            ...(typeof launchedAt === "string" ? { launchedAt } : {}),
           });
         }
       }
