@@ -47,6 +47,8 @@ export type ComponentEntry = {
   keyboard?: boolean;
   /** Distinct animations the entry ships, when more than one. Colors don't count. */
   variants?: number;
+  /** ISO date the entry reached beui.dev, which marks it New there for a week. */
+  launchedAt?: string;
 };
 
 export type ComponentGroup = { title: string; items: ComponentEntry[] };
@@ -70,6 +72,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "menu",
+        launchedAt: "2026-10-18",
         title: "Menu",
         description:
           "A pull-down menu with submenus you can slide a finger through.",
@@ -211,6 +214,7 @@ export const groups: ComponentGroup[] = [
     items: [
       {
         slug: "message",
+        launchedAt: "2026-10-18",
         title: "Message",
         description:
           "Rows that rise out of their corner, with avatars and typing dots.",
@@ -218,6 +222,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "message-bubble",
+        launchedAt: "2026-10-18",
         title: "Message Bubble",
         description:
           "Six surfaces that pop from their corner, and a show more.",
@@ -226,6 +231,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "message-scroller",
+        launchedAt: "2026-10-18",
         title: "Message Scroller",
         description: "Follows new output and lets go when you scroll up.",
         Showcase: MessageScrollerShowcase,
@@ -233,6 +239,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "prompt-input",
+        launchedAt: "2026-10-18",
         title: "Prompt Input",
         description: "A chat composer with attachments, voice and stop.",
         Showcase: PromptInputShowcase,
@@ -240,12 +247,14 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "streaming-response",
+        launchedAt: "2026-10-18",
         title: "Streaming Response",
         description: "A reply that streams in, then settles with actions.",
         Showcase: StreamingResponseShowcase,
       },
       {
         slug: "loading-states",
+        launchedAt: "2026-10-18",
         title: "Agent Loading States",
         description: "Shimmers, cycling reasoning text and a progress timer.",
         Showcase: LoadingStatesShowcase,
@@ -253,6 +262,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "agent-activity",
+        launchedAt: "2026-10-18",
         title: "Agent Activity",
         description: "Steps, searches and tool calls in one live log.",
         Showcase: AgentActivityShowcase,
@@ -260,18 +270,21 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "todo-list",
+        launchedAt: "2026-10-18",
         title: "Todo List",
         description: "A plan whose marks morph as tasks finish.",
         Showcase: TodoListShowcase,
       },
       {
         slug: "tool-approval",
+        launchedAt: "2026-10-18",
         title: "Tool Approval",
         description: "Hold to let an agent run a tool.",
         Showcase: ToolApprovalShowcase,
       },
       {
         slug: "approval-card",
+        launchedAt: "2026-10-18",
         title: "Approval Card",
         description: "Swipeable questions, or a review to approve.",
         Showcase: ApprovalCardShowcase,
@@ -280,6 +293,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "tool-result",
+        launchedAt: "2026-10-18",
         title: "Tool Result",
         description: "Output that streams in, then folds into a result.",
         Showcase: ToolResultShowcase,
@@ -287,30 +301,35 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "citations",
+        launchedAt: "2026-10-18",
         title: "Citations",
         description: "Tap a number and its source springs up.",
         Showcase: CitationsShowcase,
       },
       {
         slug: "code-block",
+        launchedAt: "2026-10-18",
         title: "Code Block",
         description: "Streaming code with fixed line numbers and wrap.",
         Showcase: CodeBlockShowcase,
       },
       {
         slug: "file-diff",
+        launchedAt: "2026-10-18",
         title: "File Diff",
         description: "Changes with live counts and folded context.",
         Showcase: FileDiffShowcase,
       },
       {
         slug: "image-generation",
+        launchedAt: "2026-10-18",
         title: "Image Generation",
         description: "A dot field you can steer while the image forms.",
         Showcase: ImageGenerationShowcase,
       },
       {
         slug: "voice-orb",
+        launchedAt: "2026-10-18",
         title: "Voice Orb",
         description: "A liquid sphere that moves with your voice.",
         Showcase: VoiceOrbShowcase,
