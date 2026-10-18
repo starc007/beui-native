@@ -16,17 +16,20 @@ import {
   View,
   type ViewProps,
 } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
+  withSequence,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
-import { ChevronDownGlyph } from "../../primitives/agent-icons";
+import { ChevronDownGlyph, ReplyGlyph } from "../../primitives/agent-icons";
 import { FadeEdge } from "../../primitives/fade-edge";
 import {
   EASE_OUT,
@@ -80,6 +83,8 @@ const BUBBLE_POP = {
 const POP_FADE = { duration: 120, easing: EASE_OUT };
 const CONTENT_DELAY = 40;
 const LINE_HEIGHT = 24;
+// How far to drag before letting go replies.
+const REPLY_AT = 56;
 
 export type MessageBubbleTextProps = TextProps & { className?: string };
 
@@ -116,7 +121,13 @@ export type MessageBubbleProps = Omit<ViewProps, "children"> & {
   animateIn?: boolean;
   /** Makes the whole bubble tappable, with press feedback. */
   onPress?: PressableProps["onPress"];
+  /** Lifts the bubble before firing, like a context menu opening. */
   onLongPress?: PressableProps["onLongPress"];
+  /**
+   * Swipe the bubble toward the middle of the screen to reply. A reply arrow
+   * grows as you drag; letting go past it calls this.
+   */
+  onReply?: () => void;
   /** Classes for the bubble itself, such as padding or a max width. */
   contentClassName?: string;
   /** Pops in without motion, independently of the system preference. */
@@ -136,6 +147,7 @@ export function MessageBubble({
   animateIn = false,
   onPress,
   onLongPress,
+  onReply,
   contentClassName = "",
   disableAnimation = false,
   className = "",
@@ -154,7 +166,12 @@ export function MessageBubble({
   const surfaceOpacity = useSharedValue(pop ? 0 : 1);
   const contentOpacity = useSharedValue(pop ? 0 : 1);
   const pressed = useSharedValue(1);
+  const drag = useSharedValue(0);
+  const armed = useSharedValue(0);
   const ghost = variant === "ghost";
+  // Toward the middle of the screen: right for start bubbles, left for end.
+  const direction = align === "end" ? -1 : 1;
+  const { color: muted } = useResolveClassNames("text-muted");
   const interactive = Boolean(onPress || onLongPress);
 
   // Plays once, on mount.
@@ -174,13 +191,51 @@ export function MessageBubble({
     transform: [{ scale: pressed.value }],
   }));
 
+  const reply = () => onReply?.();
+  const swipe = Gesture.Pan()
+    .enabled(Boolean(onReply))
+    .activeOffsetX(direction > 0 ? [-999, 12] : [-12, 999])
+    .failOffsetY([-10, 10])
+    .onUpdate((event) => {
+      const pull = Math.max(0, event.translationX * direction);
+      // Follows the finger up to the threshold, then resists.
+      const travel =
+        pull < REPLY_AT ? pull : REPLY_AT + (pull - REPLY_AT) * 0.25;
+      drag.value = travel * direction;
+      const nowArmed = pull >= REPLY_AT ? 1 : 0;
+      if (nowArmed !== armed.value) {
+        armed.value = nowArmed;
+      }
+    })
+    .onEnd(() => {
+      if (armed.value === 1) scheduleOnRN(reply);
+      armed.value = 0;
+      drag.value = withSpring(0, SPRING_SWAP);
+    });
+
+  const dragStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: drag.value }],
+  }));
+  const arrowStyle = useAnimatedStyle(() => {
+    const progress = Math.min(1, Math.abs(drag.value) / REPLY_AT);
+    return {
+      opacity: progress,
+      transform: [
+        {
+          scale: withSpring(
+            armed.value ? 1.15 : 0.6 + progress * 0.4,
+            SPRING_SWAP,
+          ),
+        },
+      ],
+    };
+  });
+
   const bubble = (
     <View
       style={[
         ghost ? styles.ghost : styles.bubble,
         align === "end" ? styles.end : styles.start,
-        // The pressable wrapper carries the width cap.
-        interactive && styles.uncapped,
       ]}
       className={ghost ? contentClassName : `px-3.5 py-2.5 ${contentClassName}`}
     >
@@ -209,31 +264,71 @@ export function MessageBubble({
           { alignItems: align === "end" ? "flex-end" : "flex-start" },
         ]}
         className={className}
+        accessibilityActions={
+          onReply ? [{ name: "reply", label: "Reply" }] : undefined
+        }
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === "reply") onReply?.();
+        }}
         {...props}
       >
-        {interactive ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={accessibilityLabel}
-            accessibilityHint={accessibilityHint}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            onPressIn={() => {
-              if (!reduce) pressed.value = withSpring(0.98, SPRING_PRESS);
-            }}
-            onPressOut={() => {
-              pressed.value = withSpring(1, SPRING_PRESS);
-            }}
+        {onReply ? (
+          <Animated.View
+            pointerEvents="none"
             style={[
-              styles.pressable,
-              align === "end" ? styles.end : styles.start,
+              styles.arrow,
+              align === "end" ? styles.arrowEnd : styles.arrowStart,
+              arrowStyle,
             ]}
           >
-            {bubble}
-          </Pressable>
-        ) : (
-          bubble
-        )}
+            <ReplyGlyph size={18} color={muted} />
+          </Animated.View>
+        ) : null}
+        <GestureDetector gesture={swipe}>
+          <Animated.View
+            style={[
+              ghost ? styles.ghost : styles.swipe,
+              align === "end" ? styles.end : styles.start,
+              dragStyle,
+            ]}
+          >
+            {interactive ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={accessibilityLabel}
+                accessibilityHint={accessibilityHint}
+                onPress={onPress}
+                onLongPress={
+                  onLongPress
+                    ? (event) => {
+                        if (!reduce) {
+                          pressed.value = withSequence(
+                            withSpring(1.04, SPRING_PRESS),
+                            withSpring(1, SPRING_PRESS),
+                          );
+                        }
+                        onLongPress(event);
+                      }
+                    : undefined
+                }
+                onPressIn={() => {
+                  if (!reduce) pressed.value = withSpring(0.98, SPRING_PRESS);
+                }}
+                onPressOut={() => {
+                  pressed.value = withSpring(1, SPRING_PRESS);
+                }}
+                style={[
+                  styles.pressable,
+                  align === "end" ? styles.end : styles.start,
+                ]}
+              >
+                {bubble}
+              </Pressable>
+            ) : (
+              bubble
+            )}
+          </Animated.View>
+        </GestureDetector>
       </View>
     </BubbleContext.Provider>
   );
@@ -376,10 +471,13 @@ export function MessageBubbleCollapsible({
 
 const styles = StyleSheet.create({
   row: { width: "100%" },
-  bubble: { minWidth: 36, maxWidth: "82%", borderRadius: 16 },
+  bubble: { minWidth: 36, borderRadius: 16 },
   ghost: { width: "100%" },
-  pressable: { maxWidth: "82%" },
-  uncapped: { maxWidth: "100%" },
+  pressable: { maxWidth: "100%" },
+  swipe: { maxWidth: "82%" },
+  arrow: { position: "absolute", top: 0, bottom: 0, justifyContent: "center" },
+  arrowStart: { left: 4 },
+  arrowEnd: { right: 4 },
   start: { alignSelf: "flex-start" },
   end: { alignSelf: "flex-end" },
   surface: { borderRadius: 16 },

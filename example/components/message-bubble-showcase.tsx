@@ -8,7 +8,7 @@ import {
   MessageBubbleText,
   type MessageBubbleVariant,
 } from "../../src";
-import { DemoSection } from "./demo";
+import { DemoSection, DemoStatus } from "./demo";
 
 const REPLIES = [
   "Ship it on Friday?",
@@ -24,8 +24,25 @@ const SURFACES: { variant: MessageBubbleVariant; text: string }[] = [
   { variant: "danger", text: "Danger, for failed sends." },
 ];
 
+const THREAD = [
+  { id: "a", align: "start", text: "The build is green. Want me to ship it?" },
+  {
+    id: "b",
+    align: "end",
+    text: "Not yet, the copy changes are still in review.",
+  },
+  {
+    id: "c",
+    align: "start",
+    text: "Got it. I'll hold the release until they land.",
+  },
+] as const;
+
 export function MessageBubbleShowcase() {
   const [sent, setSent] = useState<{ id: number; text: string }[]>([]);
+  const [note, setNote] = useState(
+    "Swipe a bubble toward the middle, or long-press it.",
+  );
 
   return (
     <>
@@ -77,6 +94,26 @@ export function MessageBubbleShowcase() {
             Send
           </Button>
         </View>
+      </DemoSection>
+      <DemoSection
+        title="Swipe to reply"
+        description="Drag a bubble toward the middle until the arrow pops, then let go. A long press lifts it, ready for a menu."
+      >
+        <DemoStatus>{note}</DemoStatus>
+        <MessageBubbleGroup spacing="default">
+          {THREAD.map((message) => (
+            <MessageBubble
+              key={message.id}
+              align={message.align}
+              variant={message.align === "end" ? "solid" : "soft"}
+              onReply={() => setNote(`Replying to “${message.text}”`)}
+              onLongPress={() => setNote(`Long-pressed “${message.text}”`)}
+              accessibilityLabel={message.text}
+            >
+              {message.text}
+            </MessageBubble>
+          ))}
+        </MessageBubbleGroup>
       </DemoSection>
       <DemoSection
         title="Show more"

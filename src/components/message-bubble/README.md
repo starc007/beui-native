@@ -25,10 +25,15 @@ import { MessageBubble, MessageBubbleCollapsible, MessageBubbleGroup } from "./s
 - `onPress` or `onLongPress` makes the bubble a button that presses to 0.98.
 - `MessageBubbleCollapsible` clamps its content to `collapsedLines` lines with a soft edge, and springs to its full height when opened. The toggle only appears when the content is taller than the clamp.
 
+## Better on a phone
+
+- `onReply` lets you swipe a bubble toward the middle of the screen to reply, as in Messages and WhatsApp. The bubble follows your finger and a reply arrow fades in; past 56 points the arrow pops and the drag resists, and letting go replies. The bubble springs back either way. Screen readers get a "Reply" action instead.
+- `onLongPress` lifts the bubble with a small overshoot before it fires, so a context menu opens from a bubble that responded.
+
 ## Accessibility
 
 - A tappable bubble is a button; give it an `accessibilityLabel` when its text alone doesn't say what tapping does.
 - The show more toggle reports its expanded state.
 - Reduced motion, or `disableAnimation`, shows bubbles without the pop and opens the clamp instantly.
 
-Copy this directory, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/fade-edge.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icon.
+Copy this directory, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/fade-edge.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icons and Gesture Handler for swipe to reply.

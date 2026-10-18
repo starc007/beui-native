@@ -110,7 +110,10 @@ function SwapIcon({
 function wrapText(children: ReactNode, className: string) {
   return Children.map(children, (child) =>
     typeof child === "string" || typeof child === "number" ? (
-      <Text className={className}>{child}</Text>
+      // Selectable, so a long press brings up the system copy and look-up menu.
+      <Text selectable className={className}>
+        {child}
+      </Text>
     ) : (
       child
     ),

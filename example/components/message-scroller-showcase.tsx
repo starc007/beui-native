@@ -97,6 +97,7 @@ export function MessageScrollerShowcase() {
       <View className="h-[460px] overflow-hidden rounded-2xl border border-border bg-background">
         <MessageScroller
           busy={busy}
+          messageCount={entries.length}
           nestedScrollEnabled
           onFollowChange={setFollowing}
           contentClassName="p-4"

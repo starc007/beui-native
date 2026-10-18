@@ -621,8 +621,10 @@
       "libraries": [
         "react",
         "react-native",
+        "react-native-gesture-handler",
         "react-native-reanimated",
         "react-native-svg",
+        "react-native-worklets",
         "uniwind"
       ],
       "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/message?runtime-version=exposdk%3A57.0.0&channel-name=production",
@@ -652,8 +654,10 @@
       "libraries": [
         "react",
         "react-native",
+        "react-native-gesture-handler",
         "react-native-reanimated",
         "react-native-svg",
+        "react-native-worklets",
         "uniwind"
       ],
       "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/message-bubble?runtime-version=exposdk%3A57.0.0&channel-name=production",
@@ -675,8 +679,10 @@
         "src/components/message-scroller/message-scroller.tsx"
       ],
       "shared": [
+        "src/hooks/use-presence.ts",
         "src/hooks/use-reduced-motion.ts",
         "src/primitives/agent-icons.tsx",
+        "src/primitives/roll-text.tsx",
         "src/styles/motion.ts"
       ],
       "libraries": [

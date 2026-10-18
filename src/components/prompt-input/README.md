@@ -33,6 +33,11 @@ import { PromptInput } from "./src";
 - Buttons press to 0.93 (stiffness 500, damping 30, mass 0.6).
 - Menus grow from 0.86 out of the tapped button on a spring (stiffness 420, damping 40, mass 0.5) and their rows fade down into place 30 ms apart.
 
+## Better on a phone
+
+- Stopping a reply puts your last prompt back in an empty field, so you can adjust it and send again without retyping on a phone keyboard. Turn it off with `restoreOnStop={false}`.
+- Menus open as a panel as wide as the composer, within thumb reach, rather than a narrow dropdown.
+
 ## Accessibility
 
 - The field is named "Prompt", and the buttons "Add to prompt", "Model", "Send prompt" and "Stop generating".

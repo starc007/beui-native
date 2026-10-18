@@ -360,6 +360,11 @@ export type PromptInputProps = Omit<
   /** While true, the send button becomes a stop button. */
   loading?: boolean;
   onStop?: () => void;
+  /**
+   * Puts the last prompt back in an empty field when you stop a reply, so you
+   * can adjust it and send again. Defaults to true.
+   */
+  restoreOnStop?: boolean;
   /** Rows the field starts at. Defaults to 1. */
   minRows?: number;
   /** Rows the field grows to before scrolling. Defaults to 6. */
@@ -391,6 +396,7 @@ export function PromptInput({
   onSubmit,
   loading = false,
   onStop,
+  restoreOnStop = true,
   minRows = 1,
   maxRows = 6,
   leadingAction,
@@ -449,8 +455,16 @@ export function PromptInput({
     onValueChange?.(next);
   };
 
+  const lastPrompt = useRef("");
+  const stop = () => {
+    onStop?.();
+    if (restoreOnStop && value.trim() === "" && lastPrompt.current)
+      setValue(lastPrompt.current);
+  };
+
   const submit = () => {
     if (!canSubmit) return;
+    lastPrompt.current = trimmed;
     void onSubmit?.(trimmed, model);
     if (controlledValue === undefined) setInternalValue("");
   };
@@ -554,7 +568,7 @@ export function PromptInput({
             label={sendLabel}
             disabled={loading ? !onStop : !canSubmit}
             reduce={reduce}
-            onPress={loading ? () => onStop?.() : submit}
+            onPress={loading ? stop : submit}
             className={
               loading || canSubmit ? "bg-foreground" : "bg-foreground/15"
             }
