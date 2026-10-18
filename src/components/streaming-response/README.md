@@ -23,7 +23,7 @@ import { StreamingResponse } from "./src";
 - Copying swaps the icon to a check for 1600 ms. Copy with whatever clipboard library your app uses; the component doesn't depend on one.
 - Control the rating with `feedback`, or leave it uncontrolled with `defaultFeedback`.
 
-Sources from the web version arrive with the Citations component.
+Pass `sources` to show a stack of favicons and a count beside the actions; tapping it folds open the source list from Citations.
 
 ## Motion
 
@@ -40,4 +40,4 @@ Reply text is selectable, so a long press brings up the system menu to copy a se
 - Ratings report whether they're selected.
 - Reduced motion, or `disableAnimation`, fades the actions in place.
 
-Copy this directory, `hooks/use-presence.ts`, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icons.
+Copy this directory, `components/citations/`, `hooks/use-presence.ts`, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/disclosure.tsx`, `primitives/rise-in.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icons.

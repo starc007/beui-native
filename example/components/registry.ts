@@ -7,8 +7,12 @@ import { BadgeShowcase } from "./badge-showcase";
 import { ButtonShowcase } from "./button-showcase";
 import { CardShowcase } from "./card-showcase";
 import { CheckboxShowcase } from "./checkbox-showcase";
+import { CitationsShowcase } from "./citations-showcase";
+import { CodeBlockShowcase } from "./code-block-showcase";
 import { ColorPickerShowcase } from "./color-picker-showcase";
 import { ExpandableShowcase } from "./expandable-showcase";
+import { FileDiffShowcase } from "./file-diff-showcase";
+import { ImageGenerationShowcase } from "./image-generation-showcase";
 import { InputShowcase } from "./input-showcase";
 import { LoaderShowcase } from "./loader-showcase";
 import { LoadingStatesShowcase } from "./loading-states-showcase";
@@ -30,6 +34,7 @@ import { TextAnimationShowcase } from "./text-animation-showcase";
 import { TodoListShowcase } from "./todo-list-showcase";
 import { ToolApprovalShowcase } from "./tool-approval-showcase";
 import { ToolResultShowcase } from "./tool-result-showcase";
+import { VoiceOrbShowcase } from "./voice-orb-showcase";
 
 export type ComponentEntry = {
   /** Route segment, matching the beui.dev slug where one exists. */
@@ -271,6 +276,36 @@ export const groups: ComponentGroup[] = [
         description: "Output that streams in, then folds into a result.",
         Showcase: ToolResultShowcase,
         variants: 2,
+      },
+      {
+        slug: "citations",
+        title: "Citations",
+        description: "Tap a number and its source springs up.",
+        Showcase: CitationsShowcase,
+      },
+      {
+        slug: "code-block",
+        title: "Code Block",
+        description: "Streaming code with fixed line numbers and wrap.",
+        Showcase: CodeBlockShowcase,
+      },
+      {
+        slug: "file-diff",
+        title: "File Diff",
+        description: "Changes with live counts and folded context.",
+        Showcase: FileDiffShowcase,
+      },
+      {
+        slug: "image-generation",
+        title: "Image Generation",
+        description: "A dot field you can steer while the image forms.",
+        Showcase: ImageGenerationShowcase,
+      },
+      {
+        slug: "voice-orb",
+        title: "Voice Orb",
+        description: "A liquid sphere that moves with your voice.",
+        Showcase: VoiceOrbShowcase,
       },
     ],
   },

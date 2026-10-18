@@ -213,7 +213,7 @@ export function AgentActivity({
           </Animated.View>
         </Pressable>
       )}
-      <Disclosure open={expanded} reduce={reduce} height={viewport}>
+      <Disclosure open={expanded} reduce={reduce}>
         <View style={{ height: viewport }}>
           <ScrollView
             ref={scrollRef}

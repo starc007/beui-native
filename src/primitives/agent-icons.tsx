@@ -288,3 +288,27 @@ export function ReplyGlyph(props: GlyphProps) {
     </Glyph>
   );
 }
+
+export function WrapGlyph(props: GlyphProps) {
+  return (
+    <Glyph {...props}>
+      <Path d="M4 6.5h16M4 12h12.5a3.25 3.25 0 0 1 0 6.5H12M4 18.5h4.5M14 16.5l-2 2 2 2" />
+    </Glyph>
+  );
+}
+
+export function BookGlyph(props: GlyphProps) {
+  return (
+    <Glyph {...props}>
+      <Path d="M12 6.5c-1.6-1.3-4-2-7.5-2v13c3.5 0 5.9.7 7.5 2 1.6-1.3 4-2 7.5-2v-13c-3.5 0-5.9.7-7.5 2zM12 6.5v13" />
+    </Glyph>
+  );
+}
+
+export function ExternalGlyph(props: GlyphProps) {
+  return (
+    <Glyph {...props}>
+      <Path d="M14 4.5h5.5V10M19.5 4.5L11 13M17 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h4" />
+    </Glyph>
+  );
+}
