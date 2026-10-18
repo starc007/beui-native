@@ -25,6 +25,7 @@ import Animated, {
 import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import { ArrowUpGlyph } from "../../primitives/agent-icons";
+import { FadeEdge } from "../../primitives/fade-edge";
 import { RollText } from "../../primitives/roll-text";
 import { SPRING_LAYOUT, SPRING_PRESS } from "../../styles/motion";
 
@@ -47,6 +48,14 @@ export type MessageScrollerProps = Omit<ScrollViewProps, "children"> & {
   busy?: boolean;
   /** Shows a pill back to the newest message after you scroll up. Defaults to true. */
   showJump?: boolean;
+  /**
+   * Fades messages out under the top edge once you've scrolled, instead of
+   * cutting them off. Set `fadeColor` to the surface behind the scroller.
+   * Defaults to true.
+   */
+  fadeTop?: boolean;
+  /** Color the top edge fades into. Defaults to the background token. */
+  fadeColor?: string;
   /** Defaults to "Jump to latest". */
   jumpLabel?: string;
   /**
@@ -74,6 +83,8 @@ export function MessageScroller({
   label = "Conversation",
   busy,
   showJump = true,
+  fadeTop = true,
+  fadeColor,
   jumpLabel = "Jump to latest",
   messageCount,
   contentClassName = "",
@@ -98,6 +109,13 @@ export function MessageScroller({
   const metrics = useRef({ offset: 0, content: 0, viewport: 0 });
   const jump = useSharedValue(0);
   const jumpPress = useSharedValue(1);
+  const [scrolled, setScrolled] = useState(false);
+  const fade = useSharedValue(0);
+  const { backgroundColor: page } = useResolveClassNames("bg-background");
+  useEffect(() => {
+    fade.value = withTiming(scrolled ? 1 : 0, { duration: 160 });
+  }, [fade, scrolled]);
+  const fadeStyle = useAnimatedStyle(() => ({ opacity: fade.value }));
   const { color: foreground } = useResolveClassNames("text-foreground");
 
   // The message count when you last left the end.
@@ -190,6 +208,9 @@ export function MessageScroller({
         onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
           const { contentOffset, contentSize, layoutMeasurement } =
             event.nativeEvent;
+          // Only fade once there's content above the top edge.
+          const away = contentOffset.y > 2;
+          if (away !== scrolled) setScrolled(away);
           metrics.current = {
             offset: contentOffset.y,
             content: contentSize.height,
@@ -228,6 +249,11 @@ export function MessageScroller({
           {children}
         </View>
       </ScrollView>
+      {fadeTop ? (
+        <Animated.View pointerEvents="none" style={[styles.fade, fadeStyle]}>
+          <FadeEdge color={fadeColor ?? page} edge="top" height={FADE} />
+        </Animated.View>
+      ) : null}
       {showJump ? (
         <Animated.View
           pointerEvents={showPill ? "box-none" : "none"}
@@ -265,7 +291,10 @@ export function MessageScroller({
   );
 }
 
+const FADE = 28;
+
 const styles = StyleSheet.create({
+  fade: { position: "absolute", left: 0, right: 0, top: 0, height: FADE },
   root: { flex: 1, minHeight: 0 },
   jump: {
     position: "absolute",
