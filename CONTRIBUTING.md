@@ -105,7 +105,7 @@ scripts/record.sh prepare                       # 9:41, full battery
 xcrun simctl spawn booted defaults write -g AppleLocale en_US
 scripts/record.sh theme light
 xcrun simctl openurl booted "beui-native://"    # start from the list, for a fresh page
-scripts/record.sh open <slug>                   # opens with ?record=1, which hides the back button
+scripts/record.sh open <slug>                   # opens with ?record=1, which hides the back button and tab bar
 scripts/record.sh start <slug> light
 # Use the component: tap through each section, and scroll a long page down
 # and back to the top, so the loop ends where it starts.

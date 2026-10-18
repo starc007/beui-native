@@ -40,7 +40,7 @@ case "${1:-}" in
     xcrun simctl ui "$DEVICE" appearance "${2:?light or dark}"
     ;;
   open)
-    # record=1 hides the back button, which the clips don't need.
+    # record=1 hides the back button and tab bar, which the clips don't need.
     xcrun simctl openurl "$DEVICE" "$SCHEME://${2:?slug}?record=1"
     ;;
   start)
