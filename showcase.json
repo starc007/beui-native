@@ -929,6 +929,7 @@
         "src/primitives/agent-icons.tsx",
         "src/primitives/disclosure.tsx",
         "src/primitives/roll-text.tsx",
+        "src/primitives/running-bar.tsx",
         "src/primitives/spin-glyph.tsx",
         "src/styles/motion.ts"
       ],
@@ -1008,6 +1009,7 @@
         "src/primitives/agent-icons.tsx",
         "src/primitives/disclosure.tsx",
         "src/primitives/roll-text.tsx",
+        "src/primitives/running-bar.tsx",
         "src/primitives/spin-glyph.tsx",
         "src/styles/motion.ts"
       ],

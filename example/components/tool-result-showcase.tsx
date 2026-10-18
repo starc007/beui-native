@@ -1,5 +1,6 @@
 import * as Clipboard from "expo-clipboard";
 import { useEffect, useState } from "react";
+import { View } from "react-native";
 import {
   Button,
   ToolResult,
@@ -7,6 +8,9 @@ import {
   type ToolResultStatus,
 } from "../../src";
 import { DemoSection } from "./demo";
+
+// Header, a 150 point output, its footer and the card's padding.
+const CARD_HEIGHT = 58 + 150 + 44 + 14;
 
 const LINES = [
   "$ bun test tests/a11y.test.tsx",
@@ -56,56 +60,61 @@ export function ToolResultShowcase() {
     <>
       <DemoSection
         title="Terminal output"
-        description="Lines follow the newest output; drag up to read and it stops following. It folds into one line when the run passes."
+        description="Lines follow the newest output while a timer counts up; drag up to read and it stops following. It folds into one line when the run passes."
       >
-        <ToolResult
-          tool="terminal.run"
-          kind="terminal"
-          title={
-            terminal.status === "running"
-              ? "Running accessibility tests"
-              : "Tests passed"
-          }
-          meta={terminal.status === "success" ? "2.9s" : undefined}
-          status={terminal.status}
-          maxHeight={150}
-          onCopy={() => Clipboard.setStringAsync(output)}
-          onRetry={() => setTerminalRun((n) => n + 1)}
-        >
-          {output || " "}
-        </ToolResult>
+        {/* Holds the card at its tallest, so folding never moves the page. */}
+        <View style={{ minHeight: CARD_HEIGHT }}>
+          <ToolResult
+            tool="terminal.run"
+            kind="terminal"
+            title={
+              terminal.status === "running"
+                ? "Running accessibility tests"
+                : "Tests passed"
+            }
+            status={terminal.status}
+            maxHeight={150}
+            onCopy={() => Clipboard.setStringAsync(output)}
+            onRetry={() => setTerminalRun((n) => n + 1)}
+          >
+            {output || " "}
+          </ToolResult>
+        </View>
       </DemoSection>
       <DemoSection
         title="Request result"
         description="A failed request stays open so you can see why."
       >
-        <ToolResult
-          tool="http.request"
-          kind="request"
-          title={
-            request.status === "running"
-              ? "Fetching project activity"
-              : "Request failed"
-          }
-          meta={request.status === "running" ? "GET /v1/activity" : "429"}
-          status={request.status}
-          collapseOnComplete={false}
-          maxHeight={150}
-          onCopy={() => Clipboard.setStringAsync(RESPONSE)}
-          onRetry={() => setRequestRun((n) => n + 1)}
-        >
-          {request.status === "running" ? (
-            <ToolResultOutput>
-              {[
-                "Preparing request…",
-                "GET /v1/activity\nConnecting…",
-                "GET /v1/activity\nWaiting for response…",
-              ][Math.min(request.visible, 2)] ?? ""}
-            </ToolResultOutput>
-          ) : (
-            <ToolResultOutput>{RESPONSE}</ToolResultOutput>
-          )}
-        </ToolResult>
+        {/* Holds the card at its tallest, so folding never moves the page. */}
+        <View style={{ minHeight: CARD_HEIGHT }}>
+          <ToolResult
+            tool="http.request"
+            kind="request"
+            title={
+              request.status === "running"
+                ? "Fetching project activity"
+                : "Request failed"
+            }
+            meta={request.status === "running" ? "GET /v1/activity" : "429"}
+            status={request.status}
+            collapseOnComplete={false}
+            maxHeight={150}
+            onCopy={() => Clipboard.setStringAsync(RESPONSE)}
+            onRetry={() => setRequestRun((n) => n + 1)}
+          >
+            {request.status === "running" ? (
+              <ToolResultOutput>
+                {[
+                  "Preparing request…",
+                  "GET /v1/activity\nConnecting…",
+                  "GET /v1/activity\nWaiting for response…",
+                ][Math.min(request.visible, 2)] ?? ""}
+              </ToolResultOutput>
+            ) : (
+              <ToolResultOutput>{RESPONSE}</ToolResultOutput>
+            )}
+          </ToolResult>
+        </View>
         <Button
           className="self-center"
           size="sm"

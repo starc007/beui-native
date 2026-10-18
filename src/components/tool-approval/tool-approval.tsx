@@ -11,7 +11,6 @@ import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
-  withRepeat,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -27,13 +26,9 @@ import {
 } from "../../primitives/agent-icons";
 import { Disclosure } from "../../primitives/disclosure";
 import { RollText } from "../../primitives/roll-text";
+import { RunningBar } from "../../primitives/running-bar";
 import { SpinGlyph } from "../../primitives/spin-glyph";
-import {
-  EASE_IN_OUT,
-  EASE_OUT,
-  SPRING_PRESS,
-  SPRING_SWAP,
-} from "../../styles/motion";
+import { EASE_OUT, SPRING_PRESS, SPRING_SWAP } from "../../styles/motion";
 
 export type ToolApprovalStatus =
   | "pending"
@@ -244,40 +239,6 @@ function HoldButton({
 }
 
 export type ToolApprovalRisk = "low" | "normal" | "high";
-
-/**
- * A thin bar that slides along the bottom edge while the tool runs.
- */
-function RunningBar({ reduce }: { reduce: boolean }) {
-  const [width, setWidth] = useState(0);
-  const x = useSharedValue(0);
-  useEffect(() => {
-    if (reduce || width === 0) return;
-    x.value = 0;
-    x.value = withRepeat(
-      withTiming(1, { duration: 1200, easing: EASE_IN_OUT }),
-      -1,
-      false,
-    );
-    return () => cancelAnimation(x);
-  }, [reduce, width, x]);
-  const style = useAnimatedStyle(() => ({
-    transform: [{ translateX: -width * 0.35 + x.value * width * 1.35 }],
-  }));
-  return (
-    <View
-      pointerEvents="none"
-      style={styles.bar}
-      onLayout={({ nativeEvent }) => setWidth(nativeEvent.layout.width)}
-    >
-      {reduce ? (
-        <View style={StyleSheet.absoluteFill} className="bg-primary/40" />
-      ) : (
-        <Animated.View style={[styles.barFill, style]} className="bg-primary" />
-      )}
-    </View>
-  );
-}
 
 export type ToolApprovalProps = Omit<ViewProps, "children"> & {
   /** The tool's name, such as `terminal.run`. */
