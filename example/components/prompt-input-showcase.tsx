@@ -65,10 +65,7 @@ export function PromptInputShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Composer"
-        description="A pill while it's one line, with a mic until you type. Keep typing and it opens into a card with the buttons underneath. Send turns into stop while the reply streams."
-      >
+      <DemoSection title="Composer">
         <DemoStatus>{note}</DemoStatus>
         <PromptInput
           models={MODELS}
@@ -116,10 +113,7 @@ export function PromptInputShowcase() {
           }
         />
       </DemoSection>
-      <DemoSection
-        title="Long prompts"
-        description="A prompt that wraps opens the composer into a card."
-      >
+      <DemoSection title="Long prompts">
         <PromptInput
           defaultValue="Draft release notes for the new export menu. Keep it to three short bullets, mention the keyboard shortcut, and end with a line about what's next."
           actions={ACTIONS}

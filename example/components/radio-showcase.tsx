@@ -7,10 +7,7 @@ export function RadioShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Vertical"
-        description="With descriptions and a disabled option."
-      >
+      <DemoSection title="Vertical">
         <RadioGroup value={plan} onValueChange={setPlan}>
           <RadioGroupItem value="starter" label="Starter, free" />
           <RadioGroupItem

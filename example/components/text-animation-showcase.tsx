@@ -21,10 +21,7 @@ export function TextAnimationShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Reveal"
-        description="Words rise into place on a soft spring."
-      >
+      <DemoSection title="Reveal">
         <TextReveal
           key={revealKey}
           text="Motion in words."
@@ -41,37 +38,25 @@ export function TextAnimationShowcase() {
           Replay
         </Button>
       </DemoSection>
-      <DemoSection
-        title="Chromatic"
-        description="A color sweep reveals each word, then moves on."
-      >
+      <DemoSection title="Chromatic">
         <ChromaticTextReveal
           prefix="Motion that feels"
           words={["natural.", "intentional.", "alive."]}
           className="text-xl font-semibold text-foreground"
         />
       </DemoSection>
-      <DemoSection
-        title="Shimmer"
-        description="For loading and thinking states."
-      >
+      <DemoSection title="Shimmer">
         <TextShimmer duration={1800} className="text-xl font-semibold">
           Loading with shimmer
         </TextShimmer>
       </DemoSection>
-      <DemoSection
-        title="Cascade"
-        description="Letters roll to the next status, left to right."
-      >
+      <DemoSection title="Cascade">
         <TextCascade
           text={STATUSES[tick % STATUSES.length] ?? ""}
           className="text-xl font-semibold text-foreground"
         />
       </DemoSection>
-      <DemoSection
-        title="Scramble"
-        description="Characters cycle through glyphs before settling."
-      >
+      <DemoSection title="Scramble">
         <TextScramble
           text={CODENAMES[codename % CODENAMES.length] ?? ""}
           className="text-xl font-semibold text-foreground"

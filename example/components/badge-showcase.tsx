@@ -25,10 +25,7 @@ export function BadgeShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Status changes"
-        description="The icon and label roll, the colors blend and the pill springs to its new width."
-      >
+      <DemoSection title="Status changes">
         <View className="h-16 items-center justify-center">
           <AnimatedBadge
             status={state?.status}
@@ -40,7 +37,7 @@ export function BadgeShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection title="Statuses" description="Small and medium sizes.">
+      <DemoSection title="Statuses">
         <View className="gap-3">
           <View className="flex-row flex-wrap gap-2">
             <AnimatedBadge status="neutral" size="sm">
@@ -73,10 +70,7 @@ export function BadgeShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection
-        title="Counts"
-        description="Numbers roll too. At zero the badge turns neutral."
-      >
+      <DemoSection title="Counts">
         <View className="flex-row items-center justify-between gap-3">
           <AnimatedBadge
             status={unread > 0 ? "info" : "neutral"}
@@ -102,7 +96,7 @@ export function BadgeShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection title="Icons" description="Your own icon, or none.">
+      <DemoSection title="Icons">
         <View className="flex-row flex-wrap gap-2">
           <AnimatedBadge status="success" icon={ShieldIcon}>
             Protected

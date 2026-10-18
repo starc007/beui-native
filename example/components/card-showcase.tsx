@@ -75,10 +75,7 @@ export function CardShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Selectable"
-        description="The whole card is the target. Pressing sinks it slightly and the outline fades in."
-      >
+      <DemoSection title="Selectable">
         <View className="gap-3">
           {DOCUMENTS.map((document, index) => (
             <DocumentChoice
@@ -91,10 +88,7 @@ export function CardShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection
-        title="Muted"
-        description="A filled surface for settings groups."
-      >
+      <DemoSection title="Muted">
         <Card variant="muted" size="compact">
           <CardHeader>
             <CardTitle heading>Notifications</CardTitle>
@@ -123,10 +117,7 @@ export function CardShowcase() {
         </Card>
       </DemoSection>
 
-      <DemoSection
-        title="Header action and footer"
-        description="An action beside the title, content, and a row of buttons."
-      >
+      <DemoSection title="Header action and footer">
         <Card>
           <CardHeader>
             <CardTitle heading>Review order</CardTitle>
@@ -161,10 +152,7 @@ export function CardShowcase() {
         </Card>
       </DemoSection>
 
-      <DemoSection
-        title="With media"
-        description="Media runs edge to edge above the parts."
-      >
+      <DemoSection title="With media">
         <Card className="overflow-hidden pt-0">
           <Image
             source={{

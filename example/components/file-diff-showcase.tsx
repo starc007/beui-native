@@ -90,10 +90,7 @@ export function FileDiffShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Applying changes"
-        description="Lines arrive with live counts, then the diff folds away once it's applied. Tap the file to reopen it."
-      >
+      <DemoSection title="Applying changes">
         {/* Holds the diff at its tallest, so streaming and folding never move the page. */}
         <View style={{ minHeight: DIFF_HEIGHT }}>
           <FileDiff
@@ -120,10 +117,7 @@ export function FileDiffShowcase() {
           Replay
         </Button>
       </DemoSection>
-      <DemoSection
-        title="Unchanged lines fold"
-        description="Long stretches without changes collapse into a row. Tap it to see them."
-      >
+      <DemoSection title="Unchanged lines fold">
         <FileDiff
           file="tests/tabs.test.tsx"
           lines={LONG}

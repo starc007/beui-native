@@ -70,10 +70,7 @@ export function AlertShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Variants"
-        description="Switching blends the color, swaps the icon and springs the height. Dismissing folds it away."
-      >
+      <DemoSection title="Variants">
         <View className="gap-4">
           <Tabs
             value={variant}
@@ -122,10 +119,7 @@ export function AlertShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection
-        title="Stacked"
-        description="Content below glides up into the space a dismissed alert leaves."
-      >
+      <DemoSection title="Stacked">
         <View className="gap-3">
           {STACK.map((item) => (
             <Alert
@@ -156,10 +150,7 @@ export function AlertShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection
-        title="Plain"
-        description="The default variant, without a close."
-      >
+      <DemoSection title="Plain">
         <Alert>
           <AlertIcon />
           <AlertContent>

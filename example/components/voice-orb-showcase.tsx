@@ -19,10 +19,7 @@ export function VoiceOrbShowcase() {
   });
 
   return (
-    <DemoSection
-      title="Listening"
-      description="The surface and silhouette follow the voice level. Tap the orb to pause and resume; the surface holds still where it is."
-    >
+    <DemoSection title="Listening">
       <DemoStatus>{listening ? "Listening." : "Paused."}</DemoStatus>
       <View className="items-center py-2">
         <VoiceOrb

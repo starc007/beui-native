@@ -53,10 +53,7 @@ export function MessageBubbleShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Animated surfaces"
-        description="A sent bubble pops out of the corner on its side, and bubbles in a row join up. Send a few."
-      >
+      <DemoSection title="Animated surfaces">
         <MessageBubbleGroup spacing="default">
           {SURFACES.map((surface) => (
             <MessageBubble key={surface.variant} variant={surface.variant}>
@@ -102,10 +99,7 @@ export function MessageBubbleShowcase() {
           </Pressable>
         </View>
       </DemoSection>
-      <DemoSection
-        title="Swipe to reply"
-        description="Drag a bubble toward the middle until the arrow pops, then let go. A long press lifts it, ready for a menu."
-      >
+      <DemoSection title="Swipe to reply">
         <DemoStatus>{note}</DemoStatus>
         <MessageBubbleGroup spacing="default">
           {THREAD.map((message) => (
@@ -122,10 +116,7 @@ export function MessageBubbleShowcase() {
           ))}
         </MessageBubbleGroup>
       </DemoSection>
-      <DemoSection
-        title="Show more"
-        description="Long replies clamp to four lines and spring open to their full height."
-      >
+      <DemoSection title="Show more">
         <MessageBubble>
           <MessageBubbleCollapsible collapsedLines={4}>
             <MessageBubbleText>

@@ -44,10 +44,7 @@ export function CodeBlockShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Streaming code"
-        description="Lines stream in and stay highlighted as they arrive. Drag up and it stops following."
-      >
+      <DemoSection title="Streaming code">
         {/* Holds the block at its tallest, so streaming never moves the page. */}
         <View style={{ minHeight: STREAM_HEIGHT }}>
           <CodeBlock
@@ -69,10 +66,7 @@ export function CodeBlockShowcase() {
           Replay
         </Button>
       </DemoSection>
-      <DemoSection
-        title="Long lines"
-        description="Swipe a long line sideways and the numbers stay put, or tap the wrap button to fold it."
-      >
+      <DemoSection title="Long lines">
         <CodeBlock
           code={SCRIPT}
           filename="ship.sh"

@@ -21,10 +21,7 @@ export function InputShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Validation"
-        description="Type an address without @ to see the error shake. Return moves to the next field."
-      >
+      <DemoSection title="Validation">
         <Input
           label="Email"
           placeholder="you@example.com"
@@ -42,10 +39,7 @@ export function InputShowcase() {
           reserveErrorLine
         />
       </DemoSection>
-      <DemoSection
-        title="Icons and controls"
-        description="A trailing control, and a check that draws on success."
-      >
+      <DemoSection title="Icons and controls">
         <View className="gap-1">
           <Input
             ref={passwordRef}

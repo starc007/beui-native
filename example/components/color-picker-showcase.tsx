@@ -70,10 +70,7 @@ export function ColorPickerShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Popover"
-        description="Tap the chip to open the picker. Drag the color area, and a loupe lifts above your finger to show the color under it."
-      >
+      <DemoSection title="Popover">
         <View className="gap-3">
           <ColorPicker
             value={brand}
@@ -115,10 +112,7 @@ export function ColorPickerShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection
-        title="Inline"
-        description="The same parts, laid out on the page without a trigger."
-      >
+      <DemoSection title="Inline">
         <ColorPicker
           value={accent}
           onValueChange={setAccent}

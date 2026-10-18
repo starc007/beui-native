@@ -12,10 +12,7 @@ export function NumberShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Ticker"
-        description="Each digit rolls through its own column. Updates every few seconds."
-      >
+      <DemoSection title="Ticker">
         <View className="gap-1">
           <Text className="text-xs text-muted">Active users</Text>
           <NumberTicker
@@ -25,10 +22,7 @@ export function NumberShowcase() {
           />
         </View>
       </DemoSection>
-      <DemoSection
-        title="Count up"
-        description="Counts from the previous value on an ease-out curve."
-      >
+      <DemoSection title="Count up">
         <View className="gap-1">
           <Text className="text-xs text-muted">Revenue</Text>
           <AnimatedNumber

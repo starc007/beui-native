@@ -81,10 +81,7 @@ export function ImageGenerationShowcase() {
   }, [run]);
 
   return (
-    <DemoSection
-      title="Generating"
-      description="A lens wanders over the dot field until the image comes into focus. Drag a finger across it and the lens follows, swelling under your touch."
-    >
+    <DemoSection title="Generating">
       <DemoStatus>{note}</DemoStatus>
       <ImageGeneration
         prompt="a quiet mountain landscape at sunset"

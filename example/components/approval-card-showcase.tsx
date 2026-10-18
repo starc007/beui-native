@@ -90,10 +90,7 @@ export function ApprovalCardShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Questions"
-        description="One question at a time. A single choice moves on by itself; swipe left or right to move between questions."
-      >
+      <DemoSection title="Questions">
         <ApprovalCard
           key={questions}
           questions={QUESTIONS}
@@ -117,10 +114,7 @@ export function ApprovalCardShowcase() {
           Replay
         </Button>
       </DemoSection>
-      <DemoSection
-        title="Review"
-        description="Approve, ask for changes or reject a prepared release."
-      >
+      <DemoSection title="Review">
         <ApprovalCard
           title="Publish the component update?"
           description="The agent has prepared the release and is waiting for your decision."

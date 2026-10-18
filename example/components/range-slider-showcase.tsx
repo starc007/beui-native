@@ -33,10 +33,7 @@ export function RangeSliderShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Steps"
-        description="Drag or tap the track. The thumb glides to each step and stretches while held."
-      >
+      <DemoSection title="Steps">
         <View className="gap-3">
           <Readout label="Drag the handle">
             <NumberTicker
@@ -58,10 +55,7 @@ export function RangeSliderShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection
-        title="Units"
-        description="formatValueText tells screen readers what the number means."
-      >
+      <DemoSection title="Units">
         <View className="gap-6">
           <View className="gap-3">
             <Readout label="Volume">
@@ -102,10 +96,7 @@ export function RangeSliderShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection
-        title="Without ticks"
-        description="Fine steps hide their dots. Past 50 steps they hide on their own."
-      >
+      <DemoSection title="Without ticks">
         <RangeSlider
           defaultValue={30}
           showTicks={false}
