@@ -348,6 +348,7 @@ export type {
   ToolApprovalCodeProps,
   ToolApprovalParameter,
   ToolApprovalProps,
+  ToolApprovalRisk,
   ToolApprovalStatus,
 } from "./components/tool-approval";
 export { ToolApproval, ToolApprovalCode } from "./components/tool-approval";
