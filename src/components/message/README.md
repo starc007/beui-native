@@ -8,9 +8,9 @@ import {
   MessageAvatar,
   MessageBubble,
   MessageContent,
-  MessageFooter,
   MessageGroup,
   MessageHeader,
+  MessageStatus,
   MessageTyping,
 } from "./src";
 
@@ -18,9 +18,9 @@ import {
   <Message from="user" animateIn>
     <MessageAvatar>Y</MessageAvatar>
     <MessageContent>
-      <MessageHeader>You · 9:41</MessageHeader>
+      <MessageHeader>You</MessageHeader>
       <MessageBubble variant="solid">Can you summarize the notes?</MessageBubble>
-      <MessageFooter>Delivered</MessageFooter>
+      <MessageStatus time="9:41" delivery="delivered" />
     </MessageContent>
   </Message>
   <Message from="assistant">
@@ -39,6 +39,7 @@ import {
 - `Message` sets the side: user rows sit on the trailing side with the avatar after the content, and bubbles inside follow.
 - `MessageAvatar` is a 28 point circle for initials, an image or an icon. `placeholder` keeps the slot empty so grouped replies stay aligned.
 - `MessageHeader` and `MessageFooter` are small muted lines above and below the bubbles.
+- `MessageStatus` sits under the bubbles with the time and delivery state, such as "9:41 · Delivered". `delivery` is `sending` (a clock), `sent` (one check), `delivered` (two checks), `read` (two blue checks) or `failed`. The label rolls and the icon swaps as it changes. Leave out `delivery` for just the time, or hide the word with `showLabel={false}`.
 - `MessageMarker` is a centered pill for dates and system notes.
 - `MessageTyping` shows three dots that rise and fade in turn.
 - `MessageGroup` stacks rows 6 points apart, or 16 with `spacing="default"`.

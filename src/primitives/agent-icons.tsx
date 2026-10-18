@@ -312,3 +312,20 @@ export function ExternalGlyph(props: GlyphProps) {
     </Glyph>
   );
 }
+
+export function DoubleCheckGlyph(props: GlyphProps) {
+  return (
+    <Glyph {...props}>
+      <Path d="M2.5 12.5l4.5 4.5 9-9.5M12 16.5l.5.5 9-9.5" />
+    </Glyph>
+  );
+}
+
+export function ClockGlyph(props: GlyphProps) {
+  return (
+    <Glyph {...props}>
+      <Circle cx={12} cy={12} r={8.5} />
+      <Path d="M12 7.5V12l3 2" />
+    </Glyph>
+  );
+}

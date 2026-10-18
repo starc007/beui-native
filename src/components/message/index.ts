@@ -1,8 +1,10 @@
 export type {
   MessageAvatarProps,
+  MessageDelivery,
   MessageFrom,
   MessageGroupProps,
   MessageProps,
+  MessageStatusProps,
   MessageTypingProps,
 } from "./message";
 export {
@@ -13,5 +15,6 @@ export {
   MessageGroup,
   MessageHeader,
   MessageMarker,
+  MessageStatus,
   MessageTyping,
 } from "./message";
