@@ -4,7 +4,7 @@ Thanks for helping. Bug reports, component requests and pull requests are all we
 
 ## Before you start
 
-- **Bugs:** [open an issue](https://github.com/starc007/beui-native/issues/new/choose) with the platform (iOS, Android or web), device or simulator, and steps to reproduce. A screen recording helps a lot for motion bugs.
+- **Bugs:** [open an issue](https://github.com/starc007/beui-native/issues/new/choose) with the platform (iOS or Android), device or simulator, and steps to reproduce. A screen recording helps a lot for motion bugs.
 - **New components:** open an issue first, so we can agree on the API and the motion before you build it. Components usually port one from [beUI](https://beui.dev), but they're designed for touch, not copied from the web.
 - **Small fixes**, like typos or a missing accessibility label, can go straight to a pull request.
 
@@ -17,7 +17,7 @@ bun install --frozen-lockfile
 bun dev
 ```
 
-Open the showcase in Expo Go (SDK 57), or run `bun ios`, `bun android` or `bun web`. Edits under `src/` hot-reload.
+Open the showcase in Expo Go (SDK 57), or run `bun ios` or `bun android`. Edits under `src/` hot-reload.
 
 ## How the repository works
 
@@ -67,7 +67,7 @@ bun run manifest --check   # showcase.json matches the source
 
 If you change dependencies or the Metro config, also run `bun doctor` and `bun run export`. Install app dependencies from `example/` with `bunx expo install <package> --bun`, and commit the root `bun.lock`.
 
-Passing checks and bundles doesn't prove a component works on a device. In your pull request, say what you tested on iOS, on Android and on web, including VoiceOver or TalkBack, large text and reduced motion where they apply.
+Passing checks and bundles doesn't prove a component works on a device. In your pull request, say what you tested on iOS and on Android, including VoiceOver or TalkBack, large text and reduced motion where they apply.
 
 ## Commits and pull requests
 

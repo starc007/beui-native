@@ -6,7 +6,7 @@ Animated, accessible components for React Native, built for touch. A native comp
 [![npm](https://img.shields.io/npm/v/beui-native.svg?label=cli)](https://www.npmjs.com/package/beui-native)
 ![Expo SDK 57](https://img.shields.io/badge/Expo%20SDK-57-000020.svg)
 ![React Native 0.86](https://img.shields.io/badge/React%20Native-0.86-61dafb.svg)
-![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android%20%7C%20web-lightgrey.svg)
+![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android-lightgrey.svg)
 
 **[Components](https://beui.dev/react-native)** · **[Setup guide](https://beui.dev/docs/native-setup)** · **[Try in Expo Go](#try-it-on-your-phone)** · **[CLI](cli/README.md)**
 
@@ -109,7 +109,7 @@ bun install --frozen-lockfile
 bun dev
 ```
 
-Scan the code it prints with Expo Go on a phone on the same network, or run `bun ios`, `bun android` or `bun web`.
+Scan the code it prints with Expo Go on a phone on the same network, or run `bun ios` or `bun android`.
 
 ## Adding components by hand
 
@@ -163,7 +163,7 @@ cli/            The beui-native CLI, published to npm
 bun check          # TypeScript and Biome
 bun run format     # Format and apply safe lint fixes
 bun doctor         # Expo configuration and dependency checks
-bun run export     # Production bundles for iOS, Android and web
+bun run export     # Production bundles for iOS and Android
 ```
 
 Bundling isn't device testing. Before a component ships, check it on iOS and Android with VoiceOver or TalkBack, large text, reduced motion and cancelled gestures.
