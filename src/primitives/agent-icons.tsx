@@ -280,3 +280,11 @@ export function RingGlyph(props: GlyphProps) {
     </Glyph>
   );
 }
+
+export function ReplyGlyph(props: GlyphProps) {
+  return (
+    <Glyph {...props}>
+      <Path d="M9.5 7L4.5 12l5 5M4.5 12h10a5 5 0 0 1 5 5v1" />
+    </Glyph>
+  );
+}

@@ -14,7 +14,6 @@ import {
   ScrollView,
   type ScrollViewProps,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import Animated, {
@@ -26,6 +25,7 @@ import Animated, {
 import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import { ArrowUpGlyph } from "../../primitives/agent-icons";
+import { RollText } from "../../primitives/roll-text";
 import { SPRING_LAYOUT, SPRING_PRESS } from "../../styles/motion";
 
 export type MessageScrollerHandle = {
@@ -49,6 +49,11 @@ export type MessageScrollerProps = Omit<ScrollViewProps, "children"> & {
   showJump?: boolean;
   /** Defaults to "Jump to latest". */
   jumpLabel?: string;
+  /**
+   * How many messages the conversation holds. When given, the pill counts
+   * the ones that arrived while you were reading, such as "3 new messages".
+   */
+  messageCount?: number;
   /** Classes for the scroll content. */
   contentClassName?: string;
   className?: string;
@@ -70,6 +75,7 @@ export function MessageScroller({
   busy,
   showJump = true,
   jumpLabel = "Jump to latest",
+  messageCount,
   contentClassName = "",
   className = "",
   disableAnimation = false,
@@ -94,9 +100,15 @@ export function MessageScroller({
   const jumpPress = useSharedValue(1);
   const { color: foreground } = useResolveClassNames("text-foreground");
 
+  // The message count when you last left the end.
+  const [leftAt, setLeftAt] = useState(messageCount ?? 0);
+  const countRef = useRef(messageCount ?? 0);
+  countRef.current = messageCount ?? 0;
+
   const setFollowing = useCallback(
     (next: boolean) => {
       if (followingRef.current === next) return;
+      if (!next) setLeftAt(countRef.current);
       followingRef.current = next;
       setFollowingState(next);
       onFollowChange?.(next);
@@ -121,6 +133,12 @@ export function MessageScroller({
   const overflowing = () =>
     metrics.current.content > metrics.current.viewport + 1;
   const showPill = showJump && !following && overflowing();
+  const unread =
+    messageCount === undefined ? 0 : Math.max(0, messageCount - leftAt);
+  const pillLabel =
+    unread > 0
+      ? `${unread} new ${unread === 1 ? "message" : "messages"}`
+      : jumpLabel;
 
   useEffect(() => {
     jump.value = reduce
@@ -217,7 +235,7 @@ export function MessageScroller({
         >
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={jumpLabel}
+            accessibilityLabel={pillLabel}
             accessibilityElementsHidden={!showPill}
             importantForAccessibility={
               showPill ? "auto" : "no-hide-descendants"
@@ -235,9 +253,11 @@ export function MessageScroller({
             <View style={styles.down}>
               <ArrowUpGlyph size={14} color={foreground} />
             </View>
-            <Text className="text-xs font-medium text-foreground">
-              {jumpLabel}
-            </Text>
+            <RollText
+              text={pillLabel}
+              className="text-xs font-medium text-foreground"
+              reduce={reduce}
+            />
           </Pressable>
         </Animated.View>
       ) : null}

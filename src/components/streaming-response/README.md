@@ -29,6 +29,10 @@ Sources from the web version arrive with the Citations component.
 
 The action row fades and rises 4 points over 220 ms. Buttons press to 0.9, and the copy check springs in from below.
 
+## Better on a phone
+
+Reply text is selectable, so a long press brings up the system menu to copy a sentence or look up a word, not just the whole reply.
+
 ## Accessibility
 
 - The reply is a polite live region on Android while streaming. Set `announce={false}` inside a conversation that's already announced, such as `MessageScroller`.

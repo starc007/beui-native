@@ -20,10 +20,15 @@ import { MessageScroller } from "./src";
 
 The web version's preview rail depends on hover, so it isn't ported. The jump pill takes its place on touch screens.
 
+## Better on a phone
+
+- Pass `messageCount` and the pill counts what arrived while you were reading, such as "3 new messages", rolling as the count changes.
+- It never scrolls against your finger: new output waits while you drag, and letting go near the end catches up.
+
 ## Accessibility
 
 - The scroll view is named "Conversation". Change it with `label`.
 - The content is a polite live region on Android and is marked busy while `busy` is set.
 - Reduced motion, or `disableAnimation`, jumps instead of scrolling smoothly and fades the pill in place.
 
-Copy this directory, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icon.
+Copy this directory, `hooks/use-presence.ts`, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/roll-text.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icon.
