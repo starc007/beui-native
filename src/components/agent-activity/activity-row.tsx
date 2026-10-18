@@ -78,9 +78,11 @@ function Halo({ reduce }: { reduce: boolean }) {
 function StepRow({
   item,
   reduce,
+  connect,
 }: {
   item: AgentActivityStep;
   reduce: boolean;
+  connect: boolean;
 }) {
   const muted = useMuted();
   const status = item.status ?? "complete";
@@ -95,10 +97,14 @@ function StepRow({
           <View style={styles.pending} className="border-muted" />
         )}
       </View>
+      {/* Joins this step's mark to the next one, so the run reads as a sequence. */}
+      {connect ? (
+        <View style={styles.connector} className="bg-border-strong" />
+      ) : null}
       <View style={styles.flex}>
         {textOf(
           item.label,
-          `text-sm leading-5 ${status === "pending" ? "text-muted/60" : "text-foreground"}`,
+          `text-sm leading-5 ${status === "pending" ? "text-muted/60" : status === "active" ? "font-medium text-foreground" : "text-foreground/80"}`,
         )}
       </View>
       {item.meta ? textOf(item.meta, "text-sm leading-5 text-muted/60") : null}
@@ -265,14 +271,17 @@ export function ActivityRow({
   item,
   reduce,
   onOpenResult,
+  connect = false,
 }: {
   item: AgentActivityItem;
   reduce: boolean;
   onOpenResult?: (result: AgentSearchResult) => void;
+  /** Draws a line from this step's mark to the next step's. */
+  connect?: boolean;
 }) {
   switch (item.type) {
     case "step":
-      return <StepRow item={item} reduce={reduce} />;
+      return <StepRow item={item} reduce={reduce} connect={connect} />;
     case "text":
       return textOf(
         item.content,
@@ -315,6 +324,15 @@ const styles = StyleSheet.create({
   },
   halo: { borderRadius: 6 },
   dot: { width: 6, height: 6, borderRadius: 3 },
+  // From under the mark, through the row's bottom padding and the gap, to the
+  // top of the next mark.
+  connector: {
+    position: "absolute",
+    left: 6 + 7.5,
+    top: 4 + 2 + 16 + 2,
+    bottom: -4,
+    width: 1,
+  },
   pending: { width: 11, height: 11, borderRadius: 6, borderWidth: 1.5 },
   queryRow: {
     flexDirection: "row",

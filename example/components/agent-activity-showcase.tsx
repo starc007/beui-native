@@ -229,7 +229,9 @@ function Demo({
   const frame = useTimeline(timeline, run);
   return (
     <View className="gap-3">
-      <View>
+      {/* Holds the log's full height, so the sections below never jump as it
+          grows and folds. */}
+      <View style={{ minHeight: 28 + (maxHeight ?? 208) }}>
         <AgentActivity
           key={run}
           items={frame.items}

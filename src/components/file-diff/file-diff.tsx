@@ -360,7 +360,7 @@ export function FileDiff({
           <View className="overflow-hidden rounded-xl bg-surface">
             <ScrollView
               ref={scrollRef}
-              style={{ maxHeight }}
+              style={[styles.fixed, { maxHeight }]}
               nestedScrollEnabled
               showsVerticalScrollIndicator={false}
               scrollEventThrottle={32}
@@ -445,6 +445,9 @@ export function FileDiff({
 }
 
 const styles = StyleSheet.create({
+  // Scroll views shrink to fit the space above them; inside a closing
+  // disclosure that would collapse the content to nothing.
+  fixed: { flexGrow: 0, flexShrink: 0 },
   flex: { flex: 1 },
   row: { flexDirection: "row" },
   header: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 40 },

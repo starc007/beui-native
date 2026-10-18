@@ -40,7 +40,9 @@ export function Disclosure({
   style,
   children,
 }: DisclosureProps) {
-  const contentRef = useAnimatedRef<View>();
+  // The content's height, kept current by layout events; measuring on demand
+  // can read 0 for content inside a scroll view.
+  const contentHeight = useSharedValue(0);
   const clipRef = useAnimatedRef<Animated.View>();
   const height = useSharedValue(open ? NATURAL : 0);
   const shown = useSharedValue(open ? 1 : 0);
@@ -56,8 +58,7 @@ export function Disclosure({
     scheduleOnUI(() => {
       "worklet";
       // Real sizes, read on the UI thread at the moment of the change.
-      const content = measure(contentRef);
-      const full = Math.min(content?.height ?? 0, cap);
+      const full = Math.min(contentHeight.value, cap);
       if (open) {
         const from = height.value === NATURAL ? full : height.value;
         if (reduce) {
@@ -80,13 +81,17 @@ export function Disclosure({
       open ? 1 : 0,
       reduce ? { duration: 0 } : open ? OPEN : CLOSE,
     );
-  }, [clipRef, contentRef, height, maxHeight, open, reduce, shown]);
+  }, [clipRef, contentHeight, height, maxHeight, open, reduce, shown]);
 
   const clipStyle = useAnimatedStyle(() =>
+    // Settled open, the clip follows the content's measured height.
     height.value === NATURAL
-      ? maxHeight === undefined
-        ? {}
-        : { maxHeight }
+      ? {
+          height: Math.min(
+            contentHeight.value,
+            maxHeight ?? Number.POSITIVE_INFINITY,
+          ),
+        }
       : { height: height.value },
   );
   const contentStyle = useAnimatedStyle(
@@ -105,8 +110,15 @@ export function Disclosure({
       importantForAccessibility={open ? "auto" : "no-hide-descendants"}
       style={[styles.clip, clipStyle, style]}
     >
-      <Animated.View style={contentStyle}>
-        <View ref={contentRef} collapsable={false} style={styles.measure}>
+      {/* Absolutely placed, so the content keeps its natural height while the
+          clip around it is short, and can be measured at any time. */}
+      <Animated.View style={[styles.content, contentStyle]}>
+        <View
+          style={styles.measure}
+          onLayout={({ nativeEvent }) => {
+            contentHeight.value = nativeEvent.layout.height;
+          }}
+        >
           {children}
         </View>
       </Animated.View>
@@ -116,5 +128,6 @@ export function Disclosure({
 
 const styles = StyleSheet.create({
   clip: { overflow: "hidden" },
+  content: { position: "absolute", left: 0, right: 0, top: 0 },
   measure: { flexShrink: 0 },
 });
