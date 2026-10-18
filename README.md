@@ -55,7 +55,7 @@ Each name opens the component's page on beui.dev, with a recording from iOS and 
 | **Actions** | | |
 | [Button](https://beui.dev/react-native/button) | Spring press, ripple, icons, and a stateful variant for async actions. | [README](src/components/button/README.md) |
 | [Expandable Control](https://beui.dev/react-native/expandable-control) | Buttons and chips that spring open to reveal a label or an action. | [README](src/components/expandable-control/README.md) |
-| [Menu](https://beui.dev/react-native/menu) | A pull-down menu you can slide a finger through. | [README](src/components/menu/README.md) |
+| [Menu](https://beui.dev/react-native/menu) | A pull-down menu with submenus you can slide a finger through. | [README](src/components/menu/README.md) |
 | [Card](https://beui.dev/react-native/card) | Composable surfaces, selectable with press feedback. | [README](src/components/card/README.md) |
 | **Forms** | | |
 | [Input](https://beui.dev/react-native/input) | Error shake, focus ring and a drawn success check. | [README](src/components/input/README.md) |

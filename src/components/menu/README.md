@@ -12,6 +12,9 @@ import {
   MenuRadioGroup,
   MenuRadioItem,
   MenuSeparator,
+  MenuSub,
+  MenuSubContent,
+  MenuSubTrigger,
   MenuTrigger,
 } from "./src";
 
@@ -21,6 +24,13 @@ import {
   </MenuTrigger>
   <MenuContent align="end">
     <MenuItem icon={ShareIcon} onSelect={share}>Share</MenuItem>
+    <MenuSub>
+      <MenuSubTrigger icon={FolderIcon}>Move to</MenuSubTrigger>
+      <MenuSubContent>
+        <MenuItem onSelect={() => move("inbox")}>Inbox</MenuItem>
+        <MenuItem onSelect={() => move("archive")}>Archive</MenuItem>
+      </MenuSubContent>
+    </MenuSub>
     <MenuCheckboxItem checked={pinned} onCheckedChange={setPinned}>Pin to top</MenuCheckboxItem>
     <MenuSeparator />
     <MenuLabel>Sort by</MenuLabel>
@@ -42,6 +52,7 @@ import {
 - `MenuItem` is an action with an optional `icon` and `description`. `destructive` turns it red. It closes the menu unless `closeOnSelect={false}`.
 - `MenuCheckboxItem` toggles on and off and stays open, so several can be set in one visit.
 - `MenuRadioGroup` with `MenuRadioItem` picks one option, and closes once you choose.
+- `MenuSub` with `MenuSubTrigger` and `MenuSubContent` makes a submenu. The trigger shows a chevron; choosing it replaces the current items with the submenu's, with a back row on top titled with the trigger's text (or its `title`). Submenus can nest, and closing the menu returns to the top.
 - `MenuLabel` heads a group, and `MenuSeparator` divides groups.
 - `useMenu()` gives custom parts the open state and `close()`.
 
@@ -50,16 +61,20 @@ import {
 - The panel springs out of the point nearest its trigger (stiffness 380, damping 30, mass 0.6), from 55% scale, over a faint scrim. Closing shrinks it back toward the trigger in 150 ms.
 - Rows fade down into place 24 ms apart.
 - Checks spring in when an option is chosen.
+- Opening a submenu slides its items in from the right; going back slides the previous items in from the left. The panel's height glides to fit each page, and its rows stagger in again.
 
 ## Better on a phone
 
 Press anywhere on the menu and slide: a highlight glides under your finger from item to item, skipping disabled ones, and letting go chooses, like menus on iOS. A plain tap works too. A menu too tall for the space beside its trigger scrolls instead, and choosing is by tap there.
 
+Submenus open in place rather than as a second panel off to the side, which wouldn't fit on a phone. Sliding works on every page, and the Android back button steps back one page before it closes the menu.
+
 ## Accessibility
 
 - The trigger is a button that reports whether the menu is expanded. Name icon-only triggers with `accessibilityLabel`.
 - The panel is a menu. Items are menu items, checkbox items report checked, radio items report checked within their group, and labels are headings. Disabled items say so.
-- The Android back button closes it.
+- Submenu triggers say they open a submenu, and the back row reads as "Back from Move to".
+- The Android back button goes back a page, then closes the menu.
 - Reduced motion, or `disableAnimation`, opens and closes with fades only.
 
 Copy this directory, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/render-icon.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses Gesture Handler and `react-native-svg`.

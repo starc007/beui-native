@@ -71,7 +71,8 @@ export const groups: ComponentGroup[] = [
       {
         slug: "menu",
         title: "Menu",
-        description: "A pull-down menu you can slide a finger through.",
+        description:
+          "A pull-down menu with submenus you can slide a finger through.",
         Showcase: MenuShowcase,
       },
       {
