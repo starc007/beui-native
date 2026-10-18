@@ -82,6 +82,27 @@ export {
 export type { CheckboxProps } from "./components/checkbox";
 export { Checkbox } from "./components/checkbox";
 export type {
+  CitationFaviconProps,
+  CitationItem,
+  CitationListProps,
+  CitationProps,
+  CitationStackProps,
+  CitationsProps,
+} from "./components/citations";
+export {
+  Citation,
+  CitationFavicon,
+  CitationList,
+  CitationStack,
+  Citations,
+} from "./components/citations";
+export type {
+  CodeBlockProps,
+  CodeBlockStatus,
+  CodeLanguage,
+} from "./components/code-block";
+export { CodeBlock, CodeLineText } from "./components/code-block";
+export type {
   ColorPickerAreaProps,
   ColorPickerChannelsProps,
   ColorPickerContentProps,
@@ -120,6 +141,18 @@ export {
   ExpandableButton,
   ExpandableChip,
 } from "./components/expandable-control";
+export type {
+  FileDiffLine,
+  FileDiffLineType,
+  FileDiffProps,
+  FileDiffStatus,
+} from "./components/file-diff";
+export { FileDiff } from "./components/file-diff";
+export type {
+  ImageGenerationProps,
+  ImageGenerationStatus,
+} from "./components/image-generation";
+export { ImageGeneration } from "./components/image-generation";
 export type { InputClassNames, InputProps } from "./components/input";
 export { Input } from "./components/input";
 export type { LoaderProps, LoaderVariant } from "./components/loader";
@@ -295,5 +328,7 @@ export type {
   ToolResultStatus,
 } from "./components/tool-result";
 export { ToolResult, ToolResultOutput } from "./components/tool-result";
+export type { VoiceOrbProps } from "./components/voice-orb";
+export { VoiceOrb } from "./components/voice-orb";
 export type { IconProps, IconSource } from "./primitives/render-icon";
 export { motion } from "./styles/motion";

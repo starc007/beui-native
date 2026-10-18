@@ -17,11 +17,18 @@ import { usePresence } from "../../hooks/use-presence";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import {
   CheckGlyph,
+  ChevronDownGlyph,
   CopyGlyph,
   RetryGlyph,
   ThumbGlyph,
 } from "../../primitives/agent-icons";
+import { Disclosure } from "../../primitives/disclosure";
 import { EASE_OUT, SPRING_PRESS, SPRING_SWAP } from "../../styles/motion";
+import {
+  type CitationItem,
+  CitationList,
+  CitationStack,
+} from "../citations/citations";
 
 export type StreamingResponseStatus = "streaming" | "complete" | "error";
 export type StreamingResponseFeedback = "up" | "down" | null;
@@ -134,6 +141,14 @@ export type StreamingResponseProps = Omit<ViewProps, "children"> & {
   defaultFeedback?: StreamingResponseFeedback;
   /** Shows helpful and not helpful buttons once complete. */
   onFeedbackChange?: (feedback: StreamingResponseFeedback) => void;
+  /** Sources behind the reply, shown as a stack and a count that opens the list. */
+  sources?: CitationItem[];
+  sourcesOpen?: boolean;
+  /** Defaults to false. */
+  defaultSourcesOpen?: boolean;
+  onSourcesOpenChange?: (open: boolean) => void;
+  /** Replaces opening a source's URL. */
+  onOpenSource?: (item: CitationItem) => void;
   /** Defaults to true. */
   showActions?: boolean;
   /** Announces text as it arrives on Android. Turn off inside a live list. Defaults to true. */
@@ -159,6 +174,11 @@ export function StreamingResponse({
   feedback: controlledFeedback,
   defaultFeedback = null,
   onFeedbackChange,
+  sources = [],
+  sourcesOpen: controlledSourcesOpen,
+  defaultSourcesOpen = false,
+  onSourcesOpenChange,
+  onOpenSource,
   showActions = true,
   announce = true,
   className = "",
@@ -182,10 +202,31 @@ export function StreamingResponse({
   const { color: muted } = useResolveClassNames("text-muted");
   const { color: foreground } = useResolveClassNames("text-foreground");
 
+  const [internalSourcesOpen, setInternalSourcesOpen] =
+    useState(defaultSourcesOpen);
+  const sourcesOpen = controlledSourcesOpen ?? internalSourcesOpen;
+  const hasSources = sources.length > 0;
+  const sourcesTurn = useSharedValue(sourcesOpen ? 1 : 0);
+  useEffect(() => {
+    sourcesTurn.value = reduce
+      ? sourcesOpen
+        ? 1
+        : 0
+      : withSpring(sourcesOpen ? 1 : 0, SPRING_SWAP);
+  }, [reduce, sourcesOpen, sourcesTurn]);
+  const sourcesChevron = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${sourcesTurn.value * 180}deg` }],
+  }));
+  const toggleSources = () => {
+    if (controlledSourcesOpen === undefined)
+      setInternalSourcesOpen(!sourcesOpen);
+    onSourcesOpenChange?.(!sourcesOpen);
+  };
+
   const hasActions =
     showActions &&
     !streaming &&
-    Boolean(onCopy || onRetry || (complete && onFeedbackChange));
+    Boolean(hasSources || onCopy || onRetry || (complete && onFeedbackChange));
 
   useEffect(() => {
     if (!hasActions) {
@@ -288,7 +329,36 @@ export function StreamingResponse({
               </ActionButton>
             </>
           ) : null}
+          {hasSources ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ expanded: sourcesOpen }}
+              accessibilityLabel={`${sources.length} ${sources.length === 1 ? "source" : "sources"}`}
+              onPress={toggleSources}
+              hitSlop={6}
+              style={styles.sources}
+            >
+              <CitationStack citations={sources} />
+              <Text className="text-xs text-muted" style={styles.tabular}>
+                {sources.length} {sources.length === 1 ? "source" : "sources"}
+              </Text>
+              <Animated.View style={sourcesChevron}>
+                <ChevronDownGlyph size={12} color={muted} />
+              </Animated.View>
+            </Pressable>
+          ) : null}
         </Animated.View>
+      ) : null}
+      {hasSources ? (
+        <Disclosure open={sourcesOpen && hasActions} reduce={reduce}>
+          <View className="mt-2 rounded-xl bg-surface p-2">
+            <CitationList
+              citations={sources}
+              onOpenSource={onOpenSource}
+              disableAnimation={disableAnimation}
+            />
+          </View>
+        </Disclosure>
       ) : null}
     </View>
   );
@@ -310,4 +380,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   layer: { position: "absolute" },
+  sources: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginLeft: 8,
+    minHeight: 30,
+  },
+  tabular: { fontVariant: ["tabular-nums"] },
 });

@@ -744,9 +744,12 @@
         "src/components/streaming-response/streaming-response.tsx"
       ],
       "shared": [
+        "src/components/citations/citations.tsx",
         "src/hooks/use-presence.ts",
         "src/hooks/use-reduced-motion.ts",
         "src/primitives/agent-icons.tsx",
+        "src/primitives/disclosure.tsx",
+        "src/primitives/rise-in.tsx",
         "src/styles/motion.ts"
       ],
       "libraries": [
@@ -754,6 +757,7 @@
         "react-native",
         "react-native-reanimated",
         "react-native-svg",
+        "react-native-worklets",
         "uniwind"
       ],
       "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/streaming-response?runtime-version=exposdk%3A57.0.0&channel-name=production",
@@ -827,6 +831,7 @@
         "react-native",
         "react-native-reanimated",
         "react-native-svg",
+        "react-native-worklets",
         "uniwind"
       ],
       "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/agent-activity?runtime-version=exposdk%3A57.0.0&channel-name=production",
@@ -861,6 +866,7 @@
         "react-native",
         "react-native-reanimated",
         "react-native-svg",
+        "react-native-worklets",
         "uniwind"
       ],
       "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/todo-list?runtime-version=exposdk%3A57.0.0&channel-name=production",
@@ -974,12 +980,176 @@
         "react-native",
         "react-native-reanimated",
         "react-native-svg",
+        "react-native-worklets",
         "uniwind"
       ],
       "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/tool-result?runtime-version=exposdk%3A57.0.0&channel-name=production",
       "clips": {
         "light": "tool-result-light.mp4",
         "dark": "tool-result-dark.mp4"
+      }
+    },
+    {
+      "slug": "citations",
+      "title": "Citations",
+      "description": "Tap a number and its source springs up.",
+      "group": "AI agents",
+      "variants": 1,
+      "readme": "src/components/citations/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/citations",
+      "files": [
+        "src/components/citations/citations.tsx",
+        "src/components/citations/index.ts"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/agent-icons.tsx",
+        "src/primitives/disclosure.tsx",
+        "src/primitives/rise-in.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "react-native-svg",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/citations?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "citations-light.mp4",
+        "dark": "citations-dark.mp4"
+      }
+    },
+    {
+      "slug": "code-block",
+      "title": "Code Block",
+      "description": "Streaming code with fixed line numbers and wrap.",
+      "group": "AI agents",
+      "variants": 1,
+      "readme": "src/components/code-block/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/code-block",
+      "files": [
+        "src/components/code-block/code-block.tsx",
+        "src/components/code-block/index.ts"
+      ],
+      "shared": [
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/agent-icons.tsx",
+        "src/primitives/code-tokens.ts",
+        "src/primitives/spin-glyph.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "prism-react-renderer",
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "react-native-svg",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/code-block?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "code-block-light.mp4",
+        "dark": "code-block-dark.mp4"
+      }
+    },
+    {
+      "slug": "file-diff",
+      "title": "File Diff",
+      "description": "Changes with live counts and folded context.",
+      "group": "AI agents",
+      "variants": 1,
+      "readme": "src/components/file-diff/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/file-diff",
+      "files": [
+        "src/components/file-diff/file-diff.tsx",
+        "src/components/file-diff/index.ts"
+      ],
+      "shared": [
+        "src/components/code-block/code-block.tsx",
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/agent-icons.tsx",
+        "src/primitives/code-tokens.ts",
+        "src/primitives/disclosure.tsx",
+        "src/primitives/spin-glyph.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "prism-react-renderer",
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "react-native-svg",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/file-diff?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "file-diff-light.mp4",
+        "dark": "file-diff-dark.mp4"
+      }
+    },
+    {
+      "slug": "image-generation",
+      "title": "Image Generation",
+      "description": "A dot field you can steer while the image forms.",
+      "group": "AI agents",
+      "variants": 1,
+      "readme": "src/components/image-generation/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/image-generation",
+      "files": [
+        "src/components/image-generation/dither-field.tsx",
+        "src/components/image-generation/image-generation.tsx",
+        "src/components/image-generation/index.ts"
+      ],
+      "shared": [
+        "src/hooks/use-presence.ts",
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/agent-icons.tsx",
+        "src/primitives/roll-text.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "@shopify/react-native-skia",
+        "react",
+        "react-native",
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "react-native-svg",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/image-generation?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "image-generation-light.mp4",
+        "dark": "image-generation-dark.mp4"
+      }
+    },
+    {
+      "slug": "voice-orb",
+      "title": "Voice Orb",
+      "description": "A liquid sphere that moves with your voice.",
+      "group": "AI agents",
+      "variants": 1,
+      "readme": "src/components/voice-orb/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/voice-orb",
+      "files": [
+        "src/components/voice-orb/index.ts",
+        "src/components/voice-orb/voice-orb.tsx"
+      ],
+      "shared": ["src/hooks/use-reduced-motion.ts", "src/styles/motion.ts"],
+      "libraries": [
+        "@shopify/react-native-skia",
+        "react",
+        "react-native",
+        "react-native-reanimated"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/voice-orb?runtime-version=exposdk%3A57.0.0&channel-name=production",
+      "clips": {
+        "light": "voice-orb-light.mp4",
+        "dark": "voice-orb-dark.mp4"
       }
     }
   ]

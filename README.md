@@ -88,6 +88,11 @@ Each name opens the component's page on beui.dev, with a recording from iOS and 
 | [Tool Approval](https://beui.dev/react-native/tool-approval) | Hold to let an agent run a tool. | [README](src/components/tool-approval/README.md) |
 | [Approval Card](https://beui.dev/react-native/approval-card) | Swipeable questions, or a review to approve. | [README](src/components/approval-card/README.md) |
 | [Tool Result](https://beui.dev/react-native/tool-result) | Output that streams in, then folds into a result. | [README](src/components/tool-result/README.md) |
+| [Citations](https://beui.dev/react-native/citations) | Tap a number and its source springs up. | [README](src/components/citations/README.md) |
+| [Code Block](https://beui.dev/react-native/code-block) | Streaming code with fixed line numbers and wrap. | [README](src/components/code-block/README.md) |
+| [File Diff](https://beui.dev/react-native/file-diff) | Changes with live counts and folded context. | [README](src/components/file-diff/README.md) |
+| [Image Generation](https://beui.dev/react-native/image-generation) | A dot field you can steer while the image forms. | [README](src/components/image-generation/README.md) |
+| [Voice Orb](https://beui.dev/react-native/voice-orb) | A liquid sphere that moves with your voice. | [README](src/components/voice-orb/README.md) |
 
 ## Try it on your phone
 

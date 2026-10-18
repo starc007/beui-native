@@ -52,5 +52,8 @@
     "@biomejs/biome": "2.5.14",
     "@types/react": "~19.2.2",
     "typescript": "~6.0.3"
-  }
+  },
+  "trustedDependencies": [
+    "@shopify/react-native-skia"
+  ]
 }

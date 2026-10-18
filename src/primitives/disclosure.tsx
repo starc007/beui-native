@@ -1,60 +1,93 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 import Animated, {
+  measure,
+  useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { scheduleOnUI } from "react-native-worklets";
 import { EASE_OUT } from "../styles/motion";
 
 const OPEN = { duration: 220, easing: EASE_OUT };
 const CLOSE = { duration: 140, easing: EASE_OUT };
 const DROP = 4;
+// The height while settled open: unconstrained, so growing content just flows.
+const NATURAL = -1;
 
 export type DisclosureProps = {
   open: boolean;
   /** Snaps open and closed, keeping only the fade. */
   reduce: boolean;
-  /** Caps the open height; content scrolls or clips beyond it. */
+  /** Caps the open height; content clips beyond it. */
   maxHeight?: number;
-  /** The open height, when the caller already knows it. Skips measuring. */
-  height?: number;
   style?: ViewStyle;
   children: ReactNode;
 };
 
 /**
- * Collapsible content shared by the agent components: the height eases to the
- * content's measured size while the content fades and drops 4 points into
- * place. Closed content is hidden from screen readers and touches.
+ * Collapsible content shared by the agent components: the height eases
+ * between closed and the content's size while the content fades and drops 4
+ * points into place. Settled open, the height is left alone, so content that
+ * grows (streamed rows, new sources) is never clipped. Closed content is
+ * hidden from screen readers and touches.
  */
 export function Disclosure({
   open,
   reduce,
   maxHeight,
-  height: knownHeight,
   style,
   children,
 }: DisclosureProps) {
-  const [layoutHeight, setMeasured] = useState(0);
-  const measured = knownHeight ?? layoutHeight;
-  const target =
-    maxHeight === undefined ? measured : Math.min(measured, maxHeight);
-  const height = useSharedValue(open ? -1 : 0);
+  const contentRef = useAnimatedRef<View>();
+  const clipRef = useAnimatedRef<Animated.View>();
+  const height = useSharedValue(open ? NATURAL : 0);
   const shown = useSharedValue(open ? 1 : 0);
+  const mounted = useRef(false);
 
   useEffect(() => {
-    if (measured === 0 && open) return;
-    const timing = open ? OPEN : CLOSE;
-    const goal = open ? target : 0;
-    if (height.value < 0 || reduce) height.value = goal;
-    else height.value = withTiming(goal, timing);
-    shown.value = withTiming(open ? 1 : 0, reduce ? { duration: 0 } : timing);
-  }, [height, measured, open, reduce, shown, target]);
+    // The first render is already in place.
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    const cap = maxHeight ?? Number.POSITIVE_INFINITY;
+    scheduleOnUI(() => {
+      "worklet";
+      // Real sizes, read on the UI thread at the moment of the change.
+      const content = measure(contentRef);
+      const full = Math.min(content?.height ?? 0, cap);
+      if (open) {
+        const from = height.value === NATURAL ? full : height.value;
+        if (reduce) {
+          height.value = NATURAL;
+        } else {
+          height.value = from;
+          height.value = withTiming(full, OPEN, (done) => {
+            if (done) height.value = NATURAL;
+          });
+        }
+      } else {
+        const clip = measure(clipRef);
+        const from =
+          height.value === NATURAL ? (clip?.height ?? full) : height.value;
+        height.value = from;
+        height.value = reduce ? 0 : withTiming(0, CLOSE);
+      }
+    });
+    shown.value = withTiming(
+      open ? 1 : 0,
+      reduce ? { duration: 0 } : open ? OPEN : CLOSE,
+    );
+  }, [clipRef, contentRef, height, maxHeight, open, reduce, shown]);
 
   const clipStyle = useAnimatedStyle(() =>
-    // -1 means "open, not measured yet": lay out naturally for the first frame.
-    height.value < 0 ? {} : { height: height.value },
+    height.value === NATURAL
+      ? maxHeight === undefined
+        ? {}
+        : { maxHeight }
+      : { height: height.value },
   );
   const contentStyle = useAnimatedStyle(
     () => ({
@@ -66,16 +99,14 @@ export function Disclosure({
 
   return (
     <Animated.View
+      ref={clipRef}
       pointerEvents={open ? "auto" : "none"}
       accessibilityElementsHidden={!open}
       importantForAccessibility={open ? "auto" : "no-hide-descendants"}
       style={[styles.clip, clipStyle, style]}
     >
       <Animated.View style={contentStyle}>
-        <View
-          style={styles.measure}
-          onLayout={({ nativeEvent }) => setMeasured(nativeEvent.layout.height)}
-        >
+        <View ref={contentRef} collapsable={false} style={styles.measure}>
           {children}
         </View>
       </Animated.View>

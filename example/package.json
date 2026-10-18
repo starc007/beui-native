@@ -5,6 +5,7 @@
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.3.5",
     "@hugeicons/react-native": "^1.0.16",
+    "@shopify/react-native-skia": "2.6.2",
     "expo": "~57.0.30",
     "expo-clipboard": "~57.0.2",
     "expo-constants": "~57.0.22",
@@ -14,6 +15,7 @@
     "expo-status-bar": "~57.0.1",
     "expo-system-ui": "~57.0.4",
     "expo-updates": "~57.0.26",
+    "prism-react-renderer": "^2.4.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.86.3",
