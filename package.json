@@ -39,7 +39,6 @@
     "dev": "bun run --cwd example start",
     "ios": "bun run --cwd example ios",
     "android": "bun run --cwd example android",
-    "web": "bun run --cwd example web",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome check --write .",
