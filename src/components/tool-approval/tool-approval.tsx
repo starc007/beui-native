@@ -430,9 +430,9 @@ export function ToolApproval({
             <>
               <HoldButton
                 label="Allow once"
-                className="bg-foreground"
-                textClassName="text-background"
-                fillClassName="bg-background/25"
+                className="bg-primary"
+                textClassName="text-on-primary"
+                fillClassName="bg-on-primary/25"
                 duration={holdDuration}
                 reduce={reduce}
                 onConfirm={onApprove}
@@ -453,8 +453,8 @@ export function ToolApproval({
             <>
               <ActionButton
                 label="Allow once"
-                className="bg-foreground"
-                textClassName="text-background"
+                className="bg-primary"
+                textClassName="text-on-primary"
                 reduce={reduce}
                 onPress={onApprove}
               />

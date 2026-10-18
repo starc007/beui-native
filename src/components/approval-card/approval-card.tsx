@@ -139,9 +139,7 @@ function Dot({
     opacity: opacity.value,
     transform: [{ scale: scale.value }],
   }));
-  return (
-    <Animated.View style={[styles.dot, style]} className="bg-foreground" />
-  );
+  return <Animated.View style={[styles.dot, style]} className="bg-primary" />;
 }
 
 const SLIDE = 24;

@@ -19,6 +19,10 @@ import { MessageBubble, MessageBubbleCollapsible, MessageBubbleGroup } from "./s
 
 `variant` is `soft` (the default), `solid`, `tint`, `outline`, `ghost` or `danger`. A bubble is at most 82% of the row wide and sits on its `align` side, which defaults to the side of the surrounding `Message`. Plain strings take the bubble's text color; use `MessageBubbleText` for styled runs. `ghost` drops the surface and padding, for long assistant replies.
 
+## Corners and runs
+
+Bubbles have chat corners: the bottom corner on the sender's side tightens into a tail hint. Inside `MessageBubbleGroup`, consecutive bubbles from the same side form a run. They sit 2 points apart, and every bubble after the first tightens its top corner on that side too, so the run reads as one voice. Runs from different sides sit 6 points apart, or 12 with `spacing="default"`. The group works out each bubble's place for you; set `position` (`single`, `first`, `middle` or `last`) to choose it yourself.
+
 ## Motion
 
 - `animateIn` pops the surface out of the bottom corner on the bubble's side once, on mount: it scales from 0.92 on a spring with one small overshoot (stiffness 520, damping 27, mass 0.52) and fades in over 120 ms, and the text follows 40 ms later.
