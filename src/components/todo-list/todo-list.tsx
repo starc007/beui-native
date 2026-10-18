@@ -166,7 +166,10 @@ function StatusMark({
         viewBox="0 0 24 24"
         style={StyleSheet.absoluteFill}
       >
+        {/* Keyed by dash, because react-native-svg keeps a dash pattern
+            after strokeDasharray goes back to undefined. */}
         <AnimatedCircle
+          key={status === "pending" ? "dashed" : "solid"}
           cx={12}
           cy={12}
           r={9}
