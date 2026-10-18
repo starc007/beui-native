@@ -154,6 +154,14 @@ export function CodeBlock({
   const scrollRef = useRef<ScrollView>(null);
   const following = useRef(true);
   const dragging = useRef(false);
+  // The last lines often land with the switch to "complete", so the view
+  // follows one more size change after the stream ends.
+  const settling = useRef(false);
+  const wasStreaming = useRef(streaming);
+  if (wasStreaming.current !== streaming) {
+    settling.current = !streaming;
+    wasStreaming.current = streaming;
+  }
   const highlighted = new Set(highlightLines);
   const { color: muted } = useResolveClassNames("text-muted");
   const { color: foreground } = useResolveClassNames("text-foreground");
@@ -161,7 +169,14 @@ export function CodeBlock({
   const { color: success } = useResolveClassNames("text-success");
 
   useEffect(() => {
-    if (streaming) following.current = true;
+    if (streaming) {
+      following.current = true;
+      return;
+    }
+    const timer = setTimeout(() => {
+      settling.current = false;
+    }, 500);
+    return () => clearTimeout(timer);
   }, [streaming]);
   useEffect(() => () => clearTimeout(copiedTimer.current), []);
 
@@ -246,88 +261,98 @@ export function CodeBlock({
           </IconButton>
         ) : null}
       </View>
-      <ScrollView
-        ref={scrollRef}
-        style={{ maxHeight }}
-        nestedScrollEnabled
-        showsVerticalScrollIndicator={false}
-        className="border-t border-foreground/5"
-        contentContainerClassName="py-2"
-        scrollEventThrottle={32}
-        onLayout={({ nativeEvent }) => setViewport(nativeEvent.layout.width)}
-        onScrollBeginDrag={() => {
-          dragging.current = true;
-        }}
-        onMomentumScrollEnd={() => {
-          dragging.current = false;
-        }}
-        onScrollEndDrag={({ nativeEvent }) => {
-          if (!nativeEvent.velocity?.y) dragging.current = false;
-        }}
-        onScroll={({ nativeEvent }) => {
-          if (!dragging.current) return;
-          const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
-          following.current =
-            contentSize.height - contentOffset.y - layoutMeasurement.height <
-            24;
-        }}
-        onContentSizeChange={() => {
-          if (streaming && following.current && !dragging.current) {
-            scrollRef.current?.scrollToEnd({ animated: !reduce });
-          }
-        }}
-      >
-        <View accessibilityLiveRegion={streaming ? "polite" : "none"}>
-          {wrap ? (
-            // Wrapped lines vary in height, so each row carries its own number.
-            lines.map((tokens, index) => (
-              <View key={index} style={styles.row} className={tint(index)}>
-                {showLineNumbers ? (
-                  <Text
-                    className="font-mono text-xs text-muted/50"
-                    style={[styles.line, styles.tabular, styles.number]}
-                  >
-                    {index + 1}
-                  </Text>
-                ) : null}
-                <CodeLineText
-                  tokens={tokens}
-                  wrap
-                  className={`flex-1 pr-4 ${showLineNumbers ? "pl-1" : "pl-4"}`}
-                />
-              </View>
-            ))
-          ) : (
-            <View style={styles.row}>
-              {gutter}
-              {/* Only the code scrolls sideways; the numbers stay in place. */}
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={styles.flex}
-              >
-                <View
-                  style={{
-                    minWidth: Math.max(
-                      0,
-                      viewport - (showLineNumbers ? GUTTER : 0),
-                    ),
-                  }}
-                >
-                  {lines.map((tokens, index) => (
-                    <View
-                      key={index}
-                      className={`${tint(index)} ${showLineNumbers ? "pl-1" : "pl-4"} pr-4`}
+      {/* Padding sits outside the scroll area and its height snaps to whole
+          lines, so following the stream never leaves a half line at an edge. */}
+      <View className="border-t border-foreground/5 py-2">
+        <ScrollView
+          ref={scrollRef}
+          style={{
+            maxHeight: Math.max(
+              LINE,
+              Math.floor((maxHeight - 16) / LINE) * LINE,
+            ),
+          }}
+          nestedScrollEnabled
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={32}
+          onLayout={({ nativeEvent }) => setViewport(nativeEvent.layout.width)}
+          onScrollBeginDrag={() => {
+            dragging.current = true;
+          }}
+          onMomentumScrollEnd={() => {
+            dragging.current = false;
+          }}
+          onScrollEndDrag={({ nativeEvent }) => {
+            if (!nativeEvent.velocity?.y) dragging.current = false;
+          }}
+          onScroll={({ nativeEvent }) => {
+            if (!dragging.current) return;
+            const { contentOffset, contentSize, layoutMeasurement } =
+              nativeEvent;
+            following.current =
+              contentSize.height - contentOffset.y - layoutMeasurement.height <
+              24;
+          }}
+          onContentSizeChange={() => {
+            const follow = streaming || settling.current;
+            settling.current = false;
+            if (follow && following.current && !dragging.current) {
+              scrollRef.current?.scrollToEnd({ animated: !reduce });
+            }
+          }}
+        >
+          <View accessibilityLiveRegion={streaming ? "polite" : "none"}>
+            {wrap ? (
+              // Wrapped lines vary in height, so each row carries its own number.
+              lines.map((tokens, index) => (
+                <View key={index} style={styles.row} className={tint(index)}>
+                  {showLineNumbers ? (
+                    <Text
+                      className="font-mono text-xs text-muted/50"
+                      style={[styles.line, styles.tabular, styles.number]}
                     >
-                      <CodeLineText tokens={tokens} />
-                    </View>
-                  ))}
+                      {index + 1}
+                    </Text>
+                  ) : null}
+                  <CodeLineText
+                    tokens={tokens}
+                    wrap
+                    className={`flex-1 pr-4 ${showLineNumbers ? "pl-1" : "pl-4"}`}
+                  />
                 </View>
-              </ScrollView>
-            </View>
-          )}
-        </View>
-      </ScrollView>
+              ))
+            ) : (
+              <View style={styles.row}>
+                {gutter}
+                {/* Only the code scrolls sideways; the numbers stay in place. */}
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={styles.flex}
+                >
+                  <View
+                    style={{
+                      minWidth: Math.max(
+                        0,
+                        viewport - (showLineNumbers ? GUTTER : 0),
+                      ),
+                    }}
+                  >
+                    {lines.map((tokens, index) => (
+                      <View
+                        key={index}
+                        className={`${tint(index)} ${showLineNumbers ? "pl-1" : "pl-4"} pr-4`}
+                      >
+                        <CodeLineText tokens={tokens} />
+                      </View>
+                    ))}
+                  </View>
+                </ScrollView>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+      </View>
     </View>
   );
 }
