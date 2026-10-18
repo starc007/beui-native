@@ -429,7 +429,7 @@ export function PromptInput({
   const turn = useSharedValue(0);
 
   const { color: foreground } = useResolveClassNames("text-foreground");
-  const { color: background } = useResolveClassNames("text-background");
+  const { color: background } = useResolveClassNames("text-on-primary");
   const { color: muted } = useResolveClassNames("text-muted");
 
   const trimmed = value.trim();
@@ -569,9 +569,7 @@ export function PromptInput({
             disabled={loading ? !onStop : !canSubmit}
             reduce={reduce}
             onPress={loading ? stop : submit}
-            className={
-              loading || canSubmit ? "bg-foreground" : "bg-foreground/15"
-            }
+            className={loading || canSubmit ? "bg-primary" : "bg-foreground/10"}
           >
             {sendIcons.map((item) => (
               <SendIcon

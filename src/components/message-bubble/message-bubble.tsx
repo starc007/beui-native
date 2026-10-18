@@ -1,6 +1,7 @@
 import {
   Children,
   createContext,
+  isValidElement,
   type ReactNode,
   type Ref,
   useContext,
@@ -46,6 +47,37 @@ export type MessageBubbleVariant =
   | "ghost"
   | "danger";
 export type MessageBubbleAlign = "start" | "end";
+/** Where a bubble falls in a run of bubbles from one side. */
+export type MessageBubblePosition = "single" | "first" | "middle" | "last";
+
+const ROUND = 18;
+const TIGHT = 6;
+
+/**
+ * Chat corners: the bottom corner on the sender's side tightens into a tail
+ * hint, and bubbles after the first in a run tighten their top corner too, so
+ * a run reads as one voice.
+ */
+function corners(align: MessageBubbleAlign, position: MessageBubblePosition) {
+  const top = position === "middle" || position === "last" ? TIGHT : ROUND;
+  return align === "end"
+    ? {
+        borderTopLeftRadius: ROUND,
+        borderBottomLeftRadius: ROUND,
+        borderTopRightRadius: top,
+        borderBottomRightRadius: TIGHT,
+      }
+    : {
+        borderTopRightRadius: ROUND,
+        borderBottomRightRadius: ROUND,
+        borderTopLeftRadius: top,
+        borderBottomLeftRadius: TIGHT,
+      };
+}
+
+const PositionContext = createContext<MessageBubblePosition | undefined>(
+  undefined,
+);
 
 /** Which side a message sits on. Message provides it; bubbles default to it. */
 export const MessageSideContext = createContext<MessageBubbleAlign | undefined>(
@@ -57,7 +89,7 @@ const BubbleContext = createContext<BubbleContextValue>({ variant: "soft" });
 
 // Full class strings, so Uniwind can see every token at build time.
 const SURFACE_CLASS: Record<MessageBubbleVariant, string> = {
-  solid: "bg-foreground",
+  solid: "bg-primary",
   soft: "bg-surface",
   tint: "bg-primary/10",
   outline: "border border-border-strong bg-background",
@@ -65,7 +97,7 @@ const SURFACE_CLASS: Record<MessageBubbleVariant, string> = {
   danger: "bg-destructive/10",
 };
 const TEXT_CLASS: Record<MessageBubbleVariant, string> = {
-  solid: "text-background",
+  solid: "text-on-primary",
   soft: "text-foreground",
   tint: "text-foreground",
   outline: "text-foreground",
@@ -119,6 +151,8 @@ export type MessageBubbleProps = Omit<ViewProps, "children"> & {
   align?: MessageBubbleAlign;
   /** Pops the surface out of its corner once, on mount. Defaults to false. */
   animateIn?: boolean;
+  /** Its place in a run, for the corners. MessageBubbleGroup sets it for you. */
+  position?: MessageBubblePosition;
   /** Makes the whole bubble tappable, with press feedback. */
   onPress?: PressableProps["onPress"];
   /** Lifts the bubble before firing, like a context menu opening. */
@@ -145,6 +179,7 @@ export function MessageBubble({
   variant = "soft",
   align: alignProp,
   animateIn = false,
+  position: positionProp,
   onPress,
   onLongPress,
   onReply,
@@ -159,6 +194,8 @@ export function MessageBubble({
 }: MessageBubbleProps) {
   const side = useContext(MessageSideContext);
   const align = alignProp ?? side ?? "start";
+  const groupPosition = useContext(PositionContext);
+  const radii = corners(align, positionProp ?? groupPosition ?? "single");
   const reducedMotion = useReducedMotionPreference();
   const reduce = reducedMotion || disableAnimation;
   const pop = animateIn && !reduce;
@@ -234,7 +271,7 @@ export function MessageBubble({
   const bubble = (
     <View
       style={[
-        ghost ? styles.ghost : styles.bubble,
+        ghost ? styles.ghost : [styles.bubble, radii],
         align === "end" ? styles.end : styles.start,
       ]}
       className={ghost ? contentClassName : `px-3.5 py-2.5 ${contentClassName}`}
@@ -244,7 +281,7 @@ export function MessageBubble({
           pointerEvents="none"
           style={[
             StyleSheet.absoluteFill,
-            styles.surface,
+            radii,
             { transformOrigin: [align === "end" ? "100%" : "0%", "100%", 0] },
             surfaceStyle,
           ]}
@@ -335,22 +372,60 @@ export function MessageBubble({
 }
 
 export type MessageBubbleGroupProps = ViewProps & {
-  /** Space between bubbles: 6 (compact) or 12 points. Defaults to "compact". */
+  /** Space between runs from different sides: 6 (compact) or 12 points. Defaults to "compact". */
   spacing?: "compact" | "default";
   className?: string;
 };
 
-/** Stacks consecutive bubbles from one sender. */
+const RUN_GAP = 2;
+
+/**
+ * Stacks bubbles and joins consecutive ones from the same side into runs:
+ * they sit 2 points apart with tightened corners, and runs sit further apart.
+ */
 export function MessageBubbleGroup({
   spacing = "compact",
   className = "",
+  children,
   ...props
 }: MessageBubbleGroupProps) {
+  const side = useContext(MessageSideContext);
+  const items = Children.toArray(children);
+  const alignOf = (child: ReactNode) =>
+    (isValidElement<{ align?: MessageBubbleAlign }>(child)
+      ? child.props.align
+      : undefined) ??
+    side ??
+    "start";
+  const gap = spacing === "compact" ? 6 : 12;
   return (
-    <View
-      className={`w-full ${spacing === "compact" ? "gap-1.5" : "gap-3"} ${className}`}
-      {...props}
-    />
+    <View className={`w-full ${className}`} {...props}>
+      {items.map((child, index) => {
+        const align = alignOf(child);
+        const joinsPrevious = index > 0 && alignOf(items[index - 1]) === align;
+        const joinsNext =
+          index < items.length - 1 && alignOf(items[index + 1]) === align;
+        const position: MessageBubblePosition = joinsPrevious
+          ? joinsNext
+            ? "middle"
+            : "last"
+          : joinsNext
+            ? "first"
+            : "single";
+        return (
+          <PositionContext.Provider
+            key={isValidElement(child) && child.key != null ? child.key : index}
+            value={position}
+          >
+            <View
+              style={index > 0 && { marginTop: joinsPrevious ? RUN_GAP : gap }}
+            >
+              {child}
+            </View>
+          </PositionContext.Provider>
+        );
+      })}
+    </View>
   );
 }
 
@@ -471,7 +546,7 @@ export function MessageBubbleCollapsible({
 
 const styles = StyleSheet.create({
   row: { width: "100%" },
-  bubble: { minWidth: 36, borderRadius: 16 },
+  bubble: { minWidth: 36 },
   ghost: { width: "100%" },
   pressable: { maxWidth: "100%" },
   swipe: { maxWidth: "82%" },
@@ -480,7 +555,6 @@ const styles = StyleSheet.create({
   arrowEnd: { right: 4 },
   start: { alignSelf: "flex-start" },
   end: { alignSelf: "flex-end" },
-  surface: { borderRadius: 16 },
   clip: { overflow: "hidden" },
   measure: { flexShrink: 0 },
   toggle: {

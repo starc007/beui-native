@@ -248,9 +248,9 @@ function SourceCard({
               open(item, onOpenSource);
             }}
             style={styles.openButton}
-            className="rounded-xl bg-foreground active:opacity-80"
+            className="rounded-xl bg-primary active:opacity-80"
           >
-            <Text className="text-sm font-medium text-background">
+            <Text className="text-sm font-medium text-on-primary">
               Open source
             </Text>
           </Pressable>

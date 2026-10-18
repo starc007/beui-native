@@ -2,6 +2,7 @@ export type {
   MessageBubbleAlign,
   MessageBubbleCollapsibleProps,
   MessageBubbleGroupProps,
+  MessageBubblePosition,
   MessageBubbleProps,
   MessageBubbleTextProps,
   MessageBubbleVariant,

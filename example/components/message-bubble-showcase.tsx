@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import { useResolveClassNames } from "uniwind";
 import {
-  Button,
   MessageBubble,
   MessageBubbleCollapsible,
   MessageBubbleGroup,
@@ -9,6 +9,7 @@ import {
   type MessageBubbleVariant,
 } from "../../src";
 import { DemoSection, DemoStatus } from "./demo";
+import { ArrowUpIcon } from "./icons";
 
 const REPLIES = [
   "Ship it on Friday?",
@@ -40,6 +41,12 @@ const THREAD = [
 
 export function MessageBubbleShowcase() {
   const [sent, setSent] = useState<{ id: number; text: string }[]>([]);
+  const { color: background } = useResolveClassNames("text-on-primary");
+  const send = () =>
+    setSent((previous) => [
+      ...previous,
+      { id: Date.now(), text: REPLIES[previous.length % REPLIES.length] ?? "" },
+    ]);
   const [note, setNote] = useState(
     "Swipe a bubble toward the middle, or long-press it.",
   );
@@ -48,7 +55,7 @@ export function MessageBubbleShowcase() {
     <>
       <DemoSection
         title="Animated surfaces"
-        description="A sent bubble pops out of the corner on its side. Send a few."
+        description="A sent bubble pops out of the corner on its side, and bubbles in a row join up. Send a few."
       >
         <MessageBubbleGroup spacing="default">
           {SURFACES.map((surface) => (
@@ -70,29 +77,29 @@ export function MessageBubbleShowcase() {
             </MessageBubble>
           ))}
         </MessageBubbleGroup>
-        <View className="flex-row justify-center gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            disabled={sent.length === 0}
-            onPress={() => setSent([])}
+        {/* A small composer: the next reply waits in the field. */}
+        <View className="h-11 flex-row items-center gap-2 rounded-full border border-border bg-background pl-4 pr-1.5">
+          <Text numberOfLines={1} className="flex-1 text-sm text-foreground">
+            {REPLIES[sent.length % REPLIES.length]}
+          </Text>
+          {sent.length > 0 ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => setSent([])}
+              hitSlop={8}
+              className="px-2"
+            >
+              <Text className="text-xs font-medium text-muted">Clear</Text>
+            </Pressable>
+          ) : null}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Send"
+            onPress={send}
+            className="size-8 items-center justify-center rounded-full bg-primary active:opacity-80"
           >
-            Clear
-          </Button>
-          <Button
-            size="sm"
-            onPress={() =>
-              setSent((previous) => [
-                ...previous,
-                {
-                  id: Date.now(),
-                  text: REPLIES[previous.length % REPLIES.length] ?? "",
-                },
-              ])
-            }
-          >
-            Send
-          </Button>
+            <ArrowUpIcon size={16} color={background} />
+          </Pressable>
         </View>
       </DemoSection>
       <DemoSection

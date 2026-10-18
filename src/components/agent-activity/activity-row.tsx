@@ -68,9 +68,9 @@ function Halo({ reduce }: { reduce: boolean }) {
     <View style={styles.active}>
       <Animated.View
         style={[StyleSheet.absoluteFill, styles.halo, style]}
-        className="bg-foreground/10"
+        className="bg-primary/15"
       />
-      <View style={styles.dot} className="bg-foreground/60" />
+      <View style={styles.dot} className="bg-primary" />
     </View>
   );
 }
