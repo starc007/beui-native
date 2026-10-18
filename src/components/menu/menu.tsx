@@ -697,8 +697,9 @@ function BackRow({ label }: { label: string }) {
       accessibilityLabel={`Back from ${label}`}
       onAccessibilityTap={back}
     >
-      <View style={styles.item} className="px-3 py-2.5">
-        <View style={styles.icon}>
+      {/* The chevron's stroke lines up with the item text edge below. */}
+      <View style={[styles.item, styles.backRow]} className="px-3 py-2.5">
+        <View style={styles.backChevron}>
           <Chevron back />
         </View>
         <Text
@@ -1061,6 +1062,9 @@ const styles = StyleSheet.create({
   item: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 44 },
   disabled: { opacity: 0.4 },
   icon: { width: 22, alignItems: "center" },
+  backRow: { gap: 4 },
+  // The glyph's stroke starts 4 points into its 16 point box.
+  backChevron: { marginLeft: -4 },
   check: { width: 20, alignItems: "center" },
   separator: { height: StyleSheet.hairlineWidth },
   highlight: { position: "absolute", left: 0, right: 0, borderRadius: 12 },
