@@ -5,9 +5,9 @@ import {
   ToolApprovalCode,
   type ToolApprovalStatus,
 } from "../../src";
-import { DemoSection, DemoStatus } from "./demo";
+import { DemoSection } from "./demo";
 
-const PARAMETERS = [
+const TEST_PARAMETERS = [
   {
     id: "command",
     label: "Command",
@@ -15,68 +15,104 @@ const PARAMETERS = [
   },
   { id: "directory", label: "Directory", value: "beui-native" },
 ];
+const DELETE_PARAMETERS = [
+  {
+    id: "command",
+    label: "Command",
+    value: <ToolApprovalCode code="rm -rf build/ .expo/ node_modules/.cache" />,
+  },
+  { id: "directory", label: "Directory", value: "beui-native" },
+];
 
-export function ToolApprovalShowcase() {
+/** Steps a run from approving to its outcome, like a real agent would. */
+function useRun(final: "complete" | "error") {
   const [status, setStatus] = useState<ToolApprovalStatus>("pending");
-  const [open, setOpen] = useState(true);
   const [run, setRun] = useState(0);
-
-  // Plays the run once per approval; status changes don't restart it.
   useEffect(() => {
     if (run === 0) return;
     const timers = [
-      setTimeout(() => setStatus("approved"), 600),
-      setTimeout(() => setStatus("running"), 1150),
-      setTimeout(() => setStatus("complete"), 2200),
+      setTimeout(() => setStatus("approved"), 500),
+      setTimeout(() => setStatus("running"), 900),
+      setTimeout(() => setStatus(final), 3000),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [run]);
-
-  const approve = () => {
-    setStatus("approving");
-    setRun((n) => n + 1);
+  }, [final, run]);
+  return {
+    status,
+    approve: () => {
+      setStatus("approving");
+      setRun((n) => n + 1);
+    },
+    deny: () => setStatus("denied"),
+    reset: () => setStatus("pending"),
   };
+}
+
+export function ToolApprovalShowcase() {
+  const tests = useRun("complete");
+  const cleanup = useRun("error");
 
   return (
-    <DemoSection
-      title="Run a command"
-      description="Allowing takes a press and hold, so a stray tap can't run a tool. A quick tap says so. The details fold away once you decide."
-    >
-      <DemoStatus>
-        {status === "pending"
-          ? "Waiting for your decision."
-          : status === "denied"
-            ? "Denied. The agent won't run it."
-            : status === "complete"
-              ? "The tests ran."
-              : "Running the tests…"}
-      </DemoStatus>
-      <ToolApproval
-        tool="terminal.run"
-        title={
-          status === "pending" ? "Allow this tool to run?" : "Terminal access"
-        }
-        description="The agent wants to run the project test suite in the current workspace."
-        parameters={PARAMETERS}
-        status={status}
-        open={open}
-        onOpenChange={setOpen}
-        onApprove={approve}
-        onAlwaysAllow={approve}
-        onDeny={() => setStatus("denied")}
-      />
-      <Button
-        className="self-center"
-        size="sm"
-        variant="ghost"
-        disabled={status === "pending"}
-        onPress={() => {
-          setStatus("pending");
-          setOpen(true);
-        }}
+    <>
+      <DemoSection
+        title="Run a command"
+        description="Hold Allow once to run it; a quick tap says to hold. The card follows the run and ends with the result."
       >
-        Replay
-      </Button>
-    </DemoSection>
+        <ToolApproval
+          tool="terminal.run"
+          title="Run the test suite?"
+          description="The agent wants to run the accessibility tests in this project."
+          parameters={TEST_PARAMETERS}
+          status={tests.status}
+          result={
+            tests.status === "denied"
+              ? "You denied this. The agent will look for another way."
+              : "49 tests passed in 2.1s."
+          }
+          onApprove={tests.approve}
+          onAlwaysAllow={tests.approve}
+          onDeny={tests.deny}
+        />
+        <Button
+          className="self-center"
+          size="sm"
+          variant="ghost"
+          disabled={tests.status === "pending"}
+          onPress={tests.reset}
+        >
+          Replay
+        </Button>
+      </DemoSection>
+      <DemoSection
+        title="High risk"
+        description="Tools that can lose work need a longer hold, and the card says why."
+      >
+        <ToolApproval
+          tool="terminal.run"
+          title="Delete the build caches?"
+          description="The agent wants to clear caches to fix a stale bundle."
+          parameters={DELETE_PARAMETERS}
+          risk="high"
+          riskNote="Deletes files. This can't be undone."
+          status={cleanup.status}
+          result={
+            cleanup.status === "denied"
+              ? "You denied this. Nothing was deleted."
+              : "rm: node_modules/.cache: Permission denied"
+          }
+          onApprove={cleanup.approve}
+          onDeny={cleanup.deny}
+        />
+        <Button
+          className="self-center"
+          size="sm"
+          variant="ghost"
+          disabled={cleanup.status === "pending"}
+          onPress={cleanup.reset}
+        >
+          Replay
+        </Button>
+      </DemoSection>
+    </>
   );
 }
