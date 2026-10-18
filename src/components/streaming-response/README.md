@@ -27,7 +27,7 @@ Pass `sources` to show a stack of favicons and a count beside the actions; tappi
 
 ## Motion
 
-The action row fades and rises 4 points over 220 ms. Buttons press to 0.9, and the copy check springs in from below.
+The action row fades and rises 4 points over 220 ms. Buttons press to 0.9. Copying hands off cleanly: the copy icon slips down 3 points and fades in 110 ms, then the check draws itself on, left to right, over 260 ms. The two never overlap, and nothing is scaled, so the icons stay sharp throughout.
 
 ## Better on a phone
 

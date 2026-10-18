@@ -7,16 +7,18 @@ import {
   type ViewProps,
 } from "react-native";
 import Animated, {
+  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import Svg, { Path } from "react-native-svg";
 import { useResolveClassNames } from "uniwind";
 import { usePresence } from "../../hooks/use-presence";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import {
-  CheckGlyph,
   ChevronDownGlyph,
   CopyGlyph,
   RetryGlyph,
@@ -81,6 +83,48 @@ function ActionButton({
 }
 
 /** Copy trades places with a check, which rolls in from below. */
+const AnimatedPath = Animated.createAnimatedComponent(Path);
+// The check from CheckGlyph, and its length for drawing it on.
+const CHECK = "M5 12.5l4.5 4.5L19 7";
+const CHECK_LENGTH = Math.hypot(4.5, 4.5) + Math.hypot(9.5, 10);
+const ICON_OUT = { duration: 110, easing: EASE_OUT };
+const DRAW = { duration: 260, easing: EASE_OUT };
+const DRAW_DELAY = 60;
+
+/**
+ * A check that draws itself on, left to right. The path is redrawn each
+ * frame, so it stays crisp where a scaled glyph would blur.
+ */
+function DrawnCheck({ color, reduce }: { color: unknown; reduce: boolean }) {
+  const drawn = useSharedValue(reduce ? 1 : 0);
+  // Draws once, on mount.
+  useEffect(() => {
+    if (!reduce) drawn.value = withDelay(DRAW_DELAY, withTiming(1, DRAW));
+  }, []);
+  const props = useAnimatedProps(() => ({
+    strokeDashoffset: CHECK_LENGTH * (1 - drawn.value),
+    // A zero-length stroke still shows its round cap as a dot.
+    strokeOpacity: drawn.value > 0.02 ? 1 : 0,
+  }));
+  return (
+    <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
+      <AnimatedPath
+        d={CHECK}
+        stroke={color as string}
+        strokeWidth={2.25}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray={`${CHECK_LENGTH} ${CHECK_LENGTH}`}
+        animatedProps={props}
+      />
+    </Svg>
+  );
+}
+
+/**
+ * Copy hands off to a check: the copy icon slips down and fades, then the
+ * check draws itself on. Coming back, the copy icon drops in from above.
+ */
 function SwapIcon({
   appear,
   exiting,
@@ -92,21 +136,19 @@ function SwapIcon({
   reduce: boolean;
   children: ReactNode;
 }) {
-  const progress = useSharedValue(appear ? 0 : 1);
+  // 0 arriving, 1 resting, 2 gone.
+  const progress = useSharedValue(appear && !reduce ? 0 : 1);
   useEffect(() => {
-    const target = exiting ? 2 : 1;
-    progress.value = reduce ? target : withSpring(target, SPRING_SWAP);
-  }, [exiting, progress, reduce]);
+    if (reduce) progress.value = exiting ? 2 : 1;
+    else if (exiting) progress.value = withTiming(2, ICON_OUT);
+    else if (appear) progress.value = withSpring(1, SPRING_SWAP);
+  }, [appear, exiting, progress, reduce]);
+  // Only moves and fades: scaling a drawn glyph softens its strokes.
   const style = useAnimatedStyle(() => {
-    const away = Math.abs(1 - progress.value);
+    const p = progress.value;
     return {
-      opacity: Math.max(0, 1 - away),
-      transform: reduce
-        ? []
-        : [
-            { translateY: (1 - progress.value) * 4 },
-            { scale: 1 - away * 0.25 },
-          ],
+      opacity: p <= 1 ? Math.min(1, p) : Math.max(0, 2 - p),
+      transform: reduce ? [] : [{ translateY: (p - 1) * 3 }],
     };
   }, [reduce]);
   return (
@@ -289,7 +331,7 @@ export function StreamingResponse({
                   reduce={reduce}
                 >
                   {item.value ? (
-                    <CheckGlyph size={14} color={foreground} />
+                    <DrawnCheck color={foreground} reduce={reduce} />
                   ) : (
                     <CopyGlyph size={14} color={muted} />
                   )}
