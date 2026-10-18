@@ -1,4 +1,19 @@
 export type {
+  AgentActivityContentType,
+  AgentActivityItem,
+  AgentActivityProps,
+  AgentActivitySearch,
+  AgentActivityStatus,
+  AgentActivityStep,
+  AgentActivityText,
+  AgentActivityTool,
+  AgentActivityTrace,
+  AgentSearchResult,
+  AgentStepStatus,
+  AgentTraceKind,
+} from "./components/agent-activity";
+export { AgentActivity } from "./components/agent-activity";
+export type {
   AlertCloseProps,
   AlertIconProps,
   AlertProps,
@@ -21,6 +36,15 @@ export type {
   AnimatedBadgeStatus,
 } from "./components/animated-badge";
 export { AnimatedBadge } from "./components/animated-badge";
+export type {
+  ApprovalCardAnswer,
+  ApprovalCardAnswers,
+  ApprovalCardOption,
+  ApprovalCardProps,
+  ApprovalCardQuestion,
+  ApprovalCardStatus,
+} from "./components/approval-card";
+export { ApprovalCard } from "./components/approval-card";
 export type {
   BouncyAccordionClassNames,
   BouncyAccordionItem,
@@ -251,5 +275,25 @@ export {
   TextScramble,
   TextShimmer,
 } from "./components/text-animation";
+export type {
+  TodoItem,
+  TodoItemStatus,
+  TodoListProps,
+} from "./components/todo-list";
+export { TodoList } from "./components/todo-list";
+export type {
+  ToolApprovalCodeProps,
+  ToolApprovalParameter,
+  ToolApprovalProps,
+  ToolApprovalStatus,
+} from "./components/tool-approval";
+export { ToolApproval, ToolApprovalCode } from "./components/tool-approval";
+export type {
+  ToolResultKind,
+  ToolResultOutputProps,
+  ToolResultProps,
+  ToolResultStatus,
+} from "./components/tool-result";
+export { ToolResult, ToolResultOutput } from "./components/tool-result";
 export type { IconProps, IconSource } from "./primitives/render-icon";
 export { motion } from "./styles/motion";

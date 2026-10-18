@@ -32,4 +32,17 @@
       --color-warning: #fbbf24;
     }
   }
+
+  /* Tailwind's default monospace stack isn't a font React Native can load. */
+  :root {
+    @variant ios {
+      --font-mono: Menlo;
+    }
+  }
+
+  :root {
+    @variant android {
+      --font-mono: monospace;
+    }
+  }
 }

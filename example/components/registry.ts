@@ -1,6 +1,8 @@
 import type { ComponentType } from "react";
 import { AccordionShowcase } from "./accordion-showcase";
+import { AgentActivityShowcase } from "./agent-activity-showcase";
 import { AlertShowcase } from "./alert-showcase";
+import { ApprovalCardShowcase } from "./approval-card-showcase";
 import { BadgeShowcase } from "./badge-showcase";
 import { ButtonShowcase } from "./button-showcase";
 import { CardShowcase } from "./card-showcase";
@@ -25,6 +27,9 @@ import { SwipeShowcase } from "./swipe-showcase";
 import { SwitchShowcase } from "./switch-showcase";
 import { TabsShowcase } from "./tabs-showcase";
 import { TextAnimationShowcase } from "./text-animation-showcase";
+import { TodoListShowcase } from "./todo-list-showcase";
+import { ToolApprovalShowcase } from "./tool-approval-showcase";
+import { ToolResultShowcase } from "./tool-result-showcase";
 
 export type ComponentEntry = {
   /** Route segment, matching the beui.dev slug where one exists. */
@@ -232,6 +237,40 @@ export const groups: ComponentGroup[] = [
         description: "Shimmers, cycling reasoning text and a progress timer.",
         Showcase: LoadingStatesShowcase,
         variants: 3,
+      },
+      {
+        slug: "agent-activity",
+        title: "Agent Activity",
+        description: "Steps, searches and tool calls in one live log.",
+        Showcase: AgentActivityShowcase,
+        variants: 5,
+      },
+      {
+        slug: "todo-list",
+        title: "Todo List",
+        description: "A plan whose marks morph as tasks finish.",
+        Showcase: TodoListShowcase,
+      },
+      {
+        slug: "tool-approval",
+        title: "Tool Approval",
+        description: "Hold to let an agent run a tool.",
+        Showcase: ToolApprovalShowcase,
+      },
+      {
+        slug: "approval-card",
+        title: "Approval Card",
+        description: "Swipeable questions, or a review to approve.",
+        Showcase: ApprovalCardShowcase,
+        keyboard: true,
+        variants: 2,
+      },
+      {
+        slug: "tool-result",
+        title: "Tool Result",
+        description: "Output that streams in, then folds into a result.",
+        Showcase: ToolResultShowcase,
+        variants: 2,
       },
     ],
   },
