@@ -225,16 +225,10 @@ function SubmenuExample() {
 export function MenuShowcase() {
   return (
     <>
-      <DemoSection
-        title="Actions"
-        description="It springs out of its button. Slide a finger down the menu and the highlight follows; let go to choose."
-      >
+      <DemoSection title="Actions">
         <ActionsExample />
       </DemoSection>
-      <DemoSection
-        title="Submenus"
-        description="Font, Size and Move to open in place, each showing its current choice, with a way back on top. Pick one and the note restyles; Projects nests one level deeper."
-      >
+      <DemoSection title="Submenus">
         <SubmenuExample />
       </DemoSection>
     </>

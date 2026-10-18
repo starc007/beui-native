@@ -5,16 +5,10 @@ import { DemoSection } from "./demo";
 export function LoadingStatesShowcase() {
   return (
     <>
-      <DemoSection
-        title="Thinking shimmer"
-        description="A highlight sweeps across the status while the agent thinks."
-      >
+      <DemoSection title="Thinking shimmer">
         <ThinkingShimmer className="text-lg">Thinking…</ThinkingShimmer>
       </DemoSection>
-      <DemoSection
-        title="Reasoning text"
-        description="Cycles through what the agent is doing. The longest phrase holds the width, so nothing shifts."
-      >
+      <DemoSection title="Reasoning text">
         <View className="gap-4">
           <ReasoningText variant="cascade" className="text-base" />
           <ReasoningText variant="swap" className="text-base" />
@@ -25,10 +19,7 @@ export function LoadingStatesShowcase() {
           />
         </View>
       </DemoSection>
-      <DemoSection
-        title="Agent progress"
-        description="A pulsing glyph and a running timer for long tasks."
-      >
+      <DemoSection title="Agent progress">
         <AgentProgress
           label="Churning"
           initialSeconds={151.6}

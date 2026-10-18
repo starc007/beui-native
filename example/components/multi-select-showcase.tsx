@@ -52,10 +52,7 @@ export function MultiSelectShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Teams"
-        description="Tap the field to open the list over the page, and tap outside to close it. Picked options become chips; tap a chip's X to remove one."
-      >
+      <DemoSection title="Teams">
         <MultiSelect defaultValue={["design", "engineering"]}>
           <MultiSelectTrigger accessibilityLabel="Teams">
             <MultiSelectValue placeholder="Choose teams" />
@@ -81,10 +78,7 @@ export function MultiSelectShowcase() {
         </MultiSelect>
       </DemoSection>
 
-      <DemoSection
-        title="Search"
-        description="Search sits at the top of the list. Type to filter, including by keyword, such as “android” or “ml”. Return picks the top match, and Backspace in an empty search removes the last chip."
-      >
+      <DemoSection title="Search">
         <View className="gap-3">
           <MultiSelect value={languages} onValueChange={setLanguages}>
             <MultiSelectTrigger accessibilityLabel="Languages">
@@ -114,10 +108,7 @@ export function MultiSelectShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection
-        title="Disabled"
-        description="A disabled option, and a disabled field."
-      >
+      <DemoSection title="Disabled">
         <View className="gap-3">
           <MultiSelect defaultValue={["email"]}>
             <MultiSelectTrigger accessibilityLabel="Channels">

@@ -93,16 +93,10 @@ export function AccordionShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="FAQ"
-        description="Open a question and it springs apart from the rest."
-      >
+      <DemoSection title="FAQ">
         <BouncyAccordion items={FAQ} value={faq} onValueChange={setFaq} />
       </DemoSection>
-      <DemoSection
-        title="With icons"
-        description="Rows can lead with an icon. This one always keeps one open."
-      >
+      <DemoSection title="With icons">
         <BouncyAccordion
           items={RELEASE}
           defaultValue="calendar"

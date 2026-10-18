@@ -50,10 +50,7 @@ export function TodoListShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Implementation plan"
-        description="Each mark fills as its task progresses and turns into a check. Finished titles are struck through, and the list folds away when everything's done."
-      >
+      <DemoSection title="Implementation plan">
         <TodoList title="Implementation plan" items={plan(Math.max(step, 0))} />
         <Button
           className="self-center"
@@ -64,10 +61,7 @@ export function TodoListShowcase() {
           Replay
         </Button>
       </DemoSection>
-      <DemoSection
-        title="Every state"
-        description="Pending, in progress with an unknown end, completed and cancelled."
-      >
+      <DemoSection title="Every state">
         <TodoList title="Database cleanup" items={CANCELLED} />
       </DemoSection>
     </>

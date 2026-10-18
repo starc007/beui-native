@@ -40,10 +40,7 @@ export function CitationsShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Inline citations"
-        description="Tap a number: the source springs up out of it, with a button to open it, so you keep your place in the reply."
-      >
+      <DemoSection title="Inline citations">
         <Text className="text-sm leading-7 text-foreground">
           Run gesture-driven motion on the UI thread{" "}
           <Citation item={SOURCES[0] as CitationItem} index={1} /> and keep
@@ -53,10 +50,7 @@ export function CitationsShowcase() {
           <Citation item={SOURCES[2] as CitationItem} index={3} />.
         </Text>
       </DemoSection>
-      <DemoSection
-        title="Sources"
-        description="Sources rise in as the agent finds them. Tap one to open it."
-      >
+      <DemoSection title="Sources">
         <View>
           <Citations citations={SOURCES.slice(0, visible)} defaultOpen />
         </View>

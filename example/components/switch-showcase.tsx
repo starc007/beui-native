@@ -8,10 +8,7 @@ export function SwitchShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="States"
-        description="Controlled, uncontrolled and disabled."
-      >
+      <DemoSection title="States">
         <View className="gap-4">
           <Switch
             checked={notifications}
@@ -23,10 +20,7 @@ export function SwitchShowcase() {
           <Switch disabled label="Disabled and off" />
         </View>
       </DemoSection>
-      <DemoSection
-        title="Without a label"
-        description="Screen readers still hear a name through accessibilityLabel."
-      >
+      <DemoSection title="Without a label">
         <Switch accessibilityLabel="Airplane mode" />
       </DemoSection>
     </>

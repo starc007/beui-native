@@ -58,10 +58,7 @@ export function ToolResultShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Terminal output"
-        description="Lines follow the newest output while a timer counts up; drag up to read and it stops following. It folds into one line when the run passes."
-      >
+      <DemoSection title="Terminal output">
         {/* Holds the card at its tallest, so folding never moves the page. */}
         <View style={{ minHeight: CARD_HEIGHT }}>
           <ToolResult
@@ -81,10 +78,7 @@ export function ToolResultShowcase() {
           </ToolResult>
         </View>
       </DemoSection>
-      <DemoSection
-        title="Request result"
-        description="A failed request stays open so you can see why."
-      >
+      <DemoSection title="Request result">
         {/* Holds the card at its tallest, so folding never moves the page. */}
         <View style={{ minHeight: CARD_HEIGHT }}>
           <ToolResult

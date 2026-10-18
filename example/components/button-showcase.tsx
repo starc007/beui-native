@@ -50,10 +50,7 @@ export function ButtonShowcase() {
     <View className="gap-8">
       <DemoStatus>{message}</DemoStatus>
 
-      <DemoSection
-        title="Spring press"
-        description="Four appearances that sink into the press and spring back."
-      >
+      <DemoSection title="Spring press">
         <Row>
           <Button onPress={() => setMessage("Primary pressed.")}>
             Primary
@@ -87,10 +84,7 @@ export function ButtonShowcase() {
         </Row>
       </DemoSection>
 
-      <DemoSection
-        title="With icons"
-        description="Icons pick up the button's size and color."
-      >
+      <DemoSection title="With icons">
         <Row>
           <Button
             startIcon={PlusIcon}
@@ -139,10 +133,7 @@ export function ButtonShowcase() {
         </Row>
       </DemoSection>
 
-      <DemoSection
-        title="Ripple"
-        description="A soft wave from wherever your finger lands."
-      >
+      <DemoSection title="Ripple">
         <Row>
           <Button ripple size="lg">
             Tap anywhere
@@ -153,10 +144,7 @@ export function ButtonShowcase() {
         </Row>
       </DemoSection>
 
-      <DemoSection
-        title="Stateful"
-        description="Labels roll letter by letter while the button resizes to fit."
-      >
+      <DemoSection title="Stateful">
         <Row>
           <StatefulButton
             state={saveState}
@@ -179,10 +167,7 @@ export function ButtonShowcase() {
         </Row>
       </DemoSection>
 
-      <DemoSection
-        title="Quiet states"
-        description="Disabled actions dim. Motion can be turned off per button."
-      >
+      <DemoSection title="Quiet states">
         <Row>
           <Button variant="secondary" disabled>
             Unavailable

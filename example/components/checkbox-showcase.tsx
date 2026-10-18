@@ -12,10 +12,7 @@ export function CheckboxShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Basics"
-        description="With a label, or a label and description."
-      >
+      <DemoSection title="Basics">
         <View className="gap-4">
           <Checkbox
             checked={terms}
@@ -29,10 +26,7 @@ export function CheckboxShowcase() {
           <Checkbox defaultChecked disabled label="Disabled" />
         </View>
       </DemoSection>
-      <DemoSection
-        title="Select all"
-        description="A partial selection shows a dash and reports a mixed state."
-      >
+      <DemoSection title="Select all">
         <View className="gap-4">
           <Checkbox
             checked={all}

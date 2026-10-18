@@ -39,10 +39,7 @@ export function StreamingResponseShowcase() {
   };
 
   return (
-    <DemoSection
-      title="Reply"
-      description="Text streams in, then the actions rise in beneath it."
-    >
+    <DemoSection title="Reply">
       <DemoStatus>{note}</DemoStatus>
       <StreamingResponse
         status={complete ? "complete" : "streaming"}

@@ -145,10 +145,7 @@ export function MessageScrollerShowcase() {
       : "sent";
 
   return (
-    <DemoSection
-      title="Following output"
-      description="Send a message: the conversation follows the reply as it streams. Drag up to read and it lets go; the pill brings you back."
-    >
+    <DemoSection title="Following output">
       <DemoStatus>
         {following ? "Following the latest message." : "Paused while you read."}
       </DemoStatus>

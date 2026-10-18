@@ -37,10 +37,7 @@ export function LoaderShowcase() {
           ))}
         </View>
       </DemoSection>
-      <DemoSection
-        title="Size and color"
-        description="Everything scales from one size."
-      >
+      <DemoSection title="Size and color">
         <View className="flex-row items-center gap-6">
           <Loader variant="dots" size={16} />
           <Loader variant="dots" size={32} className="text-primary" />

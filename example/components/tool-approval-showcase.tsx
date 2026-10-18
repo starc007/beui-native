@@ -54,10 +54,7 @@ export function ToolApprovalShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Run a command"
-        description="Hold Allow once to run it; a quick tap says to hold. The card follows the run and ends with the result."
-      >
+      <DemoSection title="Run a command">
         <ToolApproval
           tool="terminal.run"
           title="Run the test suite?"
@@ -83,10 +80,7 @@ export function ToolApprovalShowcase() {
           Replay
         </Button>
       </DemoSection>
-      <DemoSection
-        title="High risk"
-        description="Tools that can lose work need a longer hold, and the card says why."
-      >
+      <DemoSection title="High risk">
         <ToolApproval
           tool="terminal.run"
           title="Delete the build caches?"

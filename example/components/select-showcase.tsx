@@ -45,10 +45,7 @@ export function SelectShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Unfold"
-        description="The panel grows out of the trigger, then pulls away into its own card."
-      >
+      <DemoSection title="Unfold">
         <Field label="Framework">
           <Select value={framework} onValueChange={setFramework}>
             <SelectTrigger accessibilityLabel="Framework">
@@ -64,10 +61,7 @@ export function SelectShowcase() {
         </Field>
       </DemoSection>
 
-      <DemoSection
-        title="Long lists"
-        description="Longer lists scroll inside the panel. Near the bottom of the screen, it opens upward."
-      >
+      <DemoSection title="Long lists">
         <Field label="Time zone">
           <Select value={zone} onValueChange={setZone}>
             <SelectTrigger accessibilityLabel="Time zone">
@@ -84,10 +78,7 @@ export function SelectShowcase() {
         </Field>
       </DemoSection>
 
-      <DemoSection
-        title="Disabled"
-        description="Whole selects and single options."
-      >
+      <DemoSection title="Disabled">
         <View className="gap-4">
           <Field label="Plan">
             <Select defaultValue="pro">

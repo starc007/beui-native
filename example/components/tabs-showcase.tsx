@@ -16,10 +16,7 @@ export function TabsShowcase() {
   return (
     // Tab lists use the surface color, so these sit on the page background.
     <>
-      <DemoSection
-        title="Pill"
-        description="The default. Labels change color where the pill passes."
-      >
+      <DemoSection title="Pill">
         <Tabs defaultValue="overview">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -38,10 +35,7 @@ export function TabsShowcase() {
         </Tabs>
       </DemoSection>
 
-      <DemoSection
-        title="Overflow"
-        description="Wider lists scroll and reveal the selected tab."
-      >
+      <DemoSection title="Overflow">
         <Tabs defaultValue="Overview" className="max-w-xs">
           <TabsList>
             {SECTIONS.map((section) => (
@@ -63,10 +57,7 @@ export function TabsShowcase() {
         </Tabs>
       </DemoSection>
 
-      <DemoSection
-        title="Icon on selected"
-        description="Only the selected tab carries its icon. It springs open beside the label as the pill arrives."
-      >
+      <DemoSection title="Icon on selected">
         <Tabs defaultValue="feed" icons="selected">
           <TabsList>
             <TabsTrigger value="feed" icon={BellIcon}>

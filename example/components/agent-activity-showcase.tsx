@@ -259,34 +259,19 @@ function Demo({
 export function AgentActivityShowcase() {
   return (
     <>
-      <DemoSection
-        title="Reasoning steps"
-        description="Each step pulses while active and gets a check when done. Once the run finishes, it folds into a summary you can tap open."
-      >
+      <DemoSection title="Reasoning steps">
         <Demo timeline={STEPS} duration={4.2} />
       </DemoSection>
-      <DemoSection
-        title="Streaming thoughts"
-        description="The newest line stays pinned to the bottom as the log glides up. Afterwards the whole log scrolls."
-      >
+      <DemoSection title="Streaming thoughts">
         <Demo timeline={TEXT} duration={5} maxHeight={160} />
       </DemoSection>
-      <DemoSection
-        title="Web search"
-        description="Results rise in one by one. Tap one to open it."
-      >
+      <DemoSection title="Web search">
         <Demo timeline={SEARCH} />
       </DemoSection>
-      <DemoSection
-        title="Tool calls"
-        description="Reads, edits with line counts, and commands."
-      >
+      <DemoSection title="Tool calls">
         <Demo timeline={TOOLS} />
       </DemoSection>
-      <DemoSection
-        title="Agent trace"
-        description="Thinking, decisions and tool calls in one run."
-      >
+      <DemoSection title="Agent trace">
         <Demo
           timeline={TRACE}
           activeLabel="Running the agent trace…"

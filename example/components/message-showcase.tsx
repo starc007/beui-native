@@ -80,10 +80,7 @@ export function MessageShowcase() {
   const [run, setRun] = useState(0);
 
   return (
-    <DemoSection
-      title="Conversation"
-      description="Your message rises out of its corner, the assistant types, and grouped replies keep their avatar slot."
-    >
+    <DemoSection title="Conversation">
       <Conversation key={run} />
       <Button
         className="self-center"

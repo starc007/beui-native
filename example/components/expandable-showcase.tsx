@@ -42,10 +42,7 @@ export function ExpandableShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Button"
-        description="Press to spring open and reveal the label. Press again to fold it."
-      >
+      <DemoSection title="Button">
         <ExpandableButton
           icon={BellIcon}
           label="Notifications"
@@ -53,10 +50,7 @@ export function ExpandableShowcase() {
         />
       </DemoSection>
 
-      <DemoSection
-        title="Toolbar"
-        description="Controlled so only one opens at a time; the others spring aside."
-      >
+      <DemoSection title="Toolbar">
         <View className="flex-row flex-wrap gap-2">
           {TOOLS.map((item) => (
             <ExpandableButton
@@ -73,10 +67,7 @@ export function ExpandableShowcase() {
         </View>
       </DemoSection>
 
-      <DemoSection
-        title="Chips"
-        description="Press a chip to reveal its remove action. Removed chips shrink away while the rest glide into place."
-      >
+      <DemoSection title="Chips">
         <View className="gap-3">
           <View className="flex-row flex-wrap gap-2">
             <LayoutAnimationConfig skipEntering>

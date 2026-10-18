@@ -19,10 +19,7 @@ export function OTPShowcase() {
 
   return (
     <>
-      <DemoSection
-        title="Verification"
-        description="A wrong code shakes and clears; the right one draws a check."
-      >
+      <DemoSection title="Verification">
         <OTPInput
           label="Verification code"
           hint={`Enter ${CODE} to verify.`}
@@ -37,10 +34,7 @@ export function OTPShowcase() {
           onComplete={(next) => setStatus(next === CODE ? "success" : "error")}
         />
       </DemoSection>
-      <DemoSection
-        title="Masked PIN"
-        description="Four slots showing dots. The keyboard closes when it fills."
-      >
+      <DemoSection title="Masked PIN">
         <OTPInput
           label="PIN"
           length={4}
