@@ -7,6 +7,6 @@
 - Keep accessible names, roles, states, text scaling, and adequate touch targets part of component behavior.
 - Run `bun check`. For dependency or Metro changes, also run `bun doctor` and `bun run export`.
 - Bundling is not device validation. State separately what was checked on iOS and Android. The components target mobile apps only; web isn't a supported platform.
-- Follow the versioned Expo guidance in `example/AGENTS.md` when working on the showcase. The showcase uses Expo Router: `example/app/index.tsx` lists components and `example/app/[component].tsx` shows one. Register each new component's showcase in `example/components/registry.ts`; keep showcases and helpers out of `example/app/`.
+- Follow the versioned Expo guidance in `example/AGENTS.md` when working on the showcase. The showcase uses Expo Router: Bottom tabs in `example/app/_layout.tsx` (All, Components, Agents, Settings) each hold a stack whose `index.tsx` lists components and whose `[component].tsx` shows one. Register each new component's showcase in `example/components/registry.ts`; keep showcases and helpers out of `example/app/`.
 - Run `bun run manifest` and commit `showcase.json` after adding a component or changing what one imports; CI fails if it's out of date (see "The manifest" in `CONTRIBUTING.md`).
 - Contributors stop at a merged pull request with an updated `showcase.json`. Recording clips, the Expo Go update and syncing to beui.dev are maintainer steps, listed under "Publishing to beui.dev" in `CONTRIBUTING.md`.

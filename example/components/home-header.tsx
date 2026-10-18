@@ -41,9 +41,12 @@ function Logo() {
 }
 
 export function HomeHeader({
+  title = "beUI",
   query,
   onQueryChange,
 }: {
+  /** The heading beside the logo. Defaults to "beUI". */
+  title?: string;
   query: string;
   onQueryChange: (query: string) => void;
 }) {
@@ -90,7 +93,7 @@ export function HomeHeader({
             accessibilityRole="header"
             className="text-[22px] font-semibold tracking-tight text-foreground"
           >
-            beUI
+            {title}
           </Text>
         </View>
 
