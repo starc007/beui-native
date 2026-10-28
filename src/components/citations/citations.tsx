@@ -2,7 +2,6 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import {
   Image,
   Linking,
-  Modal,
   Pressable,
   StyleSheet,
   Text,
@@ -28,6 +27,7 @@ import {
   GlobeGlyph,
 } from "../../primitives/agent-icons";
 import { Disclosure } from "../../primitives/disclosure";
+import { Overlay } from "../../primitives/overlay";
 import { RiseIn } from "../../primitives/rise-in";
 import { EASE_OUT, SPRING_SWAP } from "../../styles/motion";
 
@@ -191,14 +191,7 @@ function SourceCard({
   const originX = anchor.x + anchor.width / 2 - left;
 
   return (
-    <Modal
-      transparent
-      visible
-      animationType="none"
-      statusBarTranslucent
-      navigationBarTranslucent
-      onRequestClose={onClose}
-    >
+    <Overlay onRequestClose={onClose}>
       <Pressable
         accessibilityLabel="Close source"
         style={StyleSheet.absoluteFill}
@@ -257,7 +250,7 @@ function SourceCard({
           </Pressable>
         ) : null}
       </Animated.View>
-    </Modal>
+    </Overlay>
   );
 }
 

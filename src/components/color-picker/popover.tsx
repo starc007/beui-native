@@ -7,7 +7,6 @@ import {
 } from "react";
 import {
   Keyboard,
-  Modal,
   Platform,
   Pressable,
   type PressableProps,
@@ -16,7 +15,6 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
   Extrapolation,
@@ -28,6 +26,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
+import { Overlay } from "../../primitives/overlay";
 import { EASE_OUT } from "../../styles/motion";
 import { usePickerContext } from "./context";
 import { Checkerboard } from "./surfaces";
@@ -252,46 +251,38 @@ export function ColorPickerContent({
   });
 
   return (
-    <Modal
-      transparent
+    <Overlay
       visible={present}
-      animationType="none"
-      statusBarTranslucent
-      navigationBarTranslucent
       onShow={() => setShown(true)}
       onRequestClose={() => setOpen(false)}
     >
-      {/* Gestures inside a modal need their own root on Android. */}
-      <GestureHandlerRootView style={styles.root}>
-        <Pressable
-          accessibilityLabel="Close"
-          accessibilityRole="button"
-          style={StyleSheet.absoluteFill}
-          onPress={() => setOpen(false)}
-        />
-        <Animated.View
-          accessibilityViewIsModal
-          accessibilityLabel={accessibilityLabel}
-          onLayout={({ nativeEvent }) =>
-            setPanelHeight(nativeEvent.layout.height)
-          }
-          className={`gap-3 rounded-2xl border border-border bg-background p-3 ${className}`}
-          style={[
-            styles.panel,
-            { left, top, width },
-            isTop ? styles.fromBottom : styles.fromTop,
-            panelStyle,
-          ]}
-        >
-          {rows}
-        </Animated.View>
-      </GestureHandlerRootView>
-    </Modal>
+      <Pressable
+        accessibilityLabel="Close"
+        accessibilityRole="button"
+        style={StyleSheet.absoluteFill}
+        onPress={() => setOpen(false)}
+      />
+      <Animated.View
+        accessibilityViewIsModal
+        accessibilityLabel={accessibilityLabel}
+        onLayout={({ nativeEvent }) =>
+          setPanelHeight(nativeEvent.layout.height)
+        }
+        className={`gap-3 rounded-2xl border border-border bg-background p-3 ${className}`}
+        style={[
+          styles.panel,
+          { left, top, width },
+          isTop ? styles.fromBottom : styles.fromTop,
+          panelStyle,
+        ]}
+      >
+        {rows}
+      </Animated.View>
+    </Overlay>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
   panel: {
     position: "absolute",
     boxShadow: "0 12px 32px -8px rgba(0, 0, 0, 0.25)",

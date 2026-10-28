@@ -31,4 +31,4 @@ On the web, a citation number jumps the page down to the source list. On a phone
 - The toggle reports whether the list is expanded, and rows read as links.
 - Reduced motion, or `disableAnimation`, opens the card and the list with fades only.
 
-Copy this directory, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/disclosure.tsx`, `primitives/rise-in.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icons.
+Copy this directory, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/disclosure.tsx`, `primitives/rise-in.tsx`, `primitives/overlay.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icons. Its overlay uses `FullWindowOverlay` from `react-native-screens` on iOS, so it covers native tab bars.

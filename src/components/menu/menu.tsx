@@ -10,7 +10,6 @@ import {
   useState,
 } from "react";
 import {
-  Modal,
   Pressable,
   type PressableProps,
   ScrollView,
@@ -36,6 +35,7 @@ import { scheduleOnRN } from "react-native-worklets";
 import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import { CheckGlyph, ChevronDownGlyph } from "../../primitives/agent-icons";
+import { Overlay } from "../../primitives/overlay";
 import { type IconSource, renderIcon } from "../../primitives/render-icon";
 import { EASE_OUT, SPRING_LAYOUT, SPRING_SWAP } from "../../styles/motion";
 
@@ -1008,12 +1008,7 @@ export function MenuContent({
   );
 
   return (
-    <Modal
-      transparent
-      visible
-      animationType="none"
-      statusBarTranslucent
-      navigationBarTranslucent
+    <Overlay
       onRequestClose={() => (stack.length > 0 ? back() : setOpen(false))}
     >
       <Animated.View
@@ -1054,7 +1049,7 @@ export function MenuContent({
           list
         )}
       </Animated.View>
-    </Modal>
+    </Overlay>
   );
 }
 

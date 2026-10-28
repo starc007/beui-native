@@ -65,4 +65,4 @@ The area is an adjustable control: swipe up and down to change saturation, with 
 
 For haptics, call your haptics library from `onValueCommit`, as the showcase does with expo-haptics.
 
-Copy this directory, `hooks/use-reduced-motion.ts`, `hooks/use-shake.ts`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`.
+Copy this directory, `hooks/use-reduced-motion.ts`, `hooks/use-shake.ts`, `primitives/overlay.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. Its overlay uses `FullWindowOverlay` from `react-native-screens` on iOS, so it covers native tab bars.

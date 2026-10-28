@@ -8,7 +8,6 @@ import {
 } from "react";
 import {
   Keyboard,
-  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -28,6 +27,7 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 import { useResolveClassNames } from "uniwind";
 import { DrawnPath, type PathSegment } from "../../primitives/drawn-path";
+import { Overlay } from "../../primitives/overlay";
 import { EASE_OUT } from "../../styles/motion";
 import {
   MultiSelectGroupContext,
@@ -166,14 +166,7 @@ export function MultiSelectContent({
         </RegistryContext.Provider>
       </View>
 
-      <Modal
-        transparent
-        visible={present}
-        animationType="none"
-        statusBarTranslucent
-        navigationBarTranslucent
-        onRequestClose={() => context.setOpen(false)}
-      >
+      <Overlay visible={present} onRequestClose={() => context.setOpen(false)}>
         <Pressable
           accessibilityLabel="Close"
           accessibilityRole="button"
@@ -203,7 +196,7 @@ export function MultiSelectContent({
             </View>
           </Animated.View>
         ) : null}
-      </Modal>
+      </Overlay>
     </>
   );
 }

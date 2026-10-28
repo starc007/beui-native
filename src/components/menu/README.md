@@ -77,4 +77,4 @@ Submenus open in place rather than as a second panel off to the side, which woul
 - The Android back button goes back a page, then closes the menu.
 - Reduced motion, or `disableAnimation`, opens and closes with fades only.
 
-Copy this directory, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/render-icon.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses Gesture Handler and `react-native-svg`.
+Copy this directory, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/render-icon.tsx`, `primitives/overlay.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses Gesture Handler and `react-native-svg`. Its overlay uses `FullWindowOverlay` from `react-native-screens` on iOS, so it covers native tab bars.

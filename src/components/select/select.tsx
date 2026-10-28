@@ -11,7 +11,6 @@ import {
   useState,
 } from "react";
 import {
-  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -35,6 +34,7 @@ import { scheduleOnRN } from "react-native-worklets";
 import { useResolveClassNames } from "uniwind";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import { DrawnPath, type PathSegment } from "../../primitives/drawn-path";
+import { Overlay } from "../../primitives/overlay";
 import { EASE_OUT } from "../../styles/motion";
 
 // One progress value drives the surface, gap, corners and chevron, as on the
@@ -417,14 +417,7 @@ export function SelectContent({
         </RegistrationContext.Provider>
       </View>
 
-      <Modal
-        transparent
-        visible={present}
-        animationType="none"
-        statusBarTranslucent
-        navigationBarTranslucent
-        onRequestClose={() => context.setOpen(false)}
-      >
+      <Overlay visible={present} onRequestClose={() => context.setOpen(false)}>
         <Pressable
           accessibilityLabel="Close"
           accessibilityRole="button"
@@ -460,7 +453,7 @@ export function SelectContent({
             </View>
           </Animated.View>
         ) : null}
-      </Modal>
+      </Overlay>
     </>
   );
 }

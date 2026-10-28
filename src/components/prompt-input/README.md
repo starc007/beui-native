@@ -51,4 +51,4 @@ import { PromptInput } from "./src";
 
 Keep the composer above the keyboard with your app's keyboard handling, such as `KeyboardStickyView` from react-native-keyboard-controller.
 
-Copy this directory, `components/menu/`, `hooks/use-presence.ts`, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/render-icon.tsx`, `primitives/rise-in.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icons.
+Copy this directory, `components/menu/`, `hooks/use-presence.ts`, `hooks/use-reduced-motion.ts`, `primitives/agent-icons.tsx`, `primitives/render-icon.tsx`, `primitives/rise-in.tsx`, `primitives/overlay.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. It uses `react-native-svg` for its icons. Its overlay uses `FullWindowOverlay` from `react-native-screens` on iOS, so it covers native tab bars.

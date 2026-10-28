@@ -39,4 +39,4 @@ The panel opens below the trigger, or above it when there isn't room below and t
 
 Opening uses a short, barely bouncy spring (300 ms, damping ratio 0.88). Closing folds back over 200 ms with beUI's ease-out. Items fade in as the panel opens. With reduced motion, or `disableAnimation`, the panel appears and disappears without unfolding.
 
-Copy this directory, `primitives/drawn-path.tsx`, `hooks/use-reduced-motion.ts`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`.
+Copy this directory, `primitives/drawn-path.tsx`, `hooks/use-reduced-motion.ts`, `primitives/overlay.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. Its overlay uses `FullWindowOverlay` from `react-native-screens` on iOS, so it covers native tab bars.

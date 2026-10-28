@@ -64,4 +64,4 @@ With reduced motion, or `disableAnimation`, the panel and chips change at once.
 
 The field reads as a button with its label, the picked options as its value, and the list's expanded state; the search field reads with its own label; each option as a checkbox with its checked and disabled state, and each chip's remove button as "Remove" and the option's label. Give the input an `accessibilityLabel`.
 
-Copy this directory, `primitives/drawn-path.tsx`, `hooks/use-reduced-motion.ts`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`.
+Copy this directory, `primitives/drawn-path.tsx`, `hooks/use-reduced-motion.ts`, `primitives/overlay.tsx`, `styles/motion.ts`, and the semantic tokens in `styles/theme.css`. Its overlay uses `FullWindowOverlay` from `react-native-screens` on iOS, so it covers native tab bars.
