@@ -647,6 +647,7 @@
       "description": "A card that springs to the size of each view you open in it.",
       "group": "Motion",
       "variants": 1,
+      "launchedAt": "2026-10-28",
       "readme": "src/components/morphing-modal/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/morphing-modal",
       "files": [

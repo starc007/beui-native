@@ -210,6 +210,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "morphing-modal",
+        launchedAt: "2026-10-28",
         title: "Morphing Modal",
         description:
           "A card that springs to the size of each view you open in it.",
