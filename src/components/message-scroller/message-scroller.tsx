@@ -12,6 +12,7 @@ import {
   type NativeSyntheticEvent,
   Pressable,
   ScrollView,
+  type ScrollViewInstance,
   type ScrollViewProps,
   StyleSheet,
   View,
@@ -101,7 +102,7 @@ export function MessageScroller({
 }: MessageScrollerProps) {
   const reducedMotion = useReducedMotionPreference();
   const reduce = reducedMotion || disableAnimation;
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const [following, setFollowingState] = useState(followOutput);
   const followingRef = useRef(followOutput);
   // True from the moment a finger touches until momentum settles.

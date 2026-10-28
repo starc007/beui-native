@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  type TextInputInstance,
   type TextInputProps,
   View,
 } from "react-native";
@@ -220,7 +221,7 @@ export type PromptInputProps = Omit<
   /** Classes for the composer surface. */
   className?: string;
   disableAnimation?: boolean;
-  ref?: Ref<TextInput>;
+  ref?: Ref<TextInputInstance>;
 };
 
 /**

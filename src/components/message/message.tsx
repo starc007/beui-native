@@ -1,5 +1,11 @@
 import { type ReactNode, type Ref, useContext, useEffect } from "react";
-import { StyleSheet, Text, View, type ViewProps } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  type ViewInstance,
+  type ViewProps,
+} from "react-native";
 import Animated, {
   cancelAnimation,
   ReduceMotion,
@@ -42,7 +48,7 @@ export type MessageProps = Omit<ViewProps, "children"> & {
   disableAnimation?: boolean;
   className?: string;
   children: ReactNode;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 /**

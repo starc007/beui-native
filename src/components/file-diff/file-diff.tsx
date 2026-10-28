@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   Pressable,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   Text,
   View,
@@ -163,7 +164,7 @@ export function FileDiff({
     undefined,
   );
   const previous = useRef(status);
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const following = useRef(true);
   const dragging = useRef(false);
   const turn = useSharedValue(open ? 1 : 0);

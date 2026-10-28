@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import {
   Pressable,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   View,
   type ViewProps,
@@ -136,7 +137,7 @@ export function AgentActivity({
   const open = controlledOpen ?? internalOpen;
   const expanded = working || open;
   const [contentHeight, setContentHeight] = useState(0);
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const previousStatus = useRef(status);
   const offset = useSharedValue(0);
   const turn = useSharedValue(expanded ? 1 : 0);

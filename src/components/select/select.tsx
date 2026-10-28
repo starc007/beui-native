@@ -18,6 +18,7 @@ import {
   Text,
   useWindowDimensions,
   View,
+  type ViewInstance,
   type ViewProps,
 } from "react-native";
 import Animated, {
@@ -76,7 +77,7 @@ type SelectContextValue = {
   progress: SharedValue<number>;
   reduce: boolean;
   disabled: boolean;
-  triggerRef: RefObject<View | null>;
+  triggerRef: RefObject<ViewInstance | null>;
   anchor: Anchor | null;
   placement: Placement;
   setPlacement: (placement: Placement) => void;
@@ -128,7 +129,7 @@ export function Select({
   const [labels, setLabels] = useState<Map<string, string>>(new Map());
   const [anchor, setAnchor] = useState<Anchor | null>(null);
   const [placement, setPlacement] = useState<Placement>("bottom");
-  const triggerRef = useRef<View>(null);
+  const triggerRef = useRef<ViewInstance>(null);
   const progress = useSharedValue(0);
 
   const setOpen = useCallback(

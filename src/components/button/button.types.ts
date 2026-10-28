@@ -1,5 +1,10 @@
 import type { ReactNode, Ref } from "react";
-import type { PressableProps, StyleProp, View, ViewStyle } from "react-native";
+import type {
+  PressableProps,
+  StyleProp,
+  ViewInstance,
+  ViewStyle,
+} from "react-native";
 import type { IconProps, IconSource } from "../../primitives/render-icon";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "outline";
@@ -17,7 +22,7 @@ export type ButtonBaseProps = Omit<PressableProps, "children" | "style"> & {
   /** Disables press motion independently of the system preference. */
   disableAnimation?: boolean;
   style?: StyleProp<ViewStyle>;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 /** Internal props for the shared pressable surface. */

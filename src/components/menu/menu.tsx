@@ -18,6 +18,7 @@ import {
   Text,
   useWindowDimensions,
   View,
+  type ViewInstance,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -63,7 +64,7 @@ type MenuContextValue = {
   open: boolean;
   setOpen: (open: boolean) => void;
   anchor: Frame | null;
-  triggerRef: React.RefObject<View | null>;
+  triggerRef: React.RefObject<ViewInstance | null>;
   reduce: boolean;
   /** Item frames in layout order, read on the UI thread while sliding. */
   slots: SharedValue<Slot[]>;
@@ -134,7 +135,7 @@ export function Menu({
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const open = controlledOpen ?? internalOpen;
   const [anchor, setAnchor] = useState<Frame | null>(null);
-  const triggerRef = useRef<View>(null);
+  const triggerRef = useRef<ViewInstance>(null);
   const slots = useSharedValue<Slot[]>([]);
   const highlight = useSharedValue(-1);
   const entries = useRef(new Map<string, Entry>());

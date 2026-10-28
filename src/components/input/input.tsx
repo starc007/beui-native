@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  type TextInputInstance,
   type TextInputProps,
   View,
 } from "react-native";
@@ -57,7 +58,7 @@ export type InputProps = Omit<TextInputProps, "editable"> & {
   disableAnimation?: boolean;
   className?: string;
   classNames?: InputClassNames;
-  ref?: Ref<TextInput>;
+  ref?: Ref<TextInputInstance>;
 };
 
 function ErrorMessage({
@@ -158,7 +159,7 @@ export function Input({
   const [uncontrolled, setUncontrolled] = useState(defaultValue ?? "");
   const value = valueProp ?? uncontrolled;
   const [focused, setFocused] = useState(false);
-  const inputRef = useRef<TextInput | null>(null);
+  const inputRef = useRef<TextInputInstance | null>(null);
   const reducedMotion = useReducedMotionPreference();
   const animate = !reducedMotion && !disableAnimation;
 

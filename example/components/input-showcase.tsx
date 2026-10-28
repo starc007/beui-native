@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Pressable, type TextInput, View } from "react-native";
+import { Pressable, type TextInputInstance, View } from "react-native";
 import { useResolveClassNames } from "uniwind";
 import { Input } from "../../src";
 import { DemoSection } from "./demo";
@@ -11,8 +11,8 @@ export function InputShowcase() {
   const [visible, setVisible] = useState(false);
   const [query, setQuery] = useState("Ada");
   const { color: muted } = useResolveClassNames("text-muted");
-  const passwordRef = useRef<TextInput>(null);
-  const searchRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInputInstance>(null);
+  const searchRef = useRef<TextInputInstance>(null);
 
   const emailError =
     email.length > 0 && !email.includes("@")

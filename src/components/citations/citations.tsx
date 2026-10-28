@@ -8,6 +8,7 @@ import {
   Text,
   useWindowDimensions,
   View,
+  type ViewInstance,
   type ViewProps,
 } from "react-native";
 import Animated, {
@@ -284,7 +285,7 @@ export function Citation({
 }: CitationProps) {
   const reducedMotion = useReducedMotionPreference();
   const reduce = reducedMotion || disableAnimation;
-  const ref = useRef<View>(null);
+  const ref = useRef<ViewInstance>(null);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
   const [visible, setVisible] = useState(false);
 

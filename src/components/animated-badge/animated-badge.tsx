@@ -3,6 +3,7 @@ import {
   type ColorValue,
   StyleSheet,
   View,
+  type ViewInstance,
   type ViewProps,
 } from "react-native";
 import Animated, {
@@ -51,7 +52,7 @@ export type AnimatedBadgeProps = Omit<ViewProps, "children"> & {
   /** Swaps without rolling, independently of the system preference. */
   disableAnimation?: boolean;
   className?: string;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 // Full class strings, so Uniwind can see every token at build time.

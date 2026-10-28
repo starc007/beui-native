@@ -17,7 +17,7 @@ bun install --frozen-lockfile
 bun dev
 ```
 
-Open the showcase in Expo Go (SDK 57), or run `bun ios` or `bun android`. Edits under `src/` hot-reload.
+Open the showcase in Expo Go (SDK 58), or run `bun ios` or `bun android`. Edits under `src/` hot-reload.
 
 ## How the repository works
 

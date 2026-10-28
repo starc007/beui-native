@@ -15,6 +15,7 @@ import {
   Text,
   type TextProps,
   View,
+  type ViewInstance,
   type ViewProps,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -168,7 +169,7 @@ export type MessageBubbleProps = Omit<ViewProps, "children"> & {
   disableAnimation?: boolean;
   className?: string;
   children?: ReactNode;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 /**

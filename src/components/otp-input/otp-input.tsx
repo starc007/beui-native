@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  type TextInputInstance,
   type TextInputProps,
   View,
 } from "react-native";
@@ -73,7 +74,7 @@ export type OTPInputProps = Omit<
   /** Dismisses the keyboard once the last slot fills. */
   blurOnComplete?: boolean;
   className?: string;
-  ref?: Ref<TextInput>;
+  ref?: Ref<TextInputInstance>;
 };
 
 function sanitize(raw: string, length: number) {
@@ -278,7 +279,7 @@ export function OTPInput({
   ...props
 }: OTPInputProps) {
   const { theme } = useUniwind();
-  const inputRef = useRef<TextInput | null>(null);
+  const inputRef = useRef<TextInputInstance | null>(null);
   // Blur once the filled value and caret have rendered; applying them can
   // otherwise take focus straight back.
   const pendingBlur = useRef(false);

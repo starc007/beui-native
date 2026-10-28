@@ -16,6 +16,7 @@ import {
   StyleSheet,
   Text,
   View,
+  type ViewInstance,
   type ViewProps,
 } from "react-native";
 import Animated, {
@@ -45,7 +46,7 @@ type RadioGroupContextValue = {
   value: string;
   select: (value: string) => void;
   animate: boolean;
-  groupRef: RefObject<View | null>;
+  groupRef: RefObject<ViewInstance | null>;
   /** Records where an item's ring sits inside the group. */
   place: (value: string, x: number, y: number) => void;
   register: (value: string, measure: Measure) => () => void;
@@ -91,7 +92,7 @@ export function RadioGroup({
   const animate = !reducedMotion && !disableAnimation;
   const { backgroundColor: dotColor } = useResolveClassNames("bg-primary");
 
-  const groupRef = useRef<View>(null);
+  const groupRef = useRef<ViewInstance>(null);
   const positions = useRef(new Map<string, { x: number; y: number }>());
   const measures = useRef(new Map<string, Measure>());
   const valueRef = useRef(value);
@@ -208,7 +209,7 @@ export type RadioGroupItemProps = Omit<
   description?: string;
   disabled?: boolean;
   className?: string;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 export function RadioGroupItem({
@@ -229,7 +230,7 @@ export function RadioGroupItem({
   const group = useRadioGroup();
   const { animate, dotScale, groupRef, place, register } = group;
   const selected = group.value === value;
-  const ringRef = useRef<View>(null);
+  const ringRef = useRef<ViewInstance>(null);
 
   const { backgroundColor: idleBorder } = useResolveClassNames("bg-muted/50");
   const { backgroundColor: activeBorder } = useResolveClassNames("bg-primary");

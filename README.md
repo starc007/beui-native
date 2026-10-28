@@ -4,7 +4,7 @@ Animated, accessible components for React Native, built for touch. A native comp
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![npm](https://img.shields.io/npm/v/beui-native.svg?label=cli)](https://www.npmjs.com/package/beui-native)
-![Expo SDK 57](https://img.shields.io/badge/Expo%20SDK-57-000020.svg)
+![Expo SDK 58](https://img.shields.io/badge/Expo%20SDK-58-000020.svg)
 ![React Native 0.86](https://img.shields.io/badge/React%20Native-0.86-61dafb.svg)
 ![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android-lightgrey.svg)
 
@@ -97,9 +97,9 @@ Each name opens the component's page on beui.dev, with a recording from iOS and 
 
 ## Try it on your phone
 
-Scan this code with [Expo Go](https://expo.dev/go) (SDK 57) to open the showcase, with every component on its own page in light and dark. Each component's page on beui.dev has a code that opens it directly.
+Scan this code with [Expo Go](https://expo.dev/go) (SDK 58) to open the showcase, with every component on its own page in light and dark. Each component's page on beui.dev has a code that opens it directly.
 
-<img alt="QR code that opens the beUI Native showcase in Expo Go" src="https://qr.expo.dev/eas-update?projectId=93a3a95c-6dc2-4adb-b57c-efbecf859f25&runtimeVersion=exposdk:57.0.0&channel=production" width="180" />
+<img alt="QR code that opens the beUI Native showcase in Expo Go" src="https://qr.expo.dev/eas-update?projectId=93a3a95c-6dc2-4adb-b57c-efbecf859f25&runtimeVersion=exposdk:58.0.0&channel=production" width="180" />
 
 To run the showcase from source, you need Node.js 22.13 or later and [Bun](https://bun.sh) 1.3.14:
 
@@ -127,7 +127,7 @@ The components are tested with:
 
 | Library | Version |
 | --- | --- |
-| React Native | 0.86 (Expo SDK 57), React 19 |
+| React Native | 0.88 (Expo SDK 58), React 19 |
 | [Reanimated](https://docs.swmansion.com/react-native-reanimated/) and Worklets | 4.5 and 0.10 |
 | [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/) | 2.32 |
 | [Uniwind](https://docs.uniwind.dev) with Tailwind CSS | 1.12 with 4.3 |

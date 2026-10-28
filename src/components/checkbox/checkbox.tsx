@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  type ViewInstance,
 } from "react-native";
 import Animated, {
   cancelAnimation,
@@ -53,7 +54,7 @@ export type CheckboxProps = Omit<
   /** Disables press and mark motion independently of the system preference. */
   disableAnimation?: boolean;
   className?: string;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 function CheckMark({

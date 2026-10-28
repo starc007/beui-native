@@ -14,6 +14,7 @@ import {
   Text,
   type TextProps,
   View,
+  type ViewInstance,
   type ViewProps,
 } from "react-native";
 import Animated, {
@@ -67,7 +68,7 @@ export type CardProps = Omit<PressableProps, "children" | "style"> & {
   className?: string;
   style?: ViewProps["style"];
   children?: ReactNode;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 /** A surface built from parts: CardHeader, CardContent and CardFooter. */

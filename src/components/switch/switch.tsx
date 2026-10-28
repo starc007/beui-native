@@ -6,7 +6,7 @@ import {
   type PressableProps,
   StyleSheet,
   Text,
-  type View,
+  type ViewInstance,
 } from "react-native";
 import Animated, {
   cancelAnimation,
@@ -54,7 +54,7 @@ export type SwitchProps = Omit<
   /** Disables thumb motion independently of the system preference. */
   disableAnimation?: boolean;
   className?: string;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 export function Switch({

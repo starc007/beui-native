@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import {
   Pressable,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   Text,
   View,
@@ -164,7 +165,7 @@ export function ToolResult({
     undefined,
   );
   const previous = useRef(status);
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   // Follows new output until you drag up to read; reaching the end again resumes.
   const following = useRef(true);
   const dragging = useRef(false);

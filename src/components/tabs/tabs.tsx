@@ -14,6 +14,7 @@ import {
   Pressable,
   type PressableProps,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   Text,
   View,
@@ -214,7 +215,7 @@ export function TabsList({
   const widths = useRef(new Map<string, TabWidths>());
   // The box the indicator is heading for, so repeat reports don't restart it.
   const heading = useRef<LayoutRectangle | null>(null);
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const scrollX = useRef(0);
   const viewportWidth = useRef(0);
   const contentWidth = useRef(0);

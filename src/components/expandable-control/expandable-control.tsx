@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  type ViewInstance,
 } from "react-native";
 import Animated, {
   Extrapolation,
@@ -161,7 +162,7 @@ export type ExpandableButtonProps = Omit<PressableProps, "children" | "style"> &
     disableAnimation?: boolean;
     className?: string;
     labelClassName?: string;
-    ref?: Ref<View>;
+    ref?: Ref<ViewInstance>;
   };
 
 /**

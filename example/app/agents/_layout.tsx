@@ -3,7 +3,7 @@ import { useStackOptions } from "../../components/stack-options";
 
 // A deep link straight to a component still gets the list underneath, so
 // back returns to it.
-export const unstable_settings = { initialRouteName: "index" };
+export const unstable_settings = { anchor: "index" };
 
 export default function Layout() {
   return (

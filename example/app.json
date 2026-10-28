@@ -24,7 +24,7 @@
       "favicon": "./assets/favicon.png"
     },
     "scheme": "beui-native",
-    "plugins": ["expo-router"],
+    "plugins": ["expo-router", "expo-status-bar"],
     "extra": {
       "router": {},
       "eas": {

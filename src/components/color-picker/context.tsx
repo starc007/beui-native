@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { View, type ViewProps } from "react-native";
+import { View, type ViewInstance, type ViewProps } from "react-native";
 import { type SharedValue, useSharedValue } from "react-native-reanimated";
 import { useReducedMotionPreference } from "../../hooks/use-reduced-motion";
 import {
@@ -41,7 +41,7 @@ export type ColorPickerContextValue = {
   /** 0 closed to 1 open; drives the panel and its rows. */
   progress: SharedValue<number>;
   /** The trigger, which the panel lines up under. */
-  triggerRef: RefObject<View | null>;
+  triggerRef: RefObject<ViewInstance | null>;
   triggerFrame: Frame | null;
 };
 
@@ -105,7 +105,7 @@ export function ColorPicker({
 }: ColorPickerProps) {
   const reducedMotion = useReducedMotionPreference();
   const reduce = reducedMotion || disableAnimation;
-  const triggerRef = useRef<View>(null);
+  const triggerRef = useRef<ViewInstance>(null);
   const [triggerFrame, setTriggerFrame] = useState<Frame | null>(null);
   const progress = useSharedValue(defaultOpen ? 1 : 0);
 

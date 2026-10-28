@@ -17,6 +17,7 @@ import {
   Text,
   type TextProps,
   View,
+  type ViewInstance,
   type ViewProps,
 } from "react-native";
 import Animated, {
@@ -101,7 +102,7 @@ export type AlertProps = Omit<ViewProps, "children"> & {
   disableAnimation?: boolean;
   className?: string;
   children?: ReactNode;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 /**

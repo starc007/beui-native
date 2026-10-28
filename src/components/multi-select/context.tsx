@@ -8,7 +8,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { type TextInput, View, type ViewProps } from "react-native";
+import {
+  type TextInputInstance,
+  View,
+  type ViewInstance,
+  type ViewProps,
+} from "react-native";
 
 export type Anchor = { x: number; y: number; width: number; height: number };
 
@@ -57,8 +62,8 @@ export type MultiSelectContextValue = {
   firstMatch: string | null;
   disabled: boolean;
   reduce: boolean;
-  inputRef: RefObject<TextInput | null>;
-  triggerRef: RefObject<View | null>;
+  inputRef: RefObject<TextInputInstance | null>;
+  triggerRef: RefObject<ViewInstance | null>;
   /** The trigger's frame in the window, measured as the panel opens. */
   anchor: Anchor | null;
   /** Measures the trigger again, such as after chips change its height. */
@@ -130,8 +135,8 @@ export function MultiSelect({
 }: MultiSelectProps) {
   const reducedMotion = useReducedMotionPreference();
   const reduce = reducedMotion || disableAnimation;
-  const inputRef = useRef<TextInput>(null);
-  const triggerRef = useRef<View>(null);
+  const inputRef = useRef<TextInputInstance>(null);
+  const triggerRef = useRef<ViewInstance>(null);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
   const [internalValue, setInternalValue] = useState(defaultValue);
   const [internalOpen, setInternalOpen] = useState(defaultOpen);

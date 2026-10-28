@@ -4,6 +4,7 @@ import {
   Platform,
   StyleSheet,
   View,
+  type ViewInstance,
   type ViewProps,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -86,7 +87,7 @@ export type RangeSliderProps = Omit<ViewProps, "children"> & {
   /** Moves without springing, independently of the system preference. */
   disableAnimation?: boolean;
   className?: string;
-  ref?: Ref<View>;
+  ref?: Ref<ViewInstance>;
 };
 
 /**
@@ -249,7 +250,9 @@ export function RangeSlider({
     Platform.OS === "web" && !disabled
       ? {
           focusable: true,
-          onKeyDown: (event: { key: string; preventDefault: () => void }) => {
+          // React Native 0.87+ types onKeyDown with its own native event;
+          // this runs only on web, where the event is a DOM keyboard event.
+          onKeyDown: ((event: { key: string; preventDefault: () => void }) => {
             const map: Record<string, number> = {
               ArrowRight: current + stride,
               ArrowUp: current + stride,
@@ -265,7 +268,7 @@ export function RangeSlider({
               event.preventDefault();
               commit(next);
             }
-          },
+          }) as unknown as ViewProps["onKeyDown"],
         }
       : {};
 

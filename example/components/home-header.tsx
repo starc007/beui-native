@@ -4,6 +4,7 @@ import {
   Pressable,
   Text,
   TextInput,
+  type TextInputInstance,
   type TextStyle,
   View,
 } from "react-native";
@@ -54,7 +55,7 @@ export function HomeHeader({
   const reduce = useReducedMotion();
   const { color: muted } = useResolveClassNames("text-muted");
   const { color: foreground } = useResolveClassNames("text-foreground");
-  const input = useRef<TextInput>(null);
+  const input = useRef<TextInputInstance>(null);
   const [focused, setFocused] = useState(false);
   const [space, setSpace] = useState({ row: 0, brand: 0 });
 
