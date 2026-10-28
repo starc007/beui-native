@@ -20,6 +20,7 @@ import { MenuShowcase } from "./menu-showcase";
 import { MessageBubbleShowcase } from "./message-bubble-showcase";
 import { MessageScrollerShowcase } from "./message-scroller-showcase";
 import { MessageShowcase } from "./message-showcase";
+import { MorphingModalShowcase } from "./morphing-modal-showcase";
 import { MultiSelectShowcase } from "./multi-select-showcase";
 import { NumberShowcase } from "./number-showcase";
 import { OTPShowcase } from "./otp-showcase";
@@ -206,6 +207,13 @@ export const groups: ComponentGroup[] = [
         description: "Seventeen indicators from one size prop.",
         Showcase: LoaderShowcase,
         variants: 17,
+      },
+      {
+        slug: "morphing-modal",
+        title: "Morphing Modal",
+        description:
+          "A card that springs to the size of each view you open in it.",
+        Showcase: MorphingModalShowcase,
       },
     ],
   },

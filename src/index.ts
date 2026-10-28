@@ -235,6 +235,14 @@ export type {
 } from "./components/message-scroller";
 export { MessageScroller } from "./components/message-scroller";
 export type {
+  MorphingModalHeaderProps,
+  MorphingModalProps,
+} from "./components/morphing-modal";
+export {
+  MorphingModal,
+  MorphingModalHeader,
+} from "./components/morphing-modal";
+export type {
   MultiSelectContentProps,
   MultiSelectFilter,
   MultiSelectGroupProps,
