@@ -232,7 +232,7 @@ export function MorphingModal({
     <Overlay onRequestClose={() => (onBack ? onBack() : close())}>
       <Animated.View
         style={[StyleSheet.absoluteFill, scrimStyle]}
-        className="bg-foreground/20"
+        className="bg-black/25"
       >
         <Pressable
           accessibilityLabel="Close"
