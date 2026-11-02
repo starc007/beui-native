@@ -683,6 +683,7 @@
       "description": "Pill toasts that stack, spread out and swipe away.",
       "group": "Motion",
       "variants": 1,
+      "launchedAt": "2026-11-02",
       "readme": "src/components/toast/README.md",
       "source": "https://github.com/starc007/beui-native/tree/main/src/components/toast",
       "files": [

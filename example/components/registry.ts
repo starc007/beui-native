@@ -219,6 +219,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "toast",
+        launchedAt: "2026-11-02",
         title: "Toast",
         description: "Pill toasts that stack, spread out and swipe away.",
         Showcase: ToastShowcase,
