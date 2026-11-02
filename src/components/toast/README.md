@@ -42,7 +42,7 @@ toast.promise(upload(), {
 
 ## Motion
 
-Toasts grow and fade in place on beUI's ease-out, and leaving mirrors arriving. The stack reflows over 220 ms. A status change crossfades the icon, rolls the title and eases the pill to its new width. With reduced motion, or `disableAnimation`, toasts fade in place.
+A toast drops in from the edge as a small circle around its icon, widens into the pill, then shows its text. Leaving plays the same steps in reverse. Only transforms and opacity move: two rounded caps slide apart while the middle stretches between them, so nothing is laid out again mid-motion and the corners never stretch. The stack reflows over 220 ms. A status change crossfades the icon, rolls the title and eases the pill to its new width. With reduced motion, or `disableAnimation`, toasts fade in place.
 
 ## Accessibility
 

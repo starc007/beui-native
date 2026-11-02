@@ -21,8 +21,9 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Animated, {
-  LinearTransition,
+  Easing,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
@@ -45,8 +46,25 @@ import {
   toastStore,
 } from "./toast-store";
 
-const ENTER = { duration: 320, easing: EASE_OUT } as const;
-const EXIT = { duration: 200, easing: EASE_OUT } as const;
+// Arriving runs linearly; each phase eases on its own slice of it, so
+// later phases are not crushed into the first frames of one ease-out.
+const ENTER = { duration: 560, easing: Easing.linear } as const;
+const EXIT = { duration: 420, easing: Easing.linear } as const;
+
+/** Ease-out over one phase's slice of a linear progress, clamped to 0..1. */
+function phase(progress: number, from: number, to: number) {
+  "worklet";
+  const t = Math.max(0, Math.min(1, (progress - from) / (to - from)));
+  return 1 - (1 - t) ** 3;
+}
+/** The smallest the shell starts from: a circle around the status. */
+const MORPH_START = 44;
+/** The pill's corner radius, and the width of each rounded cap. */
+const CAP = 22;
+/** A soft lift with the border, so the pill reads on any screen. */
+const SHADOW = "0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06)";
+/** The drop covers the first half, from this far past the edge. */
+const DROP_FROM = 24;
 const REFLOW = { duration: 220, easing: EASE_OUT } as const;
 const FADE = { duration: 160 } as const;
 /** How far each toast behind the front one peeks out, and how much smaller it is. */
@@ -295,10 +313,11 @@ function ToastView({
   const dragY = useSharedValue(0);
   const height = useSharedValue(44);
   const flung = useSharedValue(0);
-
-  useEffect(() => {
-    enter.value = reduce ? withTiming(1, FADE) : withTiming(1, ENTER);
-  }, [enter, reduce]);
+  // The laid-out width, and the width the pill shows at rest, which glides
+  // to a new layout when the status or title changes.
+  const layoutWidth = useSharedValue(0);
+  const restWidth = useSharedValue(0);
+  const measured = useRef(false);
 
   useEffect(() => {
     if (!target) return;
@@ -362,18 +381,83 @@ function ToastView({
       scheduleOnRN(onTouch, false);
     });
 
-  // Arriving and leaving grow and fade in place, from the pill's center.
+  // The stack's position and depth, plus a quick fade so the morph starts
+  // from the edge. It drops in as a small circle, tucked up by the screen's
+  // edge, and lands in place over the first half of the motion; leaving
+  // plays the same path back.
   const style = useAnimatedStyle(() => {
     const e = enter.value;
+    const drop = reduce ? 1 : phase(e, 0, 0.5);
+    const travel = (1 - drop) * -sign * (height.value + DROP_FROM);
     return {
-      opacity: e * opacity.value,
+      opacity: (reduce ? e : phase(e, 0, 0.18)) * opacity.value,
       transform: [
         { translateX: dragX.value },
-        { translateY: y.value + dragY.value },
-        { scale: scale.value * (reduce ? 1 : 0.88 + 0.12 * e) },
+        { translateY: y.value + dragY.value + travel },
+        { scale: scale.value * (0.6 + 0.4 * drop) },
       ],
     };
   });
+
+  // As it lands, the pill widens from a circle around the status, out from
+  // the center. Only transforms move: two rounded caps slide apart and the
+  // straight middle stretches between them, so the corners never distort.
+  const shape = useDerivedValue(() => {
+    const full = layoutWidth.value;
+    const rest = restWidth.value;
+    const start = Math.min(rest, Math.max(MORPH_START, height.value));
+    // Widening starts as the drop slows, so the two read as one motion.
+    const grow = reduce ? 1 : phase(enter.value, 0.2, 0.85);
+    const width = start + (rest - start) * grow;
+    const middle = full - CAP * 2;
+    return {
+      stretch: middle > 0 ? Math.max(0, width - CAP * 2) / middle : 1,
+      shift: (full - width) / 2,
+    };
+  });
+  const middleStyle = useAnimatedStyle(() => ({
+    transform: [{ scaleX: shape.value.stretch }],
+  }));
+  // Squeezing also squeezes the middle's shadow into a dark sliver, so its
+  // shadow fades in with its width.
+  const middleShadowStyle = useAnimatedStyle(() => ({
+    opacity: Math.min(1, shape.value.stretch * 3),
+    transform: [{ scaleX: shape.value.stretch }],
+  }));
+  const leftCapStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: shape.value.shift }],
+  }));
+  const rightCapStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: -shape.value.shift }],
+  }));
+  // The status rides the left cap, so it stays centered in the circle.
+  const rowStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: shape.value.shift }],
+  }));
+  // The words come in once the pill has room, and fade out first on the way back.
+  const textStyle = useAnimatedStyle(() => ({
+    opacity: reduce ? 1 : phase(enter.value, 0.55, 0.95),
+  }));
+
+  const onLayout = ({
+    nativeEvent,
+  }: {
+    nativeEvent: { layout: { width: number; height: number } };
+  }) => {
+    const { width, height: tall } = nativeEvent.layout;
+    height.value = tall;
+    layoutWidth.value = width;
+    onMeasure(item.id, { width, height: tall });
+    if (!measured.current) {
+      // The morph waits for the first layout, so it knows its full width.
+      measured.current = true;
+      restWidth.value = width;
+      enter.value = withTiming(1, reduce ? FADE : ENTER);
+      return;
+    }
+    // A new status or title glides the pill to its new width.
+    restWidth.value = reduce ? width : withTiming(width, REFLOW);
+  };
 
   return (
     <Animated.View
@@ -385,64 +469,124 @@ function ToastView({
       ]}
     >
       <GestureDetector gesture={pan}>
-        <Animated.View
-          layout={
-            reduce ? undefined : LinearTransition.duration(220).easing(EASE_OUT)
+        <Pressable
+          onPress={onToggle}
+          onLayout={onLayout}
+          accessibilityRole={item.status === "error" ? "alert" : "text"}
+          accessibilityLiveRegion={
+            item.status === "error" ? "assertive" : "polite"
           }
-          onLayout={({ nativeEvent }) => {
-            height.value = nativeEvent.layout.height;
-            onMeasure(item.id, {
-              width: nativeEvent.layout.width,
-              height: nativeEvent.layout.height,
-            });
-          }}
+          accessibilityHint={item.dismissible ? "Swipe to dismiss" : undefined}
           style={{ maxWidth: window.width - EDGE * 2 }}
         >
-          <Pressable
-            onPress={onToggle}
-            accessibilityRole={item.status === "error" ? "alert" : "text"}
-            accessibilityLiveRegion={
-              item.status === "error" ? "assertive" : "polite"
-            }
-            accessibilityHint={
-              item.dismissible ? "Swipe to dismiss" : undefined
-            }
-            style={styles.pill}
-            className="flex-row items-center gap-2.5 border border-border bg-background py-2.5 pl-2.5 pr-4"
-          >
-            <StatusBadge status={item.status} reduce={reduce} />
-            <View className="shrink">
-              <RollText
-                text={item.title}
-                className="text-sm font-medium text-foreground"
-                reduce={reduce}
-                numberOfLines={2}
-              />
-              {item.description ? (
-                <Text numberOfLines={3} className="text-xs text-muted">
-                  {item.description}
-                </Text>
-              ) : null}
-            </View>
-            {item.action ? (
-              <Pressable
-                accessibilityRole="button"
-                hitSlop={8}
-                onPress={() => {
-                  item.action?.onPress();
-                  toast.dismiss(item.id);
-                }}
-                className="ml-1 h-7 items-center justify-center rounded-full bg-primary px-3 active:opacity-80"
-              >
-                <Text className="text-xs font-medium text-on-primary">
-                  {item.action.label}
-                </Text>
-              </Pressable>
-            ) : null}
-          </Pressable>
-        </Animated.View>
+          {/* Every piece's shadow goes down before any fill, so the joins
+              disappear and the shadows add up to the whole pill's. */}
+          <PillPieces
+            shadow
+            middle={middleShadowStyle}
+            left={leftCapStyle}
+            right={rightCapStyle}
+          />
+          <PillPieces
+            middle={middleStyle}
+            left={leftCapStyle}
+            right={rightCapStyle}
+          />
+          <Animated.View style={rowStyle}>
+            <ToastContent item={item} reduce={reduce} textStyle={textStyle} />
+          </Animated.View>
+        </Pressable>
       </GestureDetector>
     </Animated.View>
+  );
+}
+
+type PieceStyle = ReturnType<typeof useAnimatedStyle>;
+
+/** The pill as two rounded caps and a straight middle that stretches. */
+function PillPieces({
+  shadow = false,
+  middle,
+  left,
+  right,
+}: {
+  shadow?: boolean;
+  middle: PieceStyle;
+  left: PieceStyle;
+  right: PieceStyle;
+}) {
+  // The shadow pieces only cast; the fills on top carry the border.
+  const look = shadow ? styles.shadow : undefined;
+  const edge = (sides: string) =>
+    shadow ? "bg-background" : `${sides} border-border bg-background`;
+  return (
+    <>
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.middle, look, middle]}
+        className={edge("border-y")}
+      />
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.capLeft, look, left]}
+        className={edge("border-y border-l")}
+      />
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.capRight, look, right]}
+        className={edge("border-y border-r")}
+      />
+    </>
+  );
+}
+
+/** The row inside a toast: status, words and an optional action. */
+function ToastContent({
+  item,
+  reduce,
+  textStyle,
+}: {
+  item: ToastItem;
+  reduce: boolean;
+  textStyle?: ReturnType<typeof useAnimatedStyle>;
+}) {
+  return (
+    <View className="flex-row items-center gap-2.5 py-2.5 pl-2.5 pr-4">
+      <StatusBadge status={item.status} reduce={reduce} />
+      <Animated.View
+        style={textStyle}
+        className="shrink flex-row items-center gap-2.5"
+      >
+        <View className="shrink">
+          <RollText
+            text={item.title}
+            className="text-sm font-medium text-foreground"
+            reduce={reduce}
+            numberOfLines={2}
+          />
+          {item.description ? (
+            <Text numberOfLines={3} className="text-xs text-muted">
+              {item.description}
+            </Text>
+          ) : null}
+        </View>
+        {item.action ? (
+          <Pressable
+            accessibilityRole="button"
+            hitSlop={8}
+            onPress={() => {
+              item.action?.onPress();
+              toast.dismiss(item.id);
+            }}
+            className="ml-1 h-7 items-center justify-center rounded-full bg-primary px-3 active:opacity-80"
+          >
+            <Text className="text-xs font-medium text-on-primary">
+              {item.action.label}
+            </Text>
+          </Pressable>
+        ) : null}
+      </Animated.View>
+    </View>
   );
 }
 
@@ -598,12 +742,26 @@ const styles = StyleSheet.create({
     right: EDGE,
     alignItems: "center",
   },
-  pill: {
-    borderRadius: 22,
-    minHeight: 44,
-    borderCurve: "continuous",
-    // A soft lift with the border, so the pill reads on any screen.
-    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06)",
+  pill: { borderRadius: CAP, minHeight: 44, boxShadow: SHADOW },
+  shadow: { boxShadow: SHADOW },
+  middle: { position: "absolute", top: 0, bottom: 0, left: CAP, right: CAP },
+  capLeft: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: CAP,
+    borderTopLeftRadius: CAP,
+    borderBottomLeftRadius: CAP,
+  },
+  capRight: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    right: 0,
+    width: CAP,
+    borderTopRightRadius: CAP,
+    borderBottomRightRadius: CAP,
   },
   badge: {
     width: 24,
