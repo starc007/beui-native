@@ -5,7 +5,9 @@ import { StatusBar } from "expo-status-bar";
 import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
+import { initialWindowMetrics } from "react-native-safe-area-context";
 import { useUniwind } from "uniwind";
+import { Toaster } from "../../src";
 import { FloatingAppTabs, NativeAppTabs } from "../components/app-tabs";
 
 export default function RootLayout() {
@@ -23,6 +25,11 @@ export default function RootLayout() {
         ) : (
           <NativeAppTabs hidden={record === "1"} />
         )}
+        {/* After the tabs, so toasts sit above every screen. */}
+        <Toaster
+          topInset={initialWindowMetrics?.insets.top ?? 0}
+          bottomInset={initialWindowMetrics?.insets.bottom ?? 0}
+        />
       </KeyboardProvider>
     </GestureHandlerRootView>
   );

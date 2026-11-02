@@ -198,6 +198,24 @@ export function AlertGlyph(props: GlyphProps) {
   );
 }
 
+/** An exclamation mark alone, for a filled badge. */
+export function ExclaimGlyph(props: GlyphProps) {
+  return (
+    <Glyph {...props}>
+      <Path d="M12 6.5v7M12 17.5h.01" />
+    </Glyph>
+  );
+}
+
+/** An "i" alone, for a filled badge. */
+export function InfoGlyph(props: GlyphProps) {
+  return (
+    <Glyph {...props}>
+      <Path d="M12 11v6.5M12 6.5h.01" />
+    </Glyph>
+  );
+}
+
 export function CrossGlyph(props: GlyphProps) {
   return (
     <Glyph {...props}>

@@ -678,6 +678,43 @@
       }
     },
     {
+      "slug": "toast",
+      "title": "Toast",
+      "description": "Pill toasts that stack, spread out and swipe away.",
+      "group": "Motion",
+      "variants": 1,
+      "readme": "src/components/toast/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/toast",
+      "files": [
+        "src/components/toast/index.ts",
+        "src/components/toast/toast-store.ts",
+        "src/components/toast/toaster.tsx"
+      ],
+      "shared": [
+        "src/hooks/use-presence.ts",
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/agent-icons.tsx",
+        "src/primitives/roll-text.tsx",
+        "src/primitives/spin-glyph.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "react-native-screens",
+        "react-native-svg",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/toast?runtime-version=exposdk%3A58.0.0&channel-name=production",
+      "clips": {
+        "light": "toast-light.mp4",
+        "dark": "toast-dark.mp4"
+      }
+    },
+    {
       "slug": "message",
       "title": "Message",
       "description": "Rows that rise out of their corner, with avatars and typing dots.",

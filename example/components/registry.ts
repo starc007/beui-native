@@ -33,6 +33,7 @@ import { SwipeShowcase } from "./swipe-showcase";
 import { SwitchShowcase } from "./switch-showcase";
 import { TabsShowcase } from "./tabs-showcase";
 import { TextAnimationShowcase } from "./text-animation-showcase";
+import { ToastShowcase } from "./toast-showcase";
 import { TodoListShowcase } from "./todo-list-showcase";
 import { ToolApprovalShowcase } from "./tool-approval-showcase";
 import { ToolResultShowcase } from "./tool-result-showcase";
@@ -215,6 +216,12 @@ export const groups: ComponentGroup[] = [
         description:
           "A card that springs to the size of each view you open in it.",
         Showcase: MorphingModalShowcase,
+      },
+      {
+        slug: "toast",
+        title: "Toast",
+        description: "Pill toasts that stack, spread out and swipe away.",
+        Showcase: ToastShowcase,
       },
     ],
   },
