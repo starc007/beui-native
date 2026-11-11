@@ -43,7 +43,7 @@
     "lint": "biome check .",
     "format": "biome check --write .",
     "check": "bun run typecheck && bun run lint",
-    "doctor": "cd example && bunx expo-doctor",
+    "doctor": "cd example && bunx expo-doctor@1.21.6",
     "export": "bun run --cwd example export",
     "manifest": "bun scripts/manifest.ts"
   },

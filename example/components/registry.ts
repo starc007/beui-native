@@ -14,6 +14,7 @@ import { ExpandableShowcase } from "./expandable-showcase";
 import { FileDiffShowcase } from "./file-diff-showcase";
 import { ImageGenerationShowcase } from "./image-generation-showcase";
 import { InputShowcase } from "./input-showcase";
+import { KeypadShowcase } from "./keypad-showcase";
 import { LoaderShowcase } from "./loader-showcase";
 import { LoadingStatesShowcase } from "./loading-states-showcase";
 import { MenuShowcase } from "./menu-showcase";
@@ -104,6 +105,13 @@ export const groups: ComponentGroup[] = [
         description: "Digits roll into slots, with SMS autofill.",
         Showcase: OTPShowcase,
         keyboard: true,
+      },
+      {
+        slug: "keypad",
+        title: "Keypad",
+        description: "A number pad to use as is or build key by key.",
+        Showcase: KeypadShowcase,
+        variants: 2,
       },
       {
         slug: "select",
