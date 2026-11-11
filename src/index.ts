@@ -155,6 +155,24 @@ export type {
 export { ImageGeneration } from "./components/image-generation";
 export type { InputClassNames, InputProps } from "./components/input";
 export { Input } from "./components/input";
+export type {
+  KeypadDeleteProps,
+  KeypadInputOptions,
+  KeypadKeyProps,
+  KeypadLayout,
+  KeypadProps,
+  KeypadRowProps,
+  KeypadSize,
+  KeypadVariant,
+} from "./components/keypad";
+export {
+  applyKeypadKey,
+  Keypad,
+  KeypadDelete,
+  KeypadKey,
+  KeypadRow,
+  KeypadSpacer,
+} from "./components/keypad";
 export type { LoaderProps, LoaderVariant } from "./components/loader";
 export { Loader } from "./components/loader";
 export type {

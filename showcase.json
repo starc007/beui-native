@@ -198,6 +198,38 @@
       }
     },
     {
+      "slug": "keypad",
+      "title": "Keypad",
+      "description": "A number pad to use as is or build key by key.",
+      "group": "Forms",
+      "variants": 2,
+      "readme": "src/components/keypad/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/keypad",
+      "files": [
+        "src/components/keypad/index.ts",
+        "src/components/keypad/keypad-context.ts",
+        "src/components/keypad/keypad-delete.tsx",
+        "src/components/keypad/keypad-input.ts",
+        "src/components/keypad/keypad-key.tsx",
+        "src/components/keypad/keypad-row.tsx",
+        "src/components/keypad/keypad-spacer.tsx",
+        "src/components/keypad/keypad.tsx"
+      ],
+      "shared": ["src/hooks/use-reduced-motion.ts", "src/styles/motion.ts"],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-reanimated",
+        "react-native-svg",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/keypad?runtime-version=exposdk%3A58.0.0&channel-name=production",
+      "clips": {
+        "light": "keypad-light.mp4",
+        "dark": "keypad-dark.mp4"
+      }
+    },
+    {
       "slug": "select",
       "title": "Select",
       "description": "A panel that unfolds out of its trigger.",
