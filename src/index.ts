@@ -323,6 +323,12 @@ export {
   SelectValue,
 } from "./components/select";
 export type {
+  SlideButtonProps,
+  SlideButtonSize,
+  SlideButtonState,
+} from "./components/slide-button";
+export { SlideButton } from "./components/slide-button";
+export type {
   StreamingResponseFeedback,
   StreamingResponseProps,
   StreamingResponseStatus,

@@ -29,6 +29,7 @@ import { PromptInputShowcase } from "./prompt-input-showcase";
 import { RadioShowcase } from "./radio-showcase";
 import { RangeSliderShowcase } from "./range-slider-showcase";
 import { SelectShowcase } from "./select-showcase";
+import { SlideButtonShowcase } from "./slide-button-showcase";
 import { StreamingResponseShowcase } from "./streaming-response-showcase";
 import { SwipeShowcase } from "./swipe-showcase";
 import { SwitchShowcase } from "./switch-showcase";
@@ -112,6 +113,13 @@ export const groups: ComponentGroup[] = [
         description: "A number pad to use as is or build key by key.",
         Showcase: KeypadShowcase,
         variants: 2,
+      },
+      {
+        slug: "slide-button",
+        title: "Slide Button",
+        description:
+          "Drag a thumb across to confirm, then watch it spin and check.",
+        Showcase: SlideButtonShowcase,
       },
       {
         slug: "select",
