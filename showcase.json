@@ -230,6 +230,42 @@
       }
     },
     {
+      "slug": "slide-button",
+      "title": "Slide Button",
+      "description": "Drag a thumb across to confirm, then watch it spin and check.",
+      "group": "Forms",
+      "variants": 1,
+      "readme": "src/components/slide-button/README.md",
+      "source": "https://github.com/starc007/beui-native/tree/main/src/components/slide-button",
+      "files": [
+        "src/components/slide-button/index.ts",
+        "src/components/slide-button/slide-button.tsx"
+      ],
+      "shared": [
+        "src/components/loader/index.ts",
+        "src/components/loader/loader.tsx",
+        "src/components/loader/use-keyframes.ts",
+        "src/hooks/use-reduced-motion.ts",
+        "src/primitives/drawn-path.tsx",
+        "src/primitives/render-icon.tsx",
+        "src/styles/motion.ts"
+      ],
+      "libraries": [
+        "react",
+        "react-native",
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "react-native-svg",
+        "react-native-worklets",
+        "uniwind"
+      ],
+      "expoGo": "exp://u.expo.dev/93a3a95c-6dc2-4adb-b57c-efbecf859f25/--/slide-button?runtime-version=exposdk%3A58.0.0&channel-name=production",
+      "clips": {
+        "light": "slide-button-light.mp4",
+        "dark": "slide-button-dark.mp4"
+      }
+    },
+    {
       "slug": "select",
       "title": "Select",
       "description": "A panel that unfolds out of its trigger.",
