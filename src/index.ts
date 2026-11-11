@@ -321,7 +321,7 @@ export type {
   SwipeSide,
 } from "./components/swipeable-list";
 export { SwipeableList } from "./components/swipeable-list";
-export type { SwitchProps } from "./components/switch";
+export type { SwitchProps, SwitchSize } from "./components/switch";
 export { Switch } from "./components/switch";
 export type {
   TabsContentProps,

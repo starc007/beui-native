@@ -31,14 +31,18 @@ const THUMB_SPRING = {
 } as const;
 const TRACK_FADE = { duration: 200, reduceMotion: ReduceMotion.System };
 
-const TRACK_WIDTH = 48;
-const TRACK_HEIGHT = 28;
-const PADDING = 4;
-const THUMB = 20;
-const STRETCH = 4;
-const TRAVEL = TRACK_WIDTH - PADDING * 2 - THUMB;
-// Tops the 28-point track up to a 48-point touch area.
-const HIT_SLOP = { top: 10, bottom: 10, left: 0, right: 0 };
+export type SwitchSize = "sm" | "md";
+
+const SIZES = {
+  sm: { width: 40, height: 24, padding: 3, thumb: 18, stretch: 3 },
+  md: { width: 48, height: 28, padding: 4, thumb: 20, stretch: 4 },
+} as const;
+
+/** Tops the track up to a 48-point touch area. */
+function hitSlopFor(height: number) {
+  const pad = (48 - height) / 2;
+  return { top: pad, bottom: pad, left: 0, right: 0 };
+}
 
 export type SwitchProps = Omit<
   PressableProps,
@@ -51,6 +55,8 @@ export type SwitchProps = Omit<
   disabled?: boolean;
   /** Visible label beside the switch. Pressing it toggles too. */
   label?: string;
+  /** `sm` is a 40 × 24 track, `md` a 48 × 28 one. Defaults to `md`. */
+  size?: SwitchSize;
   /** Disables thumb motion independently of the system preference. */
   disableAnimation?: boolean;
   className?: string;
@@ -63,6 +69,7 @@ export function Switch({
   onCheckedChange,
   disabled = false,
   label,
+  size = "md",
   disableAnimation = false,
   className = "",
   accessibilityLabel,
@@ -78,6 +85,10 @@ export function Switch({
   const reducedMotion = useReducedMotionPreference();
   const animate = !reducedMotion && !disableAnimation;
   const direction = I18nManager.isRTL ? -1 : 1;
+  const dims = SIZES[size];
+  const thumbSize = dims.thumb;
+  const maxStretch = dims.stretch;
+  const travel = dims.width - dims.padding * 2 - dims.thumb;
 
   const { backgroundColor: onColor } = useResolveClassNames("bg-primary");
   const { backgroundColor: offColor } = useResolveClassNames("bg-muted/60");
@@ -109,20 +120,20 @@ export function Switch({
   }));
 
   const thumbStyle = useAnimatedStyle(() => {
-    const stretch = STRETCH * press.value;
+    const stretch = maxStretch * press.value;
     // Grow toward the destination: leftward from the "on" end, rightward from "off".
     const lead = checked ? -stretch : 0;
     return {
-      width: THUMB + stretch,
+      width: thumbSize + stretch,
       transform: [
         {
           translateX:
-            direction * (position.value * TRAVEL + lead) + shake.value,
+            direction * (position.value * travel + lead) + shake.value,
         },
         { scale: 1 - 0.1 * press.value },
       ],
     };
-  }, [checked, direction]);
+  }, [checked, direction, thumbSize, maxStretch, travel]);
 
   function toggle() {
     const next = !checked;
@@ -143,7 +154,7 @@ export function Switch({
       // Native keeps presses alive while disabled so the thumb can shake; web needs the
       // real prop because react-native-web derives aria-disabled from it.
       disabled={Platform.OS === "web" && disabled}
-      hitSlop={hitSlop ?? HIT_SLOP}
+      hitSlop={hitSlop ?? hitSlopFor(dims.height)}
       className={`self-start flex-row items-center gap-3 ${disabled ? "opacity-60" : ""} ${className}`}
       onPress={() => {
         if (!disabled) toggle();
@@ -171,10 +182,28 @@ export function Switch({
         onPressOut?.(event);
       }}
     >
-      <Animated.View style={[styles.track, trackStyle]}>
+      <Animated.View
+        style={[
+          styles.track,
+          {
+            width: dims.width,
+            height: dims.height,
+            borderRadius: dims.height / 2,
+          },
+          trackStyle,
+        ]}
+      >
         <Animated.View
           className="bg-background"
-          style={[styles.thumb, thumbStyle]}
+          style={[
+            styles.thumb,
+            {
+              start: dims.padding,
+              height: dims.thumb,
+              borderRadius: dims.thumb / 2,
+            },
+            thumbStyle,
+          ]}
         />
       </Animated.View>
       {label ? (
@@ -185,18 +214,9 @@ export function Switch({
 }
 
 const styles = StyleSheet.create({
-  track: {
-    width: TRACK_WIDTH,
-    height: TRACK_HEIGHT,
-    borderRadius: TRACK_HEIGHT / 2,
-    flexShrink: 0,
-    justifyContent: "center",
-  },
+  track: { flexShrink: 0, justifyContent: "center" },
   thumb: {
     position: "absolute",
-    start: PADDING,
-    height: THUMB,
-    borderRadius: THUMB / 2,
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.18)",
   },
 });
