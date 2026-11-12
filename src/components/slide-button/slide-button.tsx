@@ -1,4 +1,4 @@
-import { type Ref, useEffect, useState } from "react";
+import { type Ref, useEffect, useRef, useState } from "react";
 import {
   I18nManager,
   StyleSheet,
@@ -113,11 +113,17 @@ export function SlideButton({
   const past = useSharedValue(false);
   const check = useSharedValue(state === "success" ? 1 : 0);
   const locked = state === "loading" || state === "success";
+  const thresholdChange = useRef(onThresholdChange);
+  thresholdChange.current = onThresholdChange;
 
   useEffect(() => {
     if (state === "idle" || state === "error") {
       x.value = reduce ? 0 : withTiming(0, SETTLE);
-      past.value = false;
+      // The thumb returns to the start, so report it is no longer past.
+      if (past.value) {
+        past.value = false;
+        thresholdChange.current?.(false);
+      }
     } else if (span) {
       x.value = reduce ? span : withTiming(span, SETTLE);
     }
