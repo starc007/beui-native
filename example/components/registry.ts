@@ -109,7 +109,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "keypad",
-        launchedAt: "2026-11-12",
+        launchedAt: "2026-11-13",
         title: "Keypad",
         description: "A number pad to use as is or build key by key.",
         Showcase: KeypadShowcase,
@@ -117,7 +117,7 @@ export const groups: ComponentGroup[] = [
       },
       {
         slug: "slide-button",
-        launchedAt: "2026-11-12",
+        launchedAt: "2026-11-13",
         title: "Slide Button",
         description:
           "Drag a thumb across to confirm, then watch it spin and check.",
